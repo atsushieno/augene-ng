@@ -20,7 +20,6 @@ import java.io.Writer
 class KotractiveSymbolProcessor(environment: SymbolProcessorEnvironment) : SymbolProcessor {
     private val codeGenerator = environment.codeGenerator
     private val logger = environment.logger
-    private val options = environment.options
 
     private val visitor = KotractiveVisitor(this)
 
@@ -102,7 +101,6 @@ internal class MetaType$name : MetaType("$name", "$fullName", $baseTypeSpec) {
 
             // interpret @DataType annotation on each property
             val dataTypeAnnotation = property.annotations.firstOrNull { it.annotationType.toString() == "DataTypes" }
-if (dataTypeAnnotation != null) { logger.warn("${property.qualifiedName?.asString()} DataTypes: ${dataTypeAnnotation.annotationType} / ${dataTypeAnnotation.arguments.firstOrNull()?.value}") }
             val dataTypeSpec = if (dataTypeAnnotation != null) dataTypeAnnotation.arguments.first().value!!.toString() else "Unknown"
 
             val optNullableAssignment = if (propertyTypeDecl.nullability == Nullability.NULLABLE) "if (value == null) null else" else ""
