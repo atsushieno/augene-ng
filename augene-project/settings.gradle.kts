@@ -1,20 +1,16 @@
 pluginManagement {
     repositories {
         google()
-        jcenter()
         gradlePluginPortal()
         mavenCentral()
+        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
     }
-
-    resolutionStrategy {
-        eachPlugin {
-            if (requested.id.namespace == "com.android" || requested.id.name == "kotlin-android-extensions") {
-                useModule("com.android.tools.build:gradle:4.1.3")
-            }
-        }
-    }
+    
 }
+rootProject.name = "augene-project"
 
-rootProject.name = "augene-ng-project"
+include(":midi2tracktionedit")
+include(":android")
+include(":desktop")
+include(":common")
 
-include("midi2tracktionedit", "augene")

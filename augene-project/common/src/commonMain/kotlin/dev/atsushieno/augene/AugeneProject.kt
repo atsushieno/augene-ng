@@ -1,6 +1,9 @@
 package dev.atsushieno.augene
 
 import dev.atsushieno.kotractive.*
+import java.nio.file.Path
+import kotlin.io.path.absolute
+import kotlin.io.path.name
 
 annotation class XmlAttribute()
 annotation class XmlIgnore()
@@ -66,7 +69,7 @@ class AugeneProject {
 	): Sequence<AugeneAudioGraph> {
 		val project = this
 		return sequence {
-			project.CheckIncludeValidity(MutableList(), resolveAbsPath, MutableList())
+			project.CheckIncludeValidity(mutableListOf(), resolveAbsPath, mutableListOf())
 			var count = 0
 			for (item in project.AudioGraphs)
 				yield(AugeneAudioGraph().apply {
@@ -79,13 +82,10 @@ class AugeneProject {
 			for (include in project.Includes!!) {
 				val src: String? = include.Source ?: continue
 				val absPath = resolveAbsPath(src)
-				val resolveNestedAbsPath =
-					{ src: String? -> Path.Combine(Path.GetDirectoryName(Path.GetFullPath(absPath)), src) }
+				val resolveNestedAbsPath = { s: String? -> Path.of(absPath).absolute().parent.resolve(s!!).name }
 				val msb = include.BankMsb ?: include.Bank
 				val lsb = include.BankLsb
-				for (nested in AugeneProject.Load(resolveAbsPath(src)).AudioGraphsExpandedFullPath(
-					resolveNestedAbsPath, msb, lsb
-				))
+				for (nested in Load(resolveAbsPath(src)).AudioGraphsExpandedFullPath(resolveNestedAbsPath, msb, lsb))
 					yield(nested)
 			}
 		}

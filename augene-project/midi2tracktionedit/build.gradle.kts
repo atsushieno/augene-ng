@@ -8,9 +8,15 @@ buildscript {
     }
 }
 
+repositories {
+    mavenLocal()
+    google()
+    mavenCentral()
+}
+
 plugins {
-    id("com.android.library") version "4.1.3"
-    id("org.jetbrains.kotlin.multiplatform") version "1.5.21"
+    id("com.android.library") //version "4.1.3"
+    id("org.jetbrains.kotlin.multiplatform") //version "1.5.21"
     id("org.jetbrains.dokka") version "1.5.0"
     id("maven-publish")
     id("signing")

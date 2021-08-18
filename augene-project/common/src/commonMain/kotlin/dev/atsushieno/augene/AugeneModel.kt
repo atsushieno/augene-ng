@@ -5,6 +5,8 @@ import dev.atsushieno.ktmidi.MidiCC
 import dev.atsushieno.midi2tracktionedit.MidiImportContext
 import dev.atsushieno.midi2tracktionedit.MidiToTracktionEditConverter
 import dev.atsushieno.mugene.*
+import java.io.File
+import java.nio.file.Path
 
 abstract class DialogAbstraction
 {
@@ -64,6 +66,9 @@ class AugeneModel
 	var LastProjectFile: String? = null
 
 	lateinit var Dialogs: DialogAbstraction
+
+	val ProjectDirectory : String
+		get() = File(ProjectFileName!!).parent
 
 	fun LoadConfiguration () {
 		IsolatedStorageFile.GetUserStoreForAssembly().apply { fs ->
@@ -166,12 +171,12 @@ class AugeneModel
 	fun ProcessNewTrack (selectFileInsteadOfNewFile: Boolean) {
 		if (selectFileInsteadOfNewFile) {
 			val files = Dialogs.ShowOpenFileDialog ("Select existing AudioGraph file for a new track",
-				DialogAbstraction.DialogOptions().apply { initialDirectory = Path.GetDirectoryName(ProjectFileName) })
+				DialogAbstraction.DialogOptions().apply { initialDirectory = ProjectDirectory })
 			if (files.any ())
 				AddNewTrack (files [0])
 		} else {
 			val files = Dialogs.ShowSaveFileDialog ("New AudioGraph file for a new track",
-				DialogAbstraction.DialogOptions().apply { initialDirectory = Path.GetDirectoryName(ProjectFileName) })
+				DialogAbstraction.DialogOptions().apply { initialDirectory = ProjectDirectory })
 			if (files.any ()) {
 				File.WriteAllText (files [0], JuceAudioGraph.EmptyAudioGraph)
 				AddNewTrack (files [0])
@@ -202,12 +207,12 @@ class AugeneModel
 	fun ProcessNewAudioGraph (selectFileInsteadOfNewFile: Boolean) {
 		if (selectFileInsteadOfNewFile) {
 			val files = Dialogs.ShowOpenFileDialog ("Select existing AudioGraph file",
-				DialogAbstraction.DialogOptions().apply { initialDirectory = Path.GetDirectoryName(ProjectFileName) })
+				DialogAbstraction.DialogOptions().apply { initialDirectory = ProjectDirectory })
 			if (files.any ())
 				AddNewAudioGraph (files [0])
 		} else {
 			val files = Dialogs.ShowSaveFileDialog ("New AudioGraph file",
-				DialogAbstraction.DialogOptions().apply { initialDirectory = Path.GetDirectoryName(ProjectFileName) })
+				DialogAbstraction.DialogOptions().apply { initialDirectory = ProjectDirectory })
 			if (files.any ()) {
 				File.WriteAllText (files [0], JuceAudioGraph.EmptyAudioGraph)
 				AddNewAudioGraph (files [0])
@@ -238,12 +243,12 @@ class AugeneModel
 	fun ProcessNewMmlFile ( selectFileInsteadOfNewFile: Boolean) {
 		if (selectFileInsteadOfNewFile) {
 			val files = Dialogs.ShowOpenFileDialog ("Select existing MML file",
-				DialogAbstraction.DialogOptions().apply { initialDirectory = Path.GetDirectoryName(ProjectFileName) })
+				DialogAbstraction.DialogOptions().apply { initialDirectory = ProjectDirectory })
 			if (files.any ())
 				AddNewMmlFile (files [0])
 		} else {
 			val files = Dialogs.ShowSaveFileDialog ("New MML file",
-				DialogAbstraction.DialogOptions().apply { initialDirectory = Path.GetDirectoryName(ProjectFileName) })
+				DialogAbstraction.DialogOptions().apply { initialDirectory = ProjectDirectory })
 			if (files.any ()) {
 				File.WriteAllText (files [0], "// New MML file")
 				AddNewMmlFile (files [0])
@@ -268,7 +273,7 @@ class AugeneModel
 		if (ConfigAudioPluginHostPath == null)
 			Dialogs.ShowWarning ("AudioPluginHost path is not configured [File > Configure].")
 		else {
-			Process.Start (ConfigAudioPluginHostPath, GetItemFileAbsolutePath (audioGraphFile))
+			ProcessBuilder(ConfigAudioPluginHostPath, GetItemFileAbsolutePath (audioGraphFile)).start()
 		}
 	}
 
@@ -471,19 +476,18 @@ class AugeneModel
 		else {
 			ProcessCompile ()
 			if (OutputEditFileName != null)
-				Process.Start (ConfigAugenePlayerPath, OutputEditFileName)
+				ProcessBuilder (ConfigAugenePlayerPath, OutputEditFileName).start()
 		}
 	}
 
 	fun OpenFileOrContainingFolder (fullPath: String) {
-		if (Environment.OSVersion.Platform == PlatformID.Unix) {
-			if (IsRunningOnMac ())
-				Process.Start ("open", fullPath)
-			else
-				Process.Start ("xdg-open", fullPath)
-		}
+		val os = System.getProperty("os.name")
+		if (os.contains("windows"))
+			ProcessBuilder("explorer", fullPath).start()
+		if (os.contains("mac"))
+			ProcessBuilder("open", fullPath).start()
 		else
-			Process.Start ("explorer", fullPath)
+			ProcessBuilder("xdg-open", fullPath).start()
 	}
 }
 

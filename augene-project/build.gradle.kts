@@ -1,35 +1,24 @@
 buildscript {
     repositories {
+        gradlePluginPortal()
         google()
-        mavenLocal()
         mavenCentral()
     }
-}
-
-
-/*
-// This is a workaround for https://youtrack.jetbrains.com/issue/KT-44884
-configurations.matching { it.name != "kotlinCompilerPluginClasspath" }.all {
-    resolutionStrategy.eachDependency {
-        version = requested.version
-        if (requested.group == "org.jetbrains.kotlinx" &&
-            requested.name.startsWith("kotlinx-coroutines") &&
-            version != null && !version.contains("native-mt")
-        ) {
-            useVersion("$version-native-mt")
-        }
+    dependencies {
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.21")
+        classpath("com.android.tools.build:gradle:4.2.2")
     }
 }
-*/
 
-allprojects {
+subprojects {
+
     group = "dev.atsushieno"
     version = "0.1"
 
     repositories {
         mavenLocal()
-        mavenCentral()
         google()
-        maven { url = uri("https://maven.pkg.jetbrains.space/public/p/compose/dev") }
+        mavenCentral()
+        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
     }
 }
