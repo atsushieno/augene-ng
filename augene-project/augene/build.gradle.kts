@@ -69,6 +69,9 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(project(":midi2tracktionedit"))
+                implementation("dev.atsushieno:ktmidi:0.3.8")
+                implementation("dev.atsushieno:mugene:0.2.15")
+                implementation("dev.atsushieno:kotractive:0.1")
             }
         }
         val commonTest by getting {

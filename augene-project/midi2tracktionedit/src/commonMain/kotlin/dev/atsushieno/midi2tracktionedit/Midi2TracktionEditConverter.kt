@@ -42,7 +42,7 @@ class MidiToTracktionEditConverter(private var context: MidiImportContext) {
     }
     */
 
-    private fun importMusic() {
+    fun importMusic() {
         if (consumed)
             throw IllegalArgumentException("This instance is already used. Create another instance of ${this::class} if you want to process more.")
         consumed = true
@@ -56,7 +56,7 @@ class MidiToTracktionEditConverter(private var context: MidiImportContext) {
         when (context.markerImportStrategy) {
             MarkerImportStrategy.Global -> {
                 //case MarkerImportStrategy.Default:
-                var markers = mutableListOf<MidiMessage>()
+                val markers = mutableListOf<MidiMessage>()
                 var t = 0
                 for (m in context.midi.mergeTracks().tracks[0].messages) {
                     t += m.deltaTime
@@ -70,8 +70,8 @@ println("GLOBAL MARKERS: ${globalMarkers.size}")
         }
 
         for (mtrack in context.midi.tracks) {
-            var trackName = populateTrackName(mtrack)
-            var ttrack = TrackElement().apply { Name = trackName }
+            val trackName = populateTrackName(mtrack)
+            val ttrack = TrackElement().apply { Name = trackName }
             context.edit.Tracks.add(ttrack)
             importTrack(mtrack, ttrack)
             if (!ttrack.Clips.any() && !ttrack.Clips.any())
@@ -155,8 +155,8 @@ println("GLOBAL MARKERS: ${globalMarkers.size}")
         nextClip()
 
         ttrack.Modifiers = ModifiersElement()
-        var noteDeltaTimes = Array<Int>(16 * 128) { 0 }  // new int [16, 128];
-        var notes = Array<NoteElement?>(16 * 128) { null } // new NoteElement? [16,128];
+        val noteDeltaTimes = Array<Int>(16 * 128) { 0 }  // new int [16, 128];
+        val notes = Array<NoteElement?>(16 * 128) { null } // new NoteElement? [16,128];
         var timeSigNumerator = 4
         var timeSigDenominator = 4
         var currentBpm = 120.0
@@ -170,16 +170,16 @@ println("GLOBAL MARKERS: ${globalMarkers.size}")
                     break
             }
 
-            var tTime = toTracktionBarSpec(currentTotalTime) - currentClipStart
+            val tTime = toTracktionBarSpec(currentTotalTime) - currentClipStart
             var eventType = msg.event.eventType.toInt()
             if (eventType == MidiChannelStatus.NOTE_ON && msg.event.lsb.toInt() == 0)
                 eventType = MidiChannelStatus.NOTE_OFF
 
             when (eventType) {
                 MidiChannelStatus.NOTE_OFF -> {
-                    var noteToOff = notes[msg.event.channel * 128 + msg.event.msb]
+                    val noteToOff = notes[msg.event.channel * 128 + msg.event.msb]
                     if (noteToOff != null) {
-                        var l = currentTotalTime - noteDeltaTimes[msg.event.channel * 128 + msg.event.msb]
+                        val l = currentTotalTime - noteDeltaTimes[msg.event.channel * 128 + msg.event.msb]
                         if (l == 0)
                             println("!!! Zero-length note: at ${toTracktionBarSpec(currentTotalTime)}, value: ${msg.event.value}")
                         else {
@@ -191,7 +191,7 @@ println("GLOBAL MARKERS: ${globalMarkers.size}")
                     noteDeltaTimes[msg.event.channel * 128 + msg.event.msb] = 0
                 }
                 MidiChannelStatus.NOTE_ON -> {
-                    var noteOn = NoteElement().apply {
+                    val noteOn = NoteElement().apply {
                         B = tTime
                         P = msg.event.msb.toInt()
                         V = msg.event.lsb.toInt()
@@ -256,7 +256,7 @@ println("GLOBAL MARKERS: ${globalMarkers.size}")
                                 })
                             }
                             MidiMetaType.TIME_SIGNATURE -> {
-                                var tsEv = msg.event
+                                val tsEv = msg.event
                                 timeSigNumerator = tsEv.extraData!![tsEv.extraDataOffset].toInt()
                                 timeSigDenominator =
                                     tsEv.extraData!![tsEv.extraDataOffset + 1].toDouble().pow(2).toInt()
@@ -283,7 +283,7 @@ println("GLOBAL MARKERS: ${globalMarkers.size}")
     }
 
     private fun toBpm(data: ByteArray, offset: Int, length: Int): Double {
-        var t = (data[offset] shl 16) + (data[offset + 1] shl 8) + data[offset + 2]
+        val t = (data[offset] shl 16) + (data[offset + 1] shl 8) + data[offset + 2]
         return 60000000.0 / t
     }
 
