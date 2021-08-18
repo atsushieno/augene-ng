@@ -55,7 +55,8 @@ abstract class XmlReader : IXmlLineInfo {
 		moveToElement()
     	while (true) {
 			when (nodeType) {
-				XmlNodeType.Element, XmlNodeType.Text -> return true
+				XmlNodeType.Element, XmlNodeType.EndElement -> return true
+				XmlNodeType.Text -> if (isCDATA || value.all { " \t\r\n".indexOf(it) < 0 }) return true
 				else -> {}
 			}
 			if (!read())
