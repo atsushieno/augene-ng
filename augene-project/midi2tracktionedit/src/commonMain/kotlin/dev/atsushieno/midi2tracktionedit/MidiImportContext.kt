@@ -2,6 +2,7 @@ package dev.atsushieno.midi2tracktionedit
 
 import dev.atsushieno.kotractive.*
 import dev.atsushieno.ktmidi.MidiMusic
+import dev.atsushieno.ktmidi.read
 
 enum class MarkerImportStrategy {
     Default,
@@ -36,7 +37,7 @@ class MidiImportContext {
     }
 
     fun LoadSmf(midiFileData: ByteArray): MidiMusic {
-        return MidiMusic.read(midiFileData)
+        return MidiMusic().apply { this.read(midiFileData.toList()) }
     }
 }
 

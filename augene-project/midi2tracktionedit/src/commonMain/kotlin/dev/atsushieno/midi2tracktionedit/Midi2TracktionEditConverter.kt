@@ -44,7 +44,7 @@ class MidiToTracktionEditConverter(private var context: MidiImportContext) {
 
     private fun importMusic() {
         if (consumed)
-            throw IllegalArgumentException("This instance is already used. Create another instance of ${this.GetType()} if you want to process more.")
+            throw IllegalArgumentException("This instance is already used. Create another instance of ${this::class} if you want to process more.")
         consumed = true
         if (context.cleanupExistingTracks) {
             context.edit.Tracks.clear()
@@ -65,7 +65,7 @@ class MidiToTracktionEditConverter(private var context: MidiImportContext) {
                 }
 
                 globalMarkers = markers.toTypedArray()
-                Console.Error.WriteLine("GLOBAL MARKERS:" + globalMarkers.size)
+println("GLOBAL MARKERS: ${globalMarkers.size}")
             }
         }
 
@@ -117,11 +117,11 @@ class MidiToTracktionEditConverter(private var context: MidiImportContext) {
             if (clip != null) {
                 clip!!.PatternGenerator = PatternGeneratorElement()
                 clip!!.PatternGenerator?.Progression = ProgressionElement()
-                var e = seq.Events.OfType<AbstractMidiEventElement>().lastOrNull()
+                val e = seq.Events.filter { it.getMetaType().simpleName == "AbstractMidiEventElement" }.lastOrNull()
                 if (e != null) {
-                    var note = e as NoteElement
-                    var extend = if (note != null) note.L else 0
-                    clip?.Length = e.B + extend
+                    val note = e as NoteElement?
+                    val extend = if (note != null) note.L else 0
+                    clip?.Length = e.B + extend.toDouble()
                 } else if (!seq.Events.any())
                     ttrack.Clips.remove(clip!!)
             }
@@ -181,7 +181,7 @@ class MidiToTracktionEditConverter(private var context: MidiImportContext) {
                     if (noteToOff != null) {
                         var l = currentTotalTime - noteDeltaTimes[msg.event.channel * 128 + msg.event.msb]
                         if (l == 0)
-                            Console.Error.WriteLine(("!!! Zero-length note: at ${toTracktionBarSpec(currentTotalTime)}, value: ${msg.event.value}"))
+                            println("!!! Zero-length note: at ${toTracktionBarSpec(currentTotalTime)}, value: ${msg.event.value}")
                         else {
                             noteToOff.L = toTracktionBarSpec(l)
                             noteToOff.C = msg.event.lsb.toInt()
@@ -197,13 +197,7 @@ class MidiToTracktionEditConverter(private var context: MidiImportContext) {
                         V = msg.event.lsb.toInt()
                     }
                     if (notes[msg.event.channel * 128 + msg.event.msb] != null)
-                        Console.Error.WriteLine(
-                            "!!! Overlapped note: at ${toTracktionBarSpec(currentTotalTime)}, value: ${
-                                msg.event.value.toString(
-                                    16
-                                )
-                            }"
-                        ) // FIXME: format specifier "X08"
+                        println("!!! Overlapped note: at ${toTracktionBarSpec(currentTotalTime)}, value: ${msg.event.value.toString(16)}") // FIXME: format specifier "X08"
                     notes[msg.event.channel * 128 + msg.event.msb] = noteOn
                     noteDeltaTimes[msg.event.channel * 128 + msg.event.msb] = currentTotalTime
                     seq.Events.add(noteOn)
