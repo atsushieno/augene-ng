@@ -15,7 +15,7 @@ class AugeneProject {
 		fun Load(filename: String): AugeneProject {
 			val serializer = XmlSerializer<AugeneProject>()
 			val xmlString = Files.readString(Path.of(filename))
-			return serializer.Deserialize(XmlReader.create(xmlString)) as AugeneProject
+			return serializer.deserialize(XmlReader.create(xmlString)) as AugeneProject
 		}
 
 		fun Save(project: AugeneProject, filename: String) {
@@ -26,7 +26,7 @@ class AugeneProject {
 
 			val serializer = XmlSerializer<AugeneProject>()
 			val sb = StringBuilder()
-			serializer.Serialize(sb, project)
+			serializer.serialize(sb, project)
 			Files.writeString(Path.of(filename), sb.toString())
 		}
 	}
@@ -160,45 +160,43 @@ class JuceAudioGraph {
 		fun Load ( reader:XmlReader) :  Sequence<JuceAudioGraph> =
 			sequence {
 				var ret = JuceAudioGraph ()
-				val doc = XDocument.Load (reader)
-				val input = doc.Root.Elements ("FILTER").firstOrNull { e ->
-					e.Elements ("PLUGIN").any { p -> p.Attribute ("name")?.Value.equals("Midi Input", true) ?: false && // it is MIDI Input since Waveform11 (maybe)
-													p.Attribute ("format")?.Value == "Internal" }
+				val doc = XDocument.load (reader)
+				val input = doc.root!!.elements ("FILTER").firstOrNull { e ->
+					e.elements ("PLUGIN").any { p -> p.attribute ("name")?.value.equals("Midi Input", true) ?: false && // it is MIDI Input since Waveform11 (maybe)
+													p.attribute ("format")?.value == "Internal" }
 				}
-				val output = doc.Root.Elements ("FILTER").firstOrNull { e ->
-					e.Elements ("PLUGIN").any { p -> p.Attribute ("name")?.Value == "Audio Output" &&
-													p.Attribute ("format")?.Value == "Internal" }
+				val output = doc.root!!.elements ("FILTER").firstOrNull { e ->
+					e.elements ("PLUGIN").any { p -> p.attribute ("name")?.value == "Audio Output" &&
+													p.attribute ("format")?.value == "Internal" }
 				}
 				if (input == null || output == null)
 					return@sequence
 				var conn: XElement? = null
-				var uid = input.Attribute ("uid")?.Value
+				var uid = input.attribute ("uid")?.value
 				while (true) {
-					conn = doc.Root.Elements ("CONNECTION").firstOrNull { e ->
-						e.Attribute ("srcFilter")?.Value == uid }
+					conn = doc.root!!.elements ("CONNECTION").firstOrNull { e ->
+						e.attribute ("srcFilter")?.value == uid }
 					if (conn == null || conn == output)
 						break
-					if (uid != input.Attribute ("uid")?.Value) {
-						val filter = doc.Root.Elements ("FILTER")
-							.firstOrNull { e -> e.Attribute ("uid")?.Value == uid }
-						if (filter == null)
-							return@sequence
-						val plugin = filter.Element ("PLUGIN")
+					if (uid != input.attribute ("uid")?.value) {
+						val filter = doc.root!!.elements ("FILTER")
+							.firstOrNull { e -> e.attribute ("uid")?.value == uid } ?: return@sequence
+						val plugin = filter.element ("PLUGIN")
 						if (plugin == null)
 							return@sequence
-						val state = filter.Element ("STATE")
-						val prog = plugin.Attribute ("programNum")
+						val state = filter.element ("STATE")
+						val prog = plugin.attribute ("programNum")
 						yield (JuceAudioGraph().apply {
-							File = plugin.Attribute ("file")?.Value
-							Category = plugin.Attribute ("category")?.Value
-							Manufacturer = plugin.Attribute ("manufacturer")?.Value
-							Name = plugin.Attribute ("name")?.Value
-							Uid = plugin.Attribute ("uid")?.Value
-							ProgramNum = if (prog != null) prog.Value.toInt() else 0
-							State = if (state != null) state.Value else null
+							File = plugin.attribute ("file")?.value
+							Category = plugin.attribute ("category")?.value
+							Manufacturer = plugin.attribute ("manufacturer")?.value
+							Name = plugin.attribute ("name")?.value
+							Uid = plugin.attribute ("uid")?.value
+							ProgramNum = if (prog != null) prog.value.toInt() else 0
+							State = state?.value
 						})
 					}
-					uid = conn.Attribute ("dstFilter")?.Value
+					uid = conn.attribute ("dstFilter")?.value
 				}
 			}
 		}
