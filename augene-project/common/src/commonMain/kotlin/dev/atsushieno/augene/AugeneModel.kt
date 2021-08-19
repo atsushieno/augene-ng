@@ -6,7 +6,12 @@ import dev.atsushieno.midi2tracktionedit.MidiImportContext
 import dev.atsushieno.midi2tracktionedit.MidiToTracktionEditConverter
 import dev.atsushieno.mugene.*
 import java.io.File
+import java.io.InputStream
+import java.io.InputStreamReader
+import java.nio.file.Files
 import java.nio.file.Path
+import java.nio.file.Paths
+import kotlin.io.path.absolute
 
 abstract class DialogAbstraction
 {
@@ -75,8 +80,8 @@ class AugeneModel
 			if (!fs.FileExists (ConfigXmlFile))
 				return@apply
 			try {
-				fs.OpenFile (ConfigXmlFile, FileMode.Open).also { file ->
-					val fileContent :String = File.ReadAllText(file)
+				fs.OpenFile (ConfigXmlFile, FileMode.Open).also { file: InputStream ->
+					val fileContent = InputStreamReader(file).readText()
 					val xr = XmlReader.create (fileContent)
 					xr.moveToContent ()
 					if (xr.isEmptyElement) {
@@ -123,13 +128,12 @@ class AugeneModel
 	fun GetItemFileRelativePath (itemFilename: String) : String {
 		var filenameRelative = itemFilename
 		if (ProjectFileName != null)
-			filenameRelative = Uri (ProjectFileName).MakeRelativeUri (Uri (itemFilename)).toString ()
+			filenameRelative = Path.of (ProjectFileName!!).relativize (Path.of(itemFilename)).toString ()
 		return filenameRelative
 	}
 
-	fun GetItemFileAbsolutePath (itemFilename: String) : String {
-		return Path.Combine (Path.GetDirectoryName (ProjectFileName), itemFilename)
-	}
+	fun GetItemFileAbsolutePath (itemFilename: String) =
+		File(ProjectFileName!!).parentFile.resolve(itemFilename).absolutePath
 
 	fun ProcessOpenProject () {
 		val files = Dialogs.ShowOpenFileDialog ("Open Augene Project")
@@ -146,15 +150,14 @@ class AugeneModel
 			// FIXME: it is kind of hack, but so far we unify history with config.
 			SaveConfiguration()
 
-			project_file_watcher.Path = Path.GetDirectoryName(ProjectFileName)
+			project_file_watcher.Path = File(ProjectFileName!!).parent
 			if (!project_file_watcher.EnableRaisingEvents)
 				project_file_watcher.EnableRaisingEvents = true
 
 			UpdateAutoReloadSetup ()
 		}
 
-		if (RefreshRequested != null)
-			RefreshRequested()
+		RefreshRequested()
 	}
 
 	fun ProcessSaveProject () {
@@ -165,7 +168,7 @@ class AugeneModel
 			else
 				return
 		}
-		AugeneProject.Save (Project, ProjectFileName)
+		AugeneProject.Save (Project, ProjectFileName!!)
 	}
 
 	fun ProcessNewTrack (selectFileInsteadOfNewFile: Boolean) {
@@ -178,7 +181,7 @@ class AugeneModel
 			val files = Dialogs.ShowSaveFileDialog ("New AudioGraph file for a new track",
 				DialogAbstraction.DialogOptions().apply { initialDirectory = ProjectDirectory })
 			if (files.any ()) {
-				File.WriteAllText (files [0], JuceAudioGraph.EmptyAudioGraph)
+				Files.writeString (Path.of(files [0]), JuceAudioGraph.EmptyAudioGraph)
 				AddNewTrack (files [0])
 			}
 		}
@@ -214,7 +217,7 @@ class AugeneModel
 			val files = Dialogs.ShowSaveFileDialog ("New AudioGraph file",
 				DialogAbstraction.DialogOptions().apply { initialDirectory = ProjectDirectory })
 			if (files.any ()) {
-				File.WriteAllText (files [0], JuceAudioGraph.EmptyAudioGraph)
+				Files.writeString (Path.of(files [0]), JuceAudioGraph.EmptyAudioGraph)
 				AddNewAudioGraph (files [0])
 			}
 		}
@@ -250,7 +253,7 @@ class AugeneModel
 			val files = Dialogs.ShowSaveFileDialog ("New MML file",
 				DialogAbstraction.DialogOptions().apply { initialDirectory = ProjectDirectory })
 			if (files.any ()) {
-				File.WriteAllText (files [0], "// New MML file")
+				Files.writeString (Path.of(files [0]), "// New MML file")
 				AddNewMmlFile (files [0])
 			}
 		}
@@ -285,7 +288,7 @@ class AugeneModel
 		} else {
 			val files = Dialogs.ShowSaveFileDialog ("New AudioGraph file as a master plugin")
 			if (files.any ()) {
-				File.WriteAllText (files [0], JuceAudioGraph.EmptyAudioGraph)
+				Files.writeString (Path.of(files [0]), JuceAudioGraph.EmptyAudioGraph)
 				AddNewMasterPluginFile (files [0])
 			}
 		}
@@ -314,12 +317,11 @@ class AugeneModel
 		AutoCompileProject = value
 	}
 
-	private fun onFileEvent(o: FileSystemWatcherFooBar, e: FileWatcherEventFooBar) {
+	private fun onFileEvent(o: Any, e: FileWatcherEventArgs) {
 		if (!AutoReloadProject && !AutoCompileProject)
 			return
 		val proj: String = ProjectFileName ?: return
-		val cmp = { s1: String, s2: String -> s1 == s2; }
-		if (e.FullPath != ProjectFileName && Project.MmlFiles.all { m -> !cmp(Path.Combine (Path.GetDirectoryName (proj), m), e.FullPath) })
+		if (e.FullPath != ProjectFileName && Project.MmlFiles.all { m -> File(proj).parentFile.resolve(m).absolutePath != e.FullPath })
 			return
 		if (AutoReloadProject)
 			ProcessLoadProjectFile (proj)
@@ -346,18 +348,17 @@ class AugeneModel
 		println ("$errorId: $msg")
 	}
 
-	fun ResolvePathRelativetoProject (pathSpec: String) : String {
-		return Path.Combine (Path.GetDirectoryName (Path.GetFullPath (ProjectFileName)), pathSpec)
-	}
+	fun ResolvePathRelativetoProject (pathSpec: String) : String =
+		File (ProjectFileName!!).absoluteFile.parentFile.resolve(pathSpec).absolutePath
 
 	fun Compile () {
 		if (ProjectFileName == null)
 			throw IllegalStateException ("To compile the project, ProjectFileName must be specified in prior")
 
-		val abspath = { s:String? -> ResolvePathRelativetoProject(s) }
+		val abspath = { s:String? -> ResolvePathRelativetoProject(s!!) }
 		val compiler = MmlCompiler.create()
 		val mmlFilesAbs = Project.MmlFiles.map { f -> abspath (f) }
-		val mmls = mmlFilesAbs.map { f -> MmlInputSource (f, File.ReadAllText (f)) } +
+		val mmls = mmlFilesAbs.map { f -> MmlInputSource (f, Files.readString (Path.of(f))) } +
 			Project.MmlStrings.map { s -> MmlInputSource ("(no file)", s) }
 		val music = compiler.compile (false, mmls.toTypedArray())
 		val edit = EditElement ()
@@ -395,11 +396,10 @@ class AugeneModel
 			if (ag != null) {
 				val existingPlugins = track.Plugins
 				track.Plugins.clear ()
-				File.ReadText(abspath (ag.Source)).apply { fr ->
-					val graph = JuceAudioGraph.Load(XmlReader.create(fr)).asIterable()
-					for (p in ToTracktion(AugenePluginSpecifier.FromAudioGraph(graph)))
-						track.Plugins.add(p)
-				}
+				val text = Files.readString(Path.of(abspath (ag.Source)))
+				val graph = JuceAudioGraph.Load(XmlReader.create(text)).asIterable()
+				for (p in ToTracktion(AugenePluginSpecifier.FromAudioGraph(graph)))
+					track.Plugins.add(p)
 				// recover volume and level at the end.
 				for (p in existingPlugins)
 					track.Plugins.add (p)
@@ -413,12 +413,12 @@ class AugeneModel
 			val existingPlugins = track.Plugins
 			track.Plugins.clear ()
 			val ag = audioGraphs.firstOrNull { a -> a.Id == track.Extension_InstrumentName }
-			if (ag != null)
-				File.ReadAllText(abspath (ag.Source)).apply { text ->
-					val graph = JuceAudioGraph.Load(XmlReader.create(text)).asIterable()
-					for (p in ToTracktion(AugenePluginSpecifier.FromAudioGraph(graph)))
-						track.Plugins.add(p)
-				}
+			if (ag != null) {
+				val text = Files.readString(Path.of(abspath (ag.Source)))
+				val graph = JuceAudioGraph.Load(XmlReader.create(text)).asIterable()
+				for (p in ToTracktion(AugenePluginSpecifier.FromAudioGraph(graph)))
+					track.Plugins.add(p)
+			}
 			// recover volume and level at the end.
 			for (p in existingPlugins)
 				track.Plugins.add (p)
@@ -433,15 +433,14 @@ class AugeneModel
 				// track's AudioGraph may be either a ID reference or a filename.
 				val ag = audioGraphs.firstOrNull { a -> a.Id == track.AudioGraph }
 				val agFile = ag?.Source ?: track.AudioGraph
-				if (!File.Exists (abspath (agFile))) {
+				if (!File (abspath (agFile)).exists()) {
 					ReportError ("AugeneAudioGraphNotFound", "AudioGraph does not exist: " + abspath (agFile))
 					continue
 				}
-				File.ReadText(abspath (agFile)).apply { fr ->
-					val graph = JuceAudioGraph.Load (XmlReader.create (fr)).asIterable()
-					for (p in ToTracktion (AugenePluginSpecifier.FromAudioGraph (graph)))
-					dstTrack.Plugins.add (p)
-				}
+				val text = Files.readString(Path.of(abspath (agFile)))
+				val graph = JuceAudioGraph.Load (XmlReader.create (text)).asIterable()
+				for (p in ToTracktion (AugenePluginSpecifier.FromAudioGraph (graph)))
+				dstTrack.Plugins.add (p)
 			}
 			// recover volume and level at the end.
 			for (p in existingPlugins)
@@ -452,22 +451,20 @@ class AugeneModel
 			// AudioGraph may be either a ID reference or a filename.
 			val ag = audioGraphs.firstOrNull { a -> a.Id == masterPlugin }
 			val agFile = ag?.Source ?: masterPlugin
-			if (!File.Exists (abspath (agFile))) {
+			if (!File (abspath (agFile)).exists()) {
 				ReportError ("AugeneAudioGraphNotFound", "AudioGraph does not exist: " + abspath (agFile))
 				continue
 			}
-			File.ReadText(abspath (agFile)).apply { fr ->
-				val graph = JuceAudioGraph.Load (XmlReader.create (fr)).asIterable()
-				for ( p in ToTracktion (AugenePluginSpecifier.FromAudioGraph(graph)))
-					edit.MasterPlugins.add (p)
-			}
+			val text = Files.readString(Path.of(abspath (agFile)))
+			val graph = JuceAudioGraph.Load (XmlReader.create (text)).asIterable()
+			for ( p in ToTracktion (AugenePluginSpecifier.FromAudioGraph(graph)))
+				edit.MasterPlugins.add (p)
 		}
 
-		val outfile = OutputEditFileName ?: abspath (Path.ChangeExtension (Path.GetFileName (ProjectFileName), ".tracktionedit"))
-		File.CreateText (outfile).apply { sw ->
-			EditModelWriter().write (sw, edit)
-			OutputEditFileName = outfile
-		}
+		val outfile = OutputEditFileName ?: abspath (File(ProjectDirectory).resolve( File(ProjectFileName!!).nameWithoutExtension + ".tracktionedit").path)
+		val sb = StringBuilder()
+		Files.writeString (Path.of(outfile), sb.toString())
+		OutputEditFileName = outfile
 	}
 
 	fun ProcessPlay () {

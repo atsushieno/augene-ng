@@ -1,6 +1,7 @@
 package dev.atsushieno.augene
 
 import dev.atsushieno.kotractive.*
+import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.io.path.absolute
 import kotlin.io.path.name
@@ -13,19 +14,20 @@ class AugeneProject {
 	companion object {
 		fun Load(filename: String): AugeneProject {
 			val serializer = XmlSerializer<AugeneProject>()
-			return File.OpenRead(filename).use { fileStream ->
-				return@use serializer.Deserialize(XmlReader.create(fileStream)) as AugeneProject
-			}
+			val xmlString = Files.readString(Path.of(filename))
+			return serializer.Deserialize(XmlReader.create(xmlString)) as AugeneProject
 		}
 
 		fun Save(project: AugeneProject, filename: String) {
 			// sanitize absolute paths
 			for (track in project.Tracks)
-				if (Path.IsPathRooted(track.AudioGraph))
-					track.AudioGraph = Uri(filename).MakeRelativeUri(Uri(track.AudioGraph)).ToString()
+				if (Path.of(track.AudioGraph!!).isAbsolute)
+					track.AudioGraph = Path.of(filename).relativize(Path.of(track.AudioGraph!!)).name
 
 			val serializer = XmlSerializer<AugeneProject>()
-			File.CreateText(filename).apply { tw -> serializer.Serialize(tw, project); }
+			val sb = StringBuilder()
+			serializer.Serialize(sb, project)
+			Files.writeString(Path.of(filename), sb.toString())
 		}
 	}
 
@@ -63,7 +65,7 @@ class AugeneProject {
 	}
 
 	fun AudioGraphsExpandedFullPath(
-		resolveAbsPath: (String?) -> String,
+		resolveAbsPath: (String) -> String,
 		bankMsb: String?,
 		bankLsb: String?
 	): Sequence<AugeneAudioGraph> {
@@ -80,9 +82,9 @@ class AugeneProject {
 					Source = resolveAbsPath(item.Source!!)
 				})
 			for (include in project.Includes!!) {
-				val src: String? = include.Source ?: continue
+				val src: String = include.Source ?: continue
 				val absPath = resolveAbsPath(src)
-				val resolveNestedAbsPath = { s: String? -> Path.of(absPath).absolute().parent.resolve(s!!).name }
+				val resolveNestedAbsPath = { s: String -> Path.of(absPath).absolute().parent.resolve(s).name }
 				val msb = include.BankMsb ?: include.Bank
 				val lsb = include.BankLsb
 				for (nested in Load(resolveAbsPath(src)).AudioGraphsExpandedFullPath(resolveNestedAbsPath, msb, lsb))
