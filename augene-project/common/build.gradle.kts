@@ -21,6 +21,7 @@ kotlin {
                 api(compose.runtime)
                 api(compose.foundation)
                 api(compose.material)
+                implementation("com.squareup.okio:okio:3.0.0-alpha.9")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2")
                 implementation(project(":midi2tracktionedit"))
                 implementation("dev.atsushieno:ktmidi:0.3.8")

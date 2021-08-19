@@ -4,6 +4,9 @@ import dev.atsushieno.kotractive.*
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import okio.ExperimentalFileSystem
+import okio.FileSystem
+import okio.Path.Companion.toPath
 import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.io.path.absolute
@@ -16,18 +19,19 @@ annotation class XmlArrayItem(val itemName: String)
 class AugeneProject {
 	companion object {
 		fun Load(filename: String): AugeneProject {
-			val jsonString = Files.readString(Path.of(filename))
+			val jsonString = Files(filename).readString(filename)
 			return Json.decodeFromString(jsonString)
 		}
 
+		@OptIn(ExperimentalFileSystem::class)
 		fun Save(project: AugeneProject, filename: String) {
 			// sanitize absolute paths
 			for (track in project.Tracks)
-				if (Path.of(track.AudioGraph!!).isAbsolute)
-					track.AudioGraph = Path.of(filename).relativize(Path.of(track.AudioGraph!!)).name
+				if (track.AudioGraph!!.toPath().isAbsolute)
+					track.AudioGraph = (filename.toPath() / track.AudioGraph!!.toPath()).toString()
 
 			val json = Json.encodeToString(project)
-			Files.writeString(Path.of(filename), json)
+			Files(filename).writeString(filename, json)
 		}
 	}
 
@@ -64,6 +68,7 @@ class AugeneProject {
 		}
 	}
 
+	@OptIn(ExperimentalFileSystem::class)
 	fun AudioGraphsExpandedFullPath(
 		resolveAbsPath: (String) -> String,
 		bankMsb: String?,
@@ -84,7 +89,7 @@ class AugeneProject {
 			for (include in project.Includes!!) {
 				val src: String = include.Source ?: continue
 				val absPath = resolveAbsPath(src)
-				val resolveNestedAbsPath = { s: String -> Path.of(absPath).absolute().parent.resolve(s).name }
+				val resolveNestedAbsPath = { s: String -> (FileSystem.SYSTEM.canonicalize(absPath.toPath()).parent!! / s).toString() }
 				val msb = include.BankMsb ?: include.Bank
 				val lsb = include.BankLsb
 				for (nested in Load(resolveAbsPath(src)).AudioGraphsExpandedFullPath(resolveNestedAbsPath, msb, lsb))
