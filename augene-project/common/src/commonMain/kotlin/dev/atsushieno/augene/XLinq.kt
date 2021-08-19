@@ -106,6 +106,7 @@ class XDocument : XContainer("", "", XmlNodeType.Document) {
     companion object {
         fun load(reader: XmlReader) : XDocument {
             val doc = XDocument()
+            reader.read()
             while(reader.nodeType != XmlNodeType.Element)
                 doc.add(readXNode(reader))
             doc.add(XElement.load(reader))
@@ -166,14 +167,14 @@ class XElement(localName: String, ns: String = ""): XContainer(localName, ns, Xm
     fun attribute(localName: String, namespaceUri: String) : XAttribute? =
         atts.firstOrNull { it.localName == localName && it.namespaceUri == namespaceUri }
 
-    val value : String =
-        nodes.map {
+    val value : String
+        get() = nodes.map {
             when (it.nodeType) {
                 XmlNodeType.Element -> (it as XElement).value
                 XmlNodeType.Text -> (it as XText).value
                 else -> ""
             }
-        }.joinToString { "" }
+        }.joinToString(separator = "")
 }
 
 class XComment(val value: String) : XNode("", "", XmlNodeType.Comment)
