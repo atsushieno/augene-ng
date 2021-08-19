@@ -5,13 +5,13 @@ import dev.atsushieno.ktmidi.MidiCC
 import dev.atsushieno.midi2tracktionedit.MidiImportContext
 import dev.atsushieno.midi2tracktionedit.MidiToTracktionEditConverter
 import dev.atsushieno.mugene.*
+import okio.FileSystem
 import java.io.File
 import java.io.InputStream
 import java.io.InputStreamReader
+import java.io.OutputStreamWriter
 import java.nio.file.Files
 import java.nio.file.Path
-import java.nio.file.Paths
-import kotlin.io.path.absolute
 
 abstract class DialogAbstraction
 {
@@ -76,49 +76,51 @@ class AugeneModel
 		get() = File(ProjectFileName!!).parent
 
 	fun LoadConfiguration () {
-		IsolatedStorageFile.GetUserStoreForAssembly().apply { fs ->
-			if (!fs.FileExists (ConfigXmlFile))
-				return@apply
-			try {
-				fs.OpenFile (ConfigXmlFile, FileMode.Open).also { file: InputStream ->
-					val fileContent = InputStreamReader(file).readText()
-					val xr = XmlReader.create (fileContent)
-					xr.moveToContent ()
-					if (xr.isEmptyElement) {
-						xr.close()
-						return@also
-					}
-					xr.readStartElement ("config")
-					xr.moveToContent ()
-					while (xr.nodeType == XmlNodeType.Element) {
-						val name = xr.localName
-						val s = xr.readElementContentAsString()
-						when (name) {
-							"AugenePlayer" -> ConfigAugenePlayerPath = s
-							"AudioPluginHost" -> ConfigAudioPluginHostPath = s
-							"LastProjectFile" -> LastProjectFile = s
-						}
-						xr.moveToContent ()
-					}
+		val fs = IsolatedStorageFile.getUserStoreForAssembly("augene-ng")
+		if (!fs.fileExists (ConfigXmlFile))
+			return
+		try {
+			fs.openFile (ConfigXmlFile).also { file: InputStream ->
+				val fileContent = InputStreamReader(file).readText()
+				val xr = XmlReader.create (fileContent)
+				xr.moveToContent ()
+				if (xr.isEmptyElement) {
 					xr.close()
+					return@also
 				}
-			} catch (ex: Exception) {
-				println (ex.toString())
-				Dialogs.ShowWarning ("Failed to load configuration file. It is ignored.")
+				xr.readStartElement ("config")
+				xr.moveToContent ()
+				while (xr.nodeType == XmlNodeType.Element) {
+					val name = xr.localName
+					val s = xr.readElementContentAsString()
+					when (name) {
+						"AugenePlayer" -> ConfigAugenePlayerPath = s
+						"AudioPluginHost" -> ConfigAudioPluginHostPath = s
+						"LastProjectFile" -> LastProjectFile = s
+					}
+					xr.moveToContent ()
+				}
+				xr.close()
 			}
+		} catch (ex: Exception) {
+			println (ex.toString())
+			Dialogs.ShowWarning ("Failed to load configuration file. It is ignored.")
 		}
 	}
 
 	
 	fun SaveConfiguration () {
-		IsolatedStorageFile.GetUserStoreForAssembly().apply { fs ->
-			fs.createFile(ConfigXmlFile).apply { file ->
-				val xw = XmlWriter.create(file)
-				xw.writeStartElement("config")
-				xw.writeElementString("AugenePlayer", ConfigAugenePlayerPath!!)
-				xw.writeElementString("AudioPluginHost", ConfigAudioPluginHostPath!!)
-				xw.writeElementString("LastProjectFile", LastProjectFile!!)
-				xw.close()
+		val fs = IsolatedStorageFile.getUserStoreForAssembly("augene-ng")
+		val sb = StringBuilder()
+			val xw = XmlWriter.create(sb)
+			xw.writeStartElement("config")
+			xw.writeElementString("AugenePlayer", ConfigAugenePlayerPath!!)
+			xw.writeElementString("AudioPluginHost", ConfigAudioPluginHostPath!!)
+			xw.writeElementString("LastProjectFile", LastProjectFile!!)
+			xw.close()
+		fs.createFile(ConfigXmlFile).use { fs ->
+			OutputStreamWriter(fs).use {
+				it.write(sb.toString())
 			}
 		}
 	}
@@ -150,9 +152,9 @@ class AugeneModel
 			// FIXME: it is kind of hack, but so far we unify history with config.
 			SaveConfiguration()
 
-			project_file_watcher.Path = File(ProjectFileName!!).parent
-			if (!project_file_watcher.EnableRaisingEvents)
-				project_file_watcher.EnableRaisingEvents = true
+			project_file_watcher.path = File(ProjectFileName!!).parent
+			if (!project_file_watcher.enableRaisingEvents)
+				project_file_watcher.enableRaisingEvents = true
 
 			UpdateAutoReloadSetup ()
 		}
@@ -317,11 +319,11 @@ class AugeneModel
 		AutoCompileProject = value
 	}
 
-	private fun onFileEvent(o: Any, e: FileWatcherEventArgs) {
+	private fun onFileEvent(o: Any, e: FileSystemWatcherEventArgs) {
 		if (!AutoReloadProject && !AutoCompileProject)
 			return
 		val proj: String = ProjectFileName ?: return
-		if (e.FullPath != ProjectFileName && Project.MmlFiles.all { m -> File(proj).parentFile.resolve(m).absolutePath != e.FullPath })
+		if (e.fullPath != ProjectFileName && Project.MmlFiles.all { m -> File(proj).parentFile.resolve(m).absolutePath != e.fullPath })
 			return
 		if (AutoReloadProject)
 			ProcessLoadProjectFile (proj)
