@@ -3,6 +3,8 @@ package dev.atsushieno.augene
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
+import java.io.InputStreamReader
+import java.io.OutputStreamWriter
 
 // Partial mimick of .NET System.IO API
 class IsolatedStorageFile private constructor(private val basePath: File) {
@@ -22,7 +24,9 @@ class IsolatedStorageFile private constructor(private val basePath: File) {
     fun fileExists(file: String) =
         basePath.resolve(file).exists()
 
-    fun openFile(file: String) = FileInputStream(basePath.resolve(file))
+    fun readFileContentString(file: String) =
+        FileInputStream(basePath.resolve(file)).use { InputStreamReader(it).readText() }
 
-    fun createFile(file: String) = FileOutputStream(basePath.resolve(file))
+    fun writeFileContentString(file: String, content: String) =
+        FileOutputStream(basePath.resolve(file)).use { OutputStreamWriter(it).write(content) }
 }

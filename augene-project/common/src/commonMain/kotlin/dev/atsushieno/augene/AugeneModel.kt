@@ -6,9 +6,6 @@ import dev.atsushieno.midi2tracktionedit.MidiImportContext
 import dev.atsushieno.midi2tracktionedit.MidiToTracktionEditConverter
 import dev.atsushieno.mugene.*
 import java.io.File
-import java.io.InputStream
-import java.io.InputStreamReader
-import java.io.OutputStreamWriter
 import java.nio.file.Files
 import java.nio.file.Path
 
@@ -50,8 +47,6 @@ class AugeneModel
 				}
 			}
 		}
-
-		fun IsRunningOnMac (): Boolean = TODO("Not implemented")
 	}
 
 	var AutoReloadProject: Boolean = false
@@ -79,28 +74,26 @@ class AugeneModel
 		if (!fs.fileExists (ConfigXmlFile))
 			return
 		try {
-			fs.openFile (ConfigXmlFile).also { file: InputStream ->
-				val fileContent = InputStreamReader(file).readText()
-				val xr = XmlReader.create (fileContent)
-				xr.moveToContent ()
-				if (xr.isEmptyElement) {
-					xr.close()
-					return@also
-				}
-				xr.readStartElement ("config")
-				xr.moveToContent ()
-				while (xr.nodeType == XmlNodeType.Element) {
-					val name = xr.localName
-					val s = xr.readElementContentAsString()
-					when (name) {
-						"AugenePlayer" -> ConfigAugenePlayerPath = s
-						"AudioPluginHost" -> ConfigAudioPluginHostPath = s
-						"LastProjectFile" -> LastProjectFile = s
-					}
-					xr.moveToContent ()
-				}
+			val fileContent = fs.readFileContentString(ConfigXmlFile)
+			val xr = XmlReader.create (fileContent)
+			xr.moveToContent ()
+			if (xr.isEmptyElement) {
 				xr.close()
+				return
 			}
+			xr.readStartElement ("config")
+			xr.moveToContent ()
+			while (xr.nodeType == XmlNodeType.Element) {
+				val name = xr.localName
+				val s = xr.readElementContentAsString()
+				when (name) {
+					"AugenePlayer" -> ConfigAugenePlayerPath = s
+					"AudioPluginHost" -> ConfigAudioPluginHostPath = s
+					"LastProjectFile" -> LastProjectFile = s
+				}
+				xr.moveToContent ()
+			}
+			xr.close()
 		} catch (ex: Exception) {
 			println (ex.toString())
 			Dialogs.ShowWarning ("Failed to load configuration file. It is ignored.")
@@ -117,11 +110,7 @@ class AugeneModel
 			xw.writeElementString("AudioPluginHost", ConfigAudioPluginHostPath!!)
 			xw.writeElementString("LastProjectFile", LastProjectFile!!)
 			xw.close()
-		fs.createFile(ConfigXmlFile).use { fs ->
-			OutputStreamWriter(fs).use {
-				it.write(sb.toString())
-			}
-		}
+		fs.writeFileContentString(ConfigXmlFile, sb.toString())
 	}
 
 	var RefreshRequested : () -> Unit = {}
