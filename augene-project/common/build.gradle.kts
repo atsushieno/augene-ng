@@ -5,6 +5,7 @@ plugins {
     id("org.jetbrains.compose") version "1.0.0-alpha1-rc4"
     id("com.android.library")
     id("maven-publish")
+    kotlin("plugin.serialization") version "1.5.20"
 }
 
 kotlin {
@@ -20,6 +21,7 @@ kotlin {
                 api(compose.runtime)
                 api(compose.foundation)
                 api(compose.material)
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2")
                 implementation(project(":midi2tracktionedit"))
                 implementation("dev.atsushieno:ktmidi:0.3.8")
                 implementation("dev.atsushieno:mugene:0.2.15")

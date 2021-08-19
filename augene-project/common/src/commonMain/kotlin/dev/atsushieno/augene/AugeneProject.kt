@@ -1,6 +1,9 @@
 package dev.atsushieno.augene
 
 import dev.atsushieno.kotractive.*
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.io.path.absolute
@@ -13,9 +16,8 @@ annotation class XmlArrayItem(val itemName: String)
 class AugeneProject {
 	companion object {
 		fun Load(filename: String): AugeneProject {
-			val serializer = XmlSerializer<AugeneProject>()
-			val xmlString = Files.readString(Path.of(filename))
-			return serializer.deserialize(XmlReader.create(xmlString)) as AugeneProject
+			val jsonString = Files.readString(Path.of(filename))
+			return Json.decodeFromString(jsonString)
 		}
 
 		fun Save(project: AugeneProject, filename: String) {
@@ -24,10 +26,8 @@ class AugeneProject {
 				if (Path.of(track.AudioGraph!!).isAbsolute)
 					track.AudioGraph = Path.of(filename).relativize(Path.of(track.AudioGraph!!)).name
 
-			val serializer = XmlSerializer<AugeneProject>()
-			val sb = StringBuilder()
-			serializer.serialize(sb, project)
-			Files.writeString(Path.of(filename), sb.toString())
+			val json = Json.encodeToString(project)
+			Files.writeString(Path.of(filename), json)
 		}
 	}
 
