@@ -51,6 +51,8 @@ abstract class XmlReader : IXmlLineInfo {
 	abstract val isCDATA: Boolean
     abstract val attributeCount: Int
 
+    abstract fun close()
+
     open fun moveToContent() : Boolean {
 		moveToElement()
     	while (true) {
@@ -62,6 +64,31 @@ abstract class XmlReader : IXmlLineInfo {
 			if (!read())
 				return false
 		}
+    }
+
+    fun readStartElement() = readStartElement(null)
+    fun readStartElement(name: String?) = readStartElement(name, null)
+    fun readStartElement(localName: String?, namespaceUri: String?) {
+        moveToContent()
+        if (nodeType != XmlNodeType.Element)
+            throw IllegalStateException("XmlReader is not at element: $nodeType")
+        if (localName != null && localName != this.localName || namespaceUri != null && namespaceUri != this.namespaceUri)
+            throw IllegalStateException("Expecting XmlReader at '$localName' element in '$namespaceUri' namespace, got '${this.localName}' element in '${this.namespaceUri}' instead")
+        read()
+    }
+
+    fun readElementContentAsString() : String {
+        if (isEmptyElement) {
+            read()
+            return ""
+        }
+        var content = "" // somewhat inefficient but there is usually one single text node.
+        val startDepth = depth
+        readStartElement()
+        while(startDepth < depth)
+            if (nodeType == XmlNodeType.Text)
+                content += value
+        return content
     }
 
 	open fun readEndElement() {
@@ -181,6 +208,8 @@ class XmlTextReader(text: String, baseUri: String? = null) : XmlReader() {
 			return valueBuffer.concatToString(0, pos)
 		}
 	}
+
+	override fun close() {} // nothing particular to do
 
 	override val lineNumber
 		get() = reader.source.lineNumber
