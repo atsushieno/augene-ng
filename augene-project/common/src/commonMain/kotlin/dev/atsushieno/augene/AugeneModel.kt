@@ -107,9 +107,9 @@ class AugeneModel
 		val sb = StringBuilder()
 			val xw = XmlWriter.create(sb)
 			xw.writeStartElement("config")
-			xw.writeElementString("AugenePlayer", ConfigAugenePlayerPath!!)
-			xw.writeElementString("AudioPluginHost", ConfigAudioPluginHostPath!!)
-			xw.writeElementString("LastProjectFile", LastProjectFile!!)
+			xw.writeElementString("AugenePlayer", ConfigAugenePlayerPath ?: "")
+			xw.writeElementString("AudioPluginHost", ConfigAudioPluginHostPath ?: "")
+			xw.writeElementString("LastProjectFile", LastProjectFile ?: "")
 			xw.close()
 		fs.writeFileContentString(ConfigXmlFile, sb.toString())
 	}
@@ -174,7 +174,7 @@ class AugeneModel
 			val files = Dialogs.ShowSaveFileDialog ("New AudioGraph file for a new track",
 				DialogAbstraction.DialogOptions().apply { initialDirectory = ProjectDirectory })
 			if (files.any ()) {
-				Files(ProjectFileName!!).writeString(files [0], JuceAudioGraph.EmptyAudioGraph)
+				FileSupport(ProjectFileName!!).writeString(files [0], JuceAudioGraph.EmptyAudioGraph)
 				AddNewTrack (files [0])
 			}
 		}
@@ -211,7 +211,7 @@ class AugeneModel
 			val files = Dialogs.ShowSaveFileDialog ("New AudioGraph file",
 				DialogAbstraction.DialogOptions().apply { initialDirectory = ProjectDirectory })
 			if (files.any ()) {
-				Files(ProjectFileName!!).writeString(files [0], JuceAudioGraph.EmptyAudioGraph)
+				FileSupport(ProjectFileName!!).writeString(files [0], JuceAudioGraph.EmptyAudioGraph)
 				AddNewAudioGraph (files [0])
 			}
 		}
@@ -248,7 +248,7 @@ class AugeneModel
 			val files = Dialogs.ShowSaveFileDialog ("New MML file",
 				DialogAbstraction.DialogOptions().apply { initialDirectory = ProjectDirectory })
 			if (files.any ()) {
-				Files(ProjectFileName!!).writeString(files [0], "// New MML file")
+				FileSupport(ProjectFileName!!).writeString(files [0], "// New MML file")
 				AddNewMmlFile (files [0])
 			}
 		}
@@ -284,7 +284,7 @@ class AugeneModel
 		} else {
 			val files = Dialogs.ShowSaveFileDialog ("New AudioGraph file as a master plugin")
 			if (files.any ()) {
-				Files(ProjectFileName!!).writeString(files [0], JuceAudioGraph.EmptyAudioGraph)
+				FileSupport(ProjectFileName!!).writeString(files [0], JuceAudioGraph.EmptyAudioGraph)
 				AddNewMasterPluginFile (files [0])
 			}
 		}
@@ -352,11 +352,11 @@ class AugeneModel
 		if (ProjectFileName == null)
 			throw IllegalStateException ("To compile the project, ProjectFileName must be specified in prior")
 
-		val files = Files(ProjectFileName!!)
+		val fileSupport = FileSupport(ProjectFileName!!)
 		val abspath = { s:String? -> ResolvePathRelativetoProject(s!!) }
 		val compiler = MmlCompiler.create()
 		val mmlFilesAbs = Project.MmlFiles.map { f -> abspath (f) }
-		val mmls = mmlFilesAbs.map { f -> MmlInputSource (f, files.readString(f)) } +
+		val mmls = mmlFilesAbs.map { f -> MmlInputSource (f, fileSupport.readString(f)) } +
 			Project.MmlStrings.map { s -> MmlInputSource ("(no file)", s) }
 		val music = compiler.compile (false, mmls.toTypedArray())
 		val edit = EditElement ()
@@ -394,7 +394,7 @@ class AugeneModel
 			if (ag != null) {
 				val existingPlugins = track.Plugins
 				track.Plugins.clear ()
-				val text = files.readString(abspath (ag.Source))
+				val text = fileSupport.readString(abspath (ag.Source))
 				val graph = JuceAudioGraph.Load(XmlReader.create(text)).asIterable()
 				for (p in ToTracktion(AugenePluginSpecifier.FromAudioGraph(graph)))
 					track.Plugins.add(p)
@@ -412,7 +412,7 @@ class AugeneModel
 			track.Plugins.clear ()
 			val ag = audioGraphs.firstOrNull { a -> a.Id == track.Extension_InstrumentName }
 			if (ag != null) {
-				val text = files.readString(abspath (ag.Source))
+				val text = fileSupport.readString(abspath (ag.Source))
 				val graph = JuceAudioGraph.Load(XmlReader.create(text)).asIterable()
 				for (p in ToTracktion(AugenePluginSpecifier.FromAudioGraph(graph)))
 					track.Plugins.add(p)
@@ -435,7 +435,7 @@ class AugeneModel
 					ReportError ("AugeneAudioGraphNotFound", "AudioGraph does not exist: " + abspath (agFile))
 					continue
 				}
-				val text = files.readString(abspath (agFile))
+				val text = fileSupport.readString(abspath (agFile))
 				val graph = JuceAudioGraph.Load (XmlReader.create (text)).asIterable()
 				for (p in ToTracktion (AugenePluginSpecifier.FromAudioGraph (graph)))
 				dstTrack.Plugins.add (p)
@@ -453,7 +453,7 @@ class AugeneModel
 				ReportError ("AugeneAudioGraphNotFound", "AudioGraph does not exist: " + abspath (agFile))
 				continue
 			}
-			val text = files.readString(abspath (agFile))
+			val text = fileSupport.readString(abspath (agFile))
 			val graph = JuceAudioGraph.Load (XmlReader.create (text)).asIterable()
 			for ( p in ToTracktion (AugenePluginSpecifier.FromAudioGraph(graph)))
 				edit.MasterPlugins.add (p)
@@ -461,7 +461,7 @@ class AugeneModel
 
 		val outfile = OutputEditFileName ?: abspath (File(ProjectDirectory).resolve( File(ProjectFileName!!).nameWithoutExtension + ".tracktionedit").path)
 		val sb = StringBuilder()
-		files.writeString(outfile, sb.toString())
+		fileSupport.writeString(outfile, sb.toString())
 		OutputEditFileName = outfile
 	}
 

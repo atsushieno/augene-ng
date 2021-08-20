@@ -4,7 +4,7 @@ import okio.ExperimentalFileSystem
 import okio.FileSystem
 import okio.Path.Companion.toPath
 
-class Files(private val baseFileName: String) {
+class FileSupport(private val baseFileName: String) {
 
     @OptIn(ExperimentalFileSystem::class)
     fun resolvePathRelativetoProject (pathSpec: String) : String =

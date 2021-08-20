@@ -21,12 +21,16 @@ kotlin {
                 api(compose.runtime)
                 api(compose.foundation)
                 api(compose.material)
+
                 implementation("com.squareup.okio:okio:3.0.0-alpha.9")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2")
+
                 implementation("dev.atsushieno:ktmidi:0.3.8")
                 implementation("dev.atsushieno:mugene:0.2.15")
                 implementation("dev.atsushieno:kotractive:0.1")
                 implementation("dev.atsushieno:midi2tracktionedit:0.1")
+
+                implementation("com.arkivanov.decompose:decompose:0.3.1")
             }
         }
         val commonTest by getting {
@@ -38,6 +42,7 @@ kotlin {
             dependencies {
                 api("androidx.appcompat:appcompat:1.3.1")
                 api("androidx.core:core-ktx:1.6.0")
+                implementation("com.arkivanov.decompose:extensions-compose-jetbrains:0.3.1")
             }
         }
         val androidTest by getting {
@@ -45,16 +50,20 @@ kotlin {
                 implementation("junit:junit:4.13.2")
             }
         }
-        val desktopMain by getting
+        val desktopMain by getting {
+            dependencies {
+                implementation("com.arkivanov.decompose:extensions-compose-jetpack:0.3.1")
+            }
+        }
         val desktopTest by getting
     }
 }
 
 android {
-    compileSdkVersion(30)
+    compileSdkVersion(31)
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     defaultConfig {
         minSdkVersion(24)
-        targetSdkVersion(30)
+        targetSdkVersion(31)
     }
 }

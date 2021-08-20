@@ -13,13 +13,13 @@ dependencies {
 }
 
 android {
-    compileSdkVersion(30)
+    compileSdkVersion(31)
     defaultConfig {
         applicationId = "dev.atsushieno.augene"
         minSdkVersion(24)
-        targetSdkVersion(30)
+        targetSdkVersion(31)
         versionCode = 1
-        versionName = "1.0"
+        versionName = "0.1"
     }
     buildTypes {
         getByName("release") {

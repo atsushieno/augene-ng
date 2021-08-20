@@ -7,10 +7,6 @@ import kotlinx.serialization.json.Json
 import okio.ExperimentalFileSystem
 import okio.FileSystem
 import okio.Path.Companion.toPath
-import java.nio.file.Files
-import java.nio.file.Path
-import kotlin.io.path.absolute
-import kotlin.io.path.name
 
 annotation class XmlAttribute()
 annotation class XmlIgnore()
@@ -19,7 +15,7 @@ annotation class XmlArrayItem(val itemName: String)
 class AugeneProject {
 	companion object {
 		fun Load(filename: String): AugeneProject {
-			val jsonString = Files(filename).readString(filename)
+			val jsonString = FileSupport(filename).readString(filename)
 			return Json.decodeFromString(jsonString)
 		}
 
@@ -31,7 +27,7 @@ class AugeneProject {
 					track.AudioGraph = (filename.toPath() / track.AudioGraph!!.toPath()).toString()
 
 			val json = Json.encodeToString(project)
-			Files(filename).writeString(filename, json)
+			FileSupport(filename).writeString(filename, json)
 		}
 	}
 
