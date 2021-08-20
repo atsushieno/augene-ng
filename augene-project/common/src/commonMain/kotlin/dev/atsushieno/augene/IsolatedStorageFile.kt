@@ -25,8 +25,8 @@ class IsolatedStorageFile private constructor(private val basePath: File) {
         basePath.resolve(file).exists()
 
     fun readFileContentString(file: String) =
-        FileInputStream(basePath.resolve(file)).use { InputStreamReader(it).readText() }
+        FileInputStream(basePath.resolve(file)).use { stream -> InputStreamReader(stream).use { it.readText() } }
 
     fun writeFileContentString(file: String, content: String) =
-        FileOutputStream(basePath.resolve(file)).use { OutputStreamWriter(it).write(content) }
+        FileOutputStream(basePath.resolve(file)).use { stream -> OutputStreamWriter(stream).use { it.write(content) } }
 }

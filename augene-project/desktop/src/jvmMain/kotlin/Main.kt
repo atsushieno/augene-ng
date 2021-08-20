@@ -6,5 +6,6 @@ import javax.swing.JFrame
 
 fun main() = singleWindowApplication {
     model.Dialogs = SwingDialogs(this.window)
+    model.LoadConfiguration()
     App()
 }
