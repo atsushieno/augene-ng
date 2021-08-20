@@ -11,6 +11,8 @@ import dev.atsushieno.ktmidi.mergeTracks
 import kotlin.math.pow
 
 private val SMF_META_EVENT = 0xFF
+internal fun Byte.toUnsigned() : Int = if (this < 0) this + 0x100 else this.toInt()
+
 
 class MidiToTracktionEditConverter(private var context: MidiImportContext) {
     // state
@@ -171,7 +173,7 @@ println("GLOBAL MARKERS: ${globalMarkers.size}")
             }
 
             val tTime = toTracktionBarSpec(currentTotalTime) - currentClipStart
-            var eventType = msg.event.eventType.toInt()
+            var eventType = msg.event.eventType.toUnsigned()
             if (eventType == MidiChannelStatus.NOTE_ON && msg.event.lsb.toInt() == 0)
                 eventType = MidiChannelStatus.NOTE_OFF
 
