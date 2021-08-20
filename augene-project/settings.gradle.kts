@@ -9,7 +9,6 @@ pluginManagement {
 }
 rootProject.name = "augene-project"
 
-include(":midi2tracktionedit")
 include(":android")
 include(":desktop")
 include(":common")

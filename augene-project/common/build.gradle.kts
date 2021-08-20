@@ -23,10 +23,10 @@ kotlin {
                 api(compose.material)
                 implementation("com.squareup.okio:okio:3.0.0-alpha.9")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2")
-                implementation(project(":midi2tracktionedit"))
                 implementation("dev.atsushieno:ktmidi:0.3.8")
                 implementation("dev.atsushieno:mugene:0.2.15")
                 implementation("dev.atsushieno:kotractive:0.1")
+                implementation("dev.atsushieno:midi2tracktionedit:0.1")
             }
         }
         val commonTest by getting {
