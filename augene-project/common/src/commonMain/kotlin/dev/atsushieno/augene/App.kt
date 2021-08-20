@@ -9,6 +9,7 @@ import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Text
 import androidx.compose.material.Button
+import androidx.compose.material.Checkbox
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Tab
@@ -48,10 +49,10 @@ fun App() {
             // FAB
             var fabActionMenuState by remember { mutableStateOf(false) }
             if (fabActionMenuState) {
-                Button(onClick = { model.ProcessOpenProject() }) { Text("Load") }
-                Button(onClick = { model.ProcessSaveProject() }) { Text("Save") }
-                Button(onClick = { model.ProcessCompile() }) { Text("Compile") }
-                Button(onClick = { model.ProcessPlay() }) { Text("Play") }
+                Button(onClick = { model.processOpenProject() }) { Text("Load") }
+                Button(onClick = { model.processSaveProject() }) { Text("Save") }
+                Button(onClick = { model.processCompile() }) { Text("Compile") }
+                Button(onClick = { model.processPlay() }) { Text("Play") }
             }
             FloatingActionButton(onClick = { fabActionMenuState = !fabActionMenuState }) {
                 Text(if (fabActionMenuState) "-" else "+")
@@ -93,13 +94,13 @@ fun TrackMappingList() {
 @Composable
 fun AudioGraphList() {
     Row {
-        Button(onClick = { model.ProcessNewAudioGraph(false) }) {
+        Button(onClick = { model.processNewAudioGraph(false) }) {
             Text("New AudioGraph")
         }
         val cells = GridCells.Adaptive(0.dp)
         LazyVerticalGrid(cells) {
             val gridScope = this
-            model.Project.audioGraphs.forEach {
+            model.project.audioGraphs.forEach {
                 gridScope.item {
                     Text(it.id ?: "")
                 }
@@ -128,7 +129,7 @@ fun MasterPluginList() {
         val cells = GridCells.Adaptive(0.dp)
         LazyVerticalGrid(cells) {
             val gridScope = this
-            model.Project.masterPlugins.forEach { id ->
+            model.project.masterPlugins.forEach { id ->
                 gridScope.item {
                     Text(id)
                 }
@@ -146,8 +147,8 @@ fun MasterPluginList() {
 @Composable
 fun AppSettings() {
     val cells = GridCells.Adaptive(2.dp)
-    var augenePlayerPathState by remember { mutableStateOf(model.ConfigAugenePlayerPath) }
-    var audioPluginHostPathState by remember { mutableStateOf(model.ConfigAudioPluginHostPath) }
+    var augenePlayerPathState by remember { mutableStateOf(model.configAugenePlayerPath) }
+    var audioPluginHostPathState by remember { mutableStateOf(model.configAudioPluginHostPath) }
 
     Column {
         Row {
@@ -157,7 +158,7 @@ fun AppSettings() {
                 value = TextFieldValue(augenePlayerPathState ?: "")
             )
             Button(onClick = {
-                model.Dialogs.ShowOpenFileDialog("Select AugenePlayer executable") {
+                model.dialogs.ShowOpenFileDialog("Select AugenePlayer executable") {
                     if (it.any())
                         augenePlayerPathState = it.first()
                 }
@@ -172,7 +173,7 @@ fun AppSettings() {
                 value = TextFieldValue(audioPluginHostPathState ?: "")
             )
             Button(onClick = {
-                model.Dialogs.ShowOpenFileDialog("Select AugenePlayer executable") {
+                model.dialogs.ShowOpenFileDialog("Select AugenePlayer executable") {
                     if (it.any())
                         audioPluginHostPathState = it.first()
                 }
@@ -182,12 +183,28 @@ fun AppSettings() {
         }
         Row {
             Button(onClick = {
-                model.ConfigAugenePlayerPath = augenePlayerPathState
-                model.ConfigAudioPluginHostPath = audioPluginHostPathState
-                model.SaveConfiguration()
+                model.configAugenePlayerPath = augenePlayerPathState
+                model.configAudioPluginHostPath = audioPluginHostPathState
+                model.saveConfiguration()
             }) {
                 Text("Apply")
             }
+        }
+        var autoReloadState by remember { mutableStateOf(false) }
+        Row {
+            Checkbox(checked = autoReloadState, onCheckedChange = {
+                model.setAutoReloadProject(it)
+                autoReloadState = it
+            })
+            Text("Auto reload project")
+        }
+        var autoRecompileState by remember { mutableStateOf(false) }
+        Row {
+            Checkbox(checked = autoRecompileState, onCheckedChange = {
+                model.setAutoRecompileProject(it)
+                autoRecompileState = it
+            })
+            Text("Auto compile project")
         }
     }
 }

@@ -45,7 +45,7 @@ class AugeneProject {
 
 	var mmlStrings: MutableList<String> = mutableListOf()
 
-	fun checkIncludeValidity(
+	private fun checkIncludeValidity(
 		includedAncestors: MutableList<String>,
 		resolveAbsPath: (String) -> String,
 		errors: MutableList<String>
@@ -191,6 +191,7 @@ class JuceAudioGraph {
 					}
 					uid = conn.attribute ("dstFilter")?.value
 				}
+				yield(ret)
 			}
 		}
 

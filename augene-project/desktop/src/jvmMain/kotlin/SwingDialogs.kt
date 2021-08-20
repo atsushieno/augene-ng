@@ -1,10 +1,8 @@
 import dev.atsushieno.augene.DialogAbstraction
 import dev.atsushieno.augene.model
 import java.io.File
-import javax.swing.JDialog
 import javax.swing.JFileChooser
 import javax.swing.JFrame
-import javax.swing.JLabel
 import javax.swing.JOptionPane
 
 class SwingDialogs(private val frame: JFrame) : DialogAbstraction() {
@@ -22,8 +20,8 @@ class SwingDialogs(private val frame: JFrame) : DialogAbstraction() {
         dialog.dialogType = dialogType
         dialog.isMultiSelectionEnabled = options.MultipleFiles
         dialog.dialogTitle = dialogTitle
-        if (model.ProjectFileName != null)
-            dialog.currentDirectory = File(model.ProjectDirectory)
+        if (model.projectFileName != null)
+            dialog.currentDirectory = File(model.projectDirectory)
         if (dialog.showDialog(JFrame(), "OK") == JFileChooser.APPROVE_OPTION)
             if (dialog.isMultiSelectionEnabled)
                 onSelectionConfirmed(dialog.selectedFiles.map { it.absolutePath }.toTypedArray())
