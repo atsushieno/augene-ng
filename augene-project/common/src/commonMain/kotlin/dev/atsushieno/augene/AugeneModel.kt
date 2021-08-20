@@ -389,7 +389,7 @@ class AugeneModel
 				(a.bankMsb == msb || a.bankMsb == null && msb == "0") &&
 				(a.bankLsb == lsb || a.bankLsb == null && lsb == "0") }
 			if (ag != null) {
-				val existingPlugins = track.Plugins
+				val existingPlugins = track.Plugins.toTypedArray()
 				track.Plugins.clear ()
 				val text = fileSupport.readString(abspath (ag.source))
 				val graph = JuceAudioGraph.load(XmlReader.create(text)).asIterable()
@@ -405,7 +405,7 @@ class AugeneModel
 		for (track in edit.Tracks.filterIsInstance<TrackElement> ()) {
 			if (track.Extension_InstrumentName == null)
 				continue
-			val existingPlugins = track.Plugins
+			val existingPlugins = track.Plugins.toTypedArray()
 			track.Plugins.clear ()
 			val ag = audioGraphs.firstOrNull { a -> a.id == track.Extension_InstrumentName }
 			if (ag != null) {
@@ -422,7 +422,7 @@ class AugeneModel
 		// Step 3: assign audio graphs by TRACKNAME (if named). It will overwrite all above.
 		for (track in project.tracks) {
 			val dstTrack = dstTracks.firstOrNull { t -> t.Id == track.id } ?: continue
-			val existingPlugins = dstTrack.Plugins
+			val existingPlugins = dstTrack.Plugins.toTypedArray()
 			dstTrack.Plugins.clear ()
 			if (track.audioGraph != null) {
 				// track's AudioGraph may be either a ID reference or a filename.
