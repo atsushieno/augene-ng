@@ -21,7 +21,7 @@ class SwingDialogs(private val frame: JFrame) : DialogAbstraction() {
         dialog.isMultiSelectionEnabled = options.MultipleFiles
         dialog.dialogTitle = dialogTitle
         if (model.projectFileName != null)
-            dialog.currentDirectory = File(model.projectDirectory)
+            dialog.currentDirectory = File(model.projectDirectory!!)
         if (dialog.showDialog(JFrame(), "OK") == JFileChooser.APPROVE_OPTION)
             if (dialog.isMultiSelectionEnabled)
                 onSelectionConfirmed(dialog.selectedFiles.map { it.absolutePath }.toTypedArray())

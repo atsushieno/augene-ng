@@ -52,8 +52,8 @@ class AugeneModel
 
 	lateinit var dialogs: DialogAbstraction
 
-	val projectDirectory : String
-		get() = File(projectFileName!!).parent
+	val projectDirectory : String?
+		get() = if (projectFileName == null) null else File(projectFileName!!).parent
 
 	fun loadConfiguration () {
 		val fs = IsolatedStorageFile.getUserStoreForAssembly("augene-ng")
@@ -456,7 +456,7 @@ class AugeneModel
 				edit.MasterPlugins.add (p)
 		}
 
-		val outfile = outputEditFileName ?: abspath (File(projectDirectory).resolve( File(projectFileName!!).nameWithoutExtension + ".tracktionedit").path)
+		val outfile = outputEditFileName ?: abspath (File(projectDirectory!!).resolve( File(projectFileName!!).nameWithoutExtension + ".tracktionedit").path)
 		val sb = StringBuilder()
 		fileSupport.writeString(outfile, sb.toString())
 		outputEditFileName = outfile

@@ -1,15 +1,20 @@
 package dev.atsushieno.augene
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Text
 import androidx.compose.material.Button
+import androidx.compose.material.Card
 import androidx.compose.material.Checkbox
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Tab
@@ -17,6 +22,8 @@ import androidx.compose.material.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 
 val model
     get() = AugeneModel.instance
@@ -49,10 +56,22 @@ fun App() {
             // FAB
             var fabActionMenuState by remember { mutableStateOf(false) }
             if (fabActionMenuState) {
-                Button(onClick = { model.processOpenProject() }) { Text("Load") }
-                Button(onClick = { model.processSaveProject() }) { Text("Save") }
-                Button(onClick = { model.processCompile() }) { Text("Compile") }
-                Button(onClick = { model.processPlay() }) { Text("Play") }
+                Button(onClick = {
+                    fabActionMenuState = false
+                    model.processOpenProject()
+                }) { Text("Load") }
+                Button(onClick = {
+                    fabActionMenuState = false
+                    model.processSaveProject()
+                }) { Text("Save") }
+                Button(onClick = {
+                    fabActionMenuState = false
+                    model.processCompile()
+                }) { Text("Compile") }
+                Button(onClick = {
+                    fabActionMenuState = false
+                    model.processPlay()
+                }) { Text("Play") }
             }
             FloatingActionButton(onClick = { fabActionMenuState = !fabActionMenuState }) {
                 Text(if (fabActionMenuState) "-" else "+")
@@ -78,10 +97,33 @@ fun SongAndMappings() {
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MmlList() {
-    Button(onClick = {}) {
-        Text("New MML")
+    Column {
+        Row {
+            Button(onClick = { model.processNewMmlFile(false) }) {
+                Text("New MML File")
+            }
+        }
+        model.project.mmlFiles.forEach {
+            Row {
+                Text(it)
+                Button(onClick = { model.openFileOrContainingFolder(it) }) { Text("Open") }
+                Button(onClick = { model.processUnregisterMmlFiles(listOf(it)) }) { Text("Delete") }
+            }
+        }
+        var mmlUpdateState by remember { mutableStateOf(0) } // hack
+        model.project.mmlStrings.forEachIndexed { index, text ->
+            Row {
+                TextField(text, modifier = Modifier.weight(1.0f, true), onValueChange = {
+                    if (mmlUpdateState < Int.MAX_VALUE)
+                        model.project.mmlStrings[index] = text
+                    mmlUpdateState++
+                })
+                Button(onClick = { model.processUnregisterMmlFiles(listOf(text)) }) { "DEL" }
+            }
+        }
     }
 }
 
@@ -93,25 +135,16 @@ fun TrackMappingList() {
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AudioGraphList() {
-    Row {
+    Column {
         Button(onClick = { model.processNewAudioGraph(false) }) {
             Text("New AudioGraph")
         }
-        val cells = GridCells.Adaptive(0.dp)
-        LazyVerticalGrid(cells) {
-            val gridScope = this
-            model.project.audioGraphs.forEach {
-                gridScope.item {
-                    Text(it.id ?: "")
-                }
-                gridScope.item {
-                    Text(it.source ?: "")
-                }
-                gridScope.item {
-                    Button(onClick = {}) {
-                        Text("DEL")
-                    }
-                }
+        model.project.audioGraphs.forEach {
+            Row {
+                Card { Text(it.id ?: "", fontWeight = FontWeight.Bold, modifier = Modifier.padding(10.dp, 0.dp)) }
+                Text(it.source ?: "")
+                Button(onClick = { if (it.source?.isNotEmpty() == true) model.processLaunchAudioPluginHost(it.source!!) }) { Text("Open") }
+                Button(onClick = { model.processDeleteAudioGraphs(listOf(it.id!!)) }) { Text("Delete") }
             }
         }
     }
@@ -120,24 +153,15 @@ fun AudioGraphList() {
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MasterPluginList() {
-
-    Row {
-
+    Column {
         Button(onClick = {}) {
             Text("New AudioGraph")
         }
-        val cells = GridCells.Adaptive(0.dp)
-        LazyVerticalGrid(cells) {
-            val gridScope = this
-            model.project.masterPlugins.forEach { id ->
-                gridScope.item {
-                    Text(id)
-                }
-                gridScope.item {
-                    Button(onClick = {}) {
-                        Text("DEL")
-                    }
-                }
+        model.project.masterPlugins.forEach {
+            Row {
+                Text(it)
+                Button(onClick = { model.processLaunchAudioPluginHost(it) }) { Text("Open") }
+                Button(onClick = { model.processUnregisterMasterPluginFiles(listOf(it)) }) { Text("Delete") }
             }
         }
     }
