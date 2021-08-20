@@ -39,6 +39,7 @@ abstract class XmlReader : IXmlLineInfo {
 
     abstract fun read() : Boolean
 
+    abstract val eof : Boolean
     abstract val depth : Int
     abstract val localName: String
     abstract val namespaceUri: String
@@ -90,6 +91,7 @@ abstract class XmlReader : IXmlLineInfo {
 				content += value
 			read()
 		}
+		readEndElement()
         return content
     }
 
@@ -265,6 +267,9 @@ class XmlTextReader(text: String, baseUri: String? = null) : XmlReader() {
 
 	private val currentNode : XmlNodeState
 		get() = if (currentAttribute >= 0) attributes[currentAttribute] else nodes.lastOrNull() ?: throw XmlException("This XmlReader is not read yet.")
+
+	override val eof
+		get() = !reader.source.canRead
 
 	override val depth
 		get() = nodes.size - 1 + if (currentAttribute >= 0) 1 else 0
