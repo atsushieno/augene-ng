@@ -458,6 +458,7 @@ class AugeneModel
 
 		val outfile = outputEditFileName ?: abspath (File(projectDirectory!!).resolve( File(projectFileName!!).nameWithoutExtension + ".tracktionedit").path)
 		val sb = StringBuilder()
+		EditModelWriter().write(sb, edit)
 		fileSupport.writeString(outfile, sb.toString())
 		outputEditFileName = outfile
 	}

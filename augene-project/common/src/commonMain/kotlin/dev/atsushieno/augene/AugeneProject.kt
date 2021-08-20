@@ -33,7 +33,7 @@ class AugeneProject {
 		}
 	}
 
-	var includes: MutableList<AugeneInclude>? = null
+	var includes: MutableList<AugeneInclude> = mutableListOf()
 
 	var audioGraphs: MutableList<AugeneAudioGraph> = mutableListOf()
 
@@ -50,7 +50,7 @@ class AugeneProject {
 		resolveAbsPath: (String) -> String,
 		errors: MutableList<String>
 	) {
-		for (inc in this.includes!!) {
+		for (inc in this.includes) {
 			if (inc.source == null)
 				continue
 			val absPath = resolveAbsPath(inc.source!!)
@@ -79,7 +79,7 @@ class AugeneProject {
 					id = item.id
 					source = resolveAbsPath(item.source!!)
 				})
-			for (include in project.includes!!) {
+			for (include in project.includes) {
 				val src: String = include.source ?: continue
 				val absPath = resolveAbsPath(src)
 				val resolveNestedAbsPath = { s: String -> (FileSystem.SYSTEM.canonicalize(absPath.toPath()).parent!! / s).toString() }
