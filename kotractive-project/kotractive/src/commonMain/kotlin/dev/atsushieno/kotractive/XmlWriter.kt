@@ -260,9 +260,10 @@ class XmlTextWriter(private val output: StringBuilder) : XmlWriter() {
     }
 
     override fun writeRaw(text: String) {
-        checkState()
-        if (state != WriteState.Attribute)
-            state = WriteState.Content
+        if (openAttribute)
+            checkState()
+        else
+            checkAndCloseStartTagIfOpen()
 
         output.append(text)
 

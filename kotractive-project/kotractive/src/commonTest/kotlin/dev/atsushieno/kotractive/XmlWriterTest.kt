@@ -26,5 +26,18 @@ class XmlWriterTest {
         xw.writeEndDocument()
         assertEquals("<?xml ?><!---&#x2D;TEST-&#x2D;--><root a='A' b='B' xmlns:c='urn:foo' c:c='C'><child><![CDATA[TEST]]&gt;]]><descendant d='D' /></child></root>", sb.toString(), "XML")
     }
+
+    @Test
+    fun write2() {
+        val sb = StringBuilder()
+        val xw = XmlWriter.create(sb)
+        xw.quoteChar = '\''
+        xw.writeStartElement("root")
+        xw.writeElementString("child1", "v1")
+        xw.writeElementString("child2", "v2")
+        xw.writeElementString("child3", "v3")
+        xw.close()
+        assertEquals("<root><child1>v1</child1><child2>v2</child2><child3>v3</child3></root>", sb.toString(), "xml")
+    }
 }
 
