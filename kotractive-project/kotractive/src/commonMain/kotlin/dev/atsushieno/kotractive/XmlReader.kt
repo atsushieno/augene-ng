@@ -265,7 +265,7 @@ class XmlTextReader(text: String, baseUri: String? = null) : XmlReader() {
 		get() = if (currentAttribute >= 0) attributes[currentAttribute] else nodes.lastOrNull() ?: throw XmlException("This XmlReader is not read yet.")
 
 	override val depth
-		get() = if (nodeType == XmlNodeType.Document) 0 else nodes.size + if (currentAttribute >= 0) 1 else 0
+		get() = nodes.size - 1 + if (currentAttribute >= 0) 1 else 0
 
 	override fun moveToElement() {
 		currentAttribute = -1

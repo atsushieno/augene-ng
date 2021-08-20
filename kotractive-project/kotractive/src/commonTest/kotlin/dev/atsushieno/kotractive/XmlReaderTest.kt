@@ -21,14 +21,14 @@ class XmlReaderTest {
         val xr = XmlReader.create("<root/><!--comment-->")
         assertNode("initial", xr, 0, XmlNodeType.Document, "", "", "", "")
         assertTrue(xr.read(), "read1")
-        assertNode("first", xr, 1, XmlNodeType.Element, "root", "", "", "")
+        assertNode("first", xr, 0, XmlNodeType.Element, "root", "", "", "")
         assertTrue(xr.isEmptyElement, "first isEmptyElement")
         assertEquals(0, xr.attributeCount, "first attributeCount")
         assertFalse(xr.moveToFirstAttribute(), "first moveToFirstAttribute")
         assertFalse(xr.moveToNextAttribute(), "first moveToNextAttribute")
 
         assertTrue(xr.read(), "read2")
-        assertNode("second", xr, 1, XmlNodeType.Comment, "", "", "", "comment")
+        assertNode("second", xr, 0, XmlNodeType.Comment, "", "", "", "comment")
         assertFalse(xr.read(), "third read")
     }
 
@@ -36,21 +36,21 @@ class XmlReaderTest {
     fun read2() {
         val xr = XmlReader.create("<root a='1' b=\"2\" c='0\"1'></root>")
         assertTrue(xr.read(), "read1")
-        assertNode("first", xr, 1, XmlNodeType.Element, "root", "", "", "")
+        assertNode("first", xr, 0, XmlNodeType.Element, "root", "", "", "")
         assertFalse(xr.isEmptyElement, "first isEmptyElement")
         assertEquals(3, xr.attributeCount, "first attributeCount")
 
         assertTrue(xr.moveToFirstAttribute(), "first moveToFirstAttribute")
-        assertNode("first attr1", xr, 2, XmlNodeType.Attribute, "a", "", "", "1")
+        assertNode("first attr1", xr, 1, XmlNodeType.Attribute, "a", "", "", "1")
 
         assertTrue(xr.moveToNextAttribute(), "first moveToNextAttribute 1")
-        assertNode("first attr2", xr, 2, XmlNodeType.Attribute, "b", "", "", "2")
+        assertNode("first attr2", xr, 1, XmlNodeType.Attribute, "b", "", "", "2")
 
         assertTrue(xr.moveToNextAttribute(), "first moveToNextAttribute 2")
-        assertNode("first attr3", xr, 2, XmlNodeType.Attribute, "c", "", "", "0\"1")
+        assertNode("first attr3", xr, 1, XmlNodeType.Attribute, "c", "", "", "0\"1")
 
         assertTrue(xr.read(), "second read")
-        assertNode("second", xr, 1, XmlNodeType.EndElement, "root", "", "", "")
+        assertNode("second", xr, 0, XmlNodeType.EndElement, "root", "", "", "")
 
         assertFalse(xr.read(), "second read")
     }
@@ -59,42 +59,42 @@ class XmlReaderTest {
     fun read3() {
         val xr = XmlReader.create("<root><child /><child2></child2><child3>text&amp;&lt;&gt;&quot;&apos;</child3><![CDATA[cdata]]></root>")
         assertTrue(xr.read(), "1st read")
-        assertNode("1st", xr, 1, XmlNodeType.Element, "root", "", "", "")
+        assertNode("1st", xr, 0, XmlNodeType.Element, "root", "", "", "")
         assertFalse(xr.isEmptyElement, "1st isEmptyElement")
         assertEquals(0, xr.attributeCount, "1st attributeCount")
 
         assertTrue(xr.read(), "2nd read")
-        assertNode("2nd", xr, 2, XmlNodeType.Element, "child", "", "", "")
+        assertNode("2nd", xr, 1, XmlNodeType.Element, "child", "", "", "")
         assertTrue(xr.isEmptyElement, "2nd isEmptyElement")
 
         assertTrue(xr.read(), "3rd read")
-        assertNode("3rd", xr, 2, XmlNodeType.Element, "child2", "", "", "")
+        assertNode("3rd", xr, 1, XmlNodeType.Element, "child2", "", "", "")
         assertFalse(xr.isEmptyElement, "3rd isEmptyElement")
 
         assertTrue(xr.read(), "4th read")
-        assertNode("4th", xr, 2, XmlNodeType.EndElement, "child2", "", "", "")
+        assertNode("4th", xr, 1, XmlNodeType.EndElement, "child2", "", "", "")
         assertFalse(xr.isEmptyElement, "4th isEmptyElement")
 
         assertTrue(xr.read(), "5th read")
-        assertNode("5th", xr, 2, XmlNodeType.Element, "child3", "", "", "")
+        assertNode("5th", xr, 1, XmlNodeType.Element, "child3", "", "", "")
         assertFalse(xr.isEmptyElement, "5th isEmptyElement")
 
         assertTrue(xr.read(), "6th read")
-        assertNode("6th", xr, 3, XmlNodeType.Text, "", "", "", "text&<>\"'")
+        assertNode("6th", xr, 2, XmlNodeType.Text, "", "", "", "text&<>\"'")
         assertFalse(xr.isEmptyElement, "6th isEmptyElement")
         assertFalse(xr.isCDATA, "6th isCDATA")
 
         assertTrue(xr.read(), "7th read")
-        assertNode("7th", xr, 2, XmlNodeType.EndElement, "child3", "", "", "")
+        assertNode("7th", xr, 1, XmlNodeType.EndElement, "child3", "", "", "")
         assertFalse(xr.isEmptyElement, "7th isEmptyElement")
 
         assertTrue(xr.read(), "8th read")
-        assertNode("8th", xr, 2, XmlNodeType.Text, "", "", "", "cdata")
+        assertNode("8th", xr, 1, XmlNodeType.Text, "", "", "", "cdata")
         assertFalse(xr.isEmptyElement, "8th isEmptyElement")
         assertTrue(xr.isCDATA, "8th isCDATA")
 
         assertTrue(xr.read(), "9th read")
-        assertNode("9th", xr, 1, XmlNodeType.EndElement, "root", "", "", "")
+        assertNode("9th", xr, 0, XmlNodeType.EndElement, "root", "", "", "")
         assertFalse(xr.isEmptyElement, "9th isEmptyElement")
 
         assertFalse(xr.read(), "second read")
@@ -114,51 +114,51 @@ class XmlReaderTest {
 """
         val xr = XmlReader.create(xml)
         assertTrue(xr.read(), "1st read")
-        assertNode("1st", xr, 1, XmlNodeType.Element, "root", "urn:foo", "", "")
+        assertNode("1st", xr, 0, XmlNodeType.Element, "root", "urn:foo", "", "")
         assertTrue(xr.moveToFirstAttribute(), "1st move1")
-        assertNode("1st att1", xr, 2, XmlNodeType.Attribute, "xmlns", "http://www.w3.org/2000/xmlns/", "", "urn:foo")
+        assertNode("1st att1", xr, 1, XmlNodeType.Attribute, "xmlns", "http://www.w3.org/2000/xmlns/", "", "urn:foo")
         assertTrue(xr.moveToNextAttribute(), "1st move2")
-        assertNode("1st att2", xr, 2, XmlNodeType.Attribute, "x", "http://www.w3.org/2000/xmlns/", "xmlns", "urn:x")
+        assertNode("1st att2", xr, 1, XmlNodeType.Attribute, "x", "http://www.w3.org/2000/xmlns/", "xmlns", "urn:x")
         assertTrue(xr.moveToNextAttribute(), "1st move3")
-        assertNode("1st att3", xr, 2, XmlNodeType.Attribute, "a", "urn:x", "x", "A")
+        assertNode("1st att3", xr, 1, XmlNodeType.Attribute, "a", "urn:x", "x", "A")
         assertFalse(xr.moveToNextAttribute(), "1st move4")
 
         assertTrue(xr.read(), "2nd read")
-        assertNode("2nd", xr, 2, XmlNodeType.Element, "child", "urn:bar", "", "")
+        assertNode("2nd", xr, 1, XmlNodeType.Element, "child", "urn:bar", "", "")
         assertTrue(xr.moveToFirstAttribute(), "2nd move1")
-        assertNode("2nd att1", xr, 3, XmlNodeType.Attribute, "xmlns", "http://www.w3.org/2000/xmlns/", "", "urn:bar")
+        assertNode("2nd att1", xr, 2, XmlNodeType.Attribute, "xmlns", "http://www.w3.org/2000/xmlns/", "", "urn:bar")
         assertTrue(xr.moveToNextAttribute(), "2nd move2")
-        assertNode("2nd att2", xr, 3, XmlNodeType.Attribute, "y", "http://www.w3.org/2000/xmlns/", "xmlns", "urn:y")
+        assertNode("2nd att2", xr, 2, XmlNodeType.Attribute, "y", "http://www.w3.org/2000/xmlns/", "xmlns", "urn:y")
         assertTrue(xr.moveToNextAttribute(), "2nd move3")
-        assertNode("2nd att3", xr, 3, XmlNodeType.Attribute, "b", "urn:x", "x", "B")
+        assertNode("2nd att3", xr, 2, XmlNodeType.Attribute, "b", "urn:x", "x", "B")
         assertTrue(xr.moveToNextAttribute(), "2nd move4")
-        assertNode("2nd att4", xr, 3, XmlNodeType.Attribute, "c", "urn:y", "y", "C")
+        assertNode("2nd att4", xr, 2, XmlNodeType.Attribute, "c", "urn:y", "y", "C")
         assertFalse(xr.moveToNextAttribute(), "2nd move5")
 
         assertTrue(xr.read(), "3rd read")
-        assertNode("3rd", xr, 2, XmlNodeType.Element, "child2", "urn:foo", "", "")
+        assertNode("3rd", xr, 1, XmlNodeType.Element, "child2", "urn:foo", "", "")
         assertTrue(xr.moveToNextAttribute(), "3rd move1")
-        assertNode("3rd att1", xr, 3, XmlNodeType.Attribute, "y", "http://www.w3.org/2000/xmlns/", "xmlns", "urn:y2")
+        assertNode("3rd att1", xr, 2, XmlNodeType.Attribute, "y", "http://www.w3.org/2000/xmlns/", "xmlns", "urn:y2")
         assertTrue(xr.moveToNextAttribute(), "3rd move2")
-        assertNode("3rd att2", xr, 3, XmlNodeType.Attribute, "d", "urn:y2", "y", "D")
+        assertNode("3rd att2", xr, 2, XmlNodeType.Attribute, "d", "urn:y2", "y", "D")
         assertFalse(xr.moveToNextAttribute(), "3rd move3")
 
         assertTrue(xr.read(), "4th read")
-        assertNode("4th", xr, 3, XmlNodeType.Element, "child3", "urn:baz", "", "")
+        assertNode("4th", xr, 2, XmlNodeType.Element, "child3", "urn:baz", "", "")
         assertTrue(xr.moveToFirstAttribute(), "4th move1")
-        assertNode("4th att1", xr, 4, XmlNodeType.Attribute, "xmlns", "http://www.w3.org/2000/xmlns/", "", "urn:baz")
+        assertNode("4th att1", xr, 3, XmlNodeType.Attribute, "xmlns", "http://www.w3.org/2000/xmlns/", "", "urn:baz")
         assertTrue(xr.moveToNextAttribute(), "4th move2")
-        assertNode("4th att2", xr, 4, XmlNodeType.Attribute, "e", "urn:y2", "y", "E")
+        assertNode("4th att2", xr, 3, XmlNodeType.Attribute, "e", "urn:y2", "y", "E")
         assertFalse(xr.moveToNextAttribute(), "4th move3")
 
         assertTrue(xr.read(), "5th read")
-        assertNode("5th", xr, 3, XmlNodeType.Element, "child4", "urn:y3", "y", "")
+        assertNode("5th", xr, 2, XmlNodeType.Element, "child4", "urn:y3", "y", "")
         assertTrue(xr.moveToFirstAttribute(), "5th move1")
-        assertNode("5th att1", xr, 4, XmlNodeType.Attribute, "y", "http://www.w3.org/2000/xmlns/", "xmlns", "urn:y3")
+        assertNode("5th att1", xr, 3, XmlNodeType.Attribute, "y", "http://www.w3.org/2000/xmlns/", "xmlns", "urn:y3")
         assertFalse(xr.moveToNextAttribute(), "5th move2")
 
         assertTrue(xr.read(), "6th read")
-        assertNode("6th", xr, 3, XmlNodeType.Element, "child5", "urn:y2", "y", "")
+        assertNode("6th", xr, 2, XmlNodeType.Element, "child5", "urn:y2", "y", "")
         assertFalse(xr.moveToFirstAttribute(), "6th move1")
     }
 
@@ -168,10 +168,10 @@ class XmlReaderTest {
         val xr = XmlTextReader(xml)
         xr.namespaces = false
         assertTrue(xr.read(), "1st read")
-        assertNode("1st", xr, 1, XmlNodeType.Element, ":::root:::", "", "", "")
+        assertNode("1st", xr, 0, XmlNodeType.Element, ":::root:::", "", "", "")
         assertTrue(xr.moveToFirstAttribute(), "1st move1")
-        assertNode("1st att1", xr, 2, XmlNodeType.Attribute, ":a:t:t:r", "", "", "v")
+        assertNode("1st att1", xr, 1, XmlNodeType.Attribute, ":a:t:t:r", "", "", "v")
         assertTrue(xr.read(), "2nd read")
-        assertNode("2nd", xr, 1, XmlNodeType.EndElement, ":::root:::", "", "", "")
+        assertNode("2nd", xr, 0, XmlNodeType.EndElement, ":::root:::", "", "", "")
     }
 }
