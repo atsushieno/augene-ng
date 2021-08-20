@@ -85,9 +85,11 @@ abstract class XmlReader : IXmlLineInfo {
         var content = "" // somewhat inefficient but there is usually one single text node.
         val startDepth = depth
         readStartElement()
-        while(startDepth < depth)
-            if (nodeType == XmlNodeType.Text)
-                content += value
+        while(startDepth < depth) {
+			if (nodeType == XmlNodeType.Text)
+				content += value
+			read()
+		}
         return content
     }
 

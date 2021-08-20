@@ -174,4 +174,14 @@ class XmlReaderTest {
         assertTrue(xr.read(), "2nd read")
         assertNode("2nd", xr, 0, XmlNodeType.EndElement, ":::root:::", "", "", "")
     }
+
+    @Test
+    fun readElementContentAsString() {
+        val xml = "<root>test<child1>test2</child1>test3</root>"
+        val xr = XmlTextReader(xml)
+        xr.moveToContent()
+        assertNode("1st", xr, 0, XmlNodeType.Element, "root", "", "", "")
+        val text = xr.readElementContentAsString()
+        assertEquals("testtest2test3", text, "text")
+    }
 }
