@@ -10,26 +10,11 @@ import okio.ExperimentalFileSystem
 import okio.Path.Companion.toPath
 import java.io.File
 
-abstract class DialogAbstraction
-{
-	class DialogOptions
-	{
-		var initialDirectory : String? = null
-		var MultipleFiles : Boolean = false
-	}
-	
-	abstract fun ShowWarning (message: String)
-
-	abstract fun ShowOpenFileDialog (dialogTitle: String) : Array<String>
-	abstract fun ShowOpenFileDialog (dialogTitle: String, options:  DialogOptions) : Array<String>
-
-	abstract fun ShowSaveFileDialog (dialogTitle: String) : Array<String>
-	abstract fun ShowSaveFileDialog (dialogTitle: String, options: DialogOptions) : Array<String>
-}
-
 class AugeneModel
 {
 	companion object {
+		val instance = AugeneModel()
+
 		const val ConfigXmlFile = "augene-config.xml"
 
 		private const val TracktionProgramChange = 4097
@@ -97,7 +82,7 @@ class AugeneModel
 			xr.close()
 		} catch (ex: Exception) {
 			println (ex.toString())
-			Dialogs.ShowWarning ("Failed to load configuration file. It is ignored.")
+			Dialogs.ShowWarning ("Failed to load configuration file. It is ignored.") {}
 		}
 	}
 
@@ -128,9 +113,10 @@ class AugeneModel
 		File(ProjectFileName!!).parentFile.resolve(itemFilename).absolutePath
 
 	fun ProcessOpenProject () {
-		val files = Dialogs.ShowOpenFileDialog ("Open Augene Project")
-		if (files.any ())
-			ProcessLoadProjectFile (files[0])
+		Dialogs.ShowOpenFileDialog ("Open Augene Project") { files ->
+			if (files.any())
+				ProcessLoadProjectFile(files[0])
+		}
 	}
 
 	fun ProcessLoadProjectFile (file: String) {
@@ -154,28 +140,33 @@ class AugeneModel
 
 	fun ProcessSaveProject () {
 		if (ProjectFileName == null) {
-			val files = Dialogs.ShowSaveFileDialog("Save Augene Project")
-			if (files.any ())
-				ProjectFileName = files [0]
-			else
-				return
+			Dialogs.ShowSaveFileDialog("Save Augene Project") { files ->
+				if (files.any())
+					ProjectFileName = files[0]
+				else
+					return@ShowSaveFileDialog
+				AugeneProject.Save (Project, ProjectFileName!!)
+			}
 		}
-		AugeneProject.Save (Project, ProjectFileName!!)
+		else
+			AugeneProject.Save (Project, ProjectFileName!!)
 	}
 
 	@OptIn(ExperimentalFileSystem::class)
 	fun ProcessNewTrack (selectFileInsteadOfNewFile: Boolean) {
 		if (selectFileInsteadOfNewFile) {
-			val files = Dialogs.ShowOpenFileDialog ("Select existing AudioGraph file for a new track",
-				DialogAbstraction.DialogOptions().apply { initialDirectory = ProjectDirectory })
-			if (files.any ())
-				AddNewTrack (files [0])
+			Dialogs.ShowOpenFileDialog ("Select existing AudioGraph file for a new track",
+				DialogAbstraction.DialogOptions().apply { initialDirectory = ProjectDirectory }) { files ->
+				if (files.any())
+					AddNewTrack(files[0])
+			}
 		} else {
-			val files = Dialogs.ShowSaveFileDialog ("New AudioGraph file for a new track",
-				DialogAbstraction.DialogOptions().apply { initialDirectory = ProjectDirectory })
-			if (files.any ()) {
-				FileSupport(ProjectFileName!!).writeString(files [0], JuceAudioGraph.EmptyAudioGraph)
-				AddNewTrack (files [0])
+			Dialogs.ShowSaveFileDialog ("New AudioGraph file for a new track",
+				DialogAbstraction.DialogOptions().apply { initialDirectory = ProjectDirectory }) { files ->
+				if (files.any()) {
+					FileSupport(ProjectFileName!!).writeString(files[0], JuceAudioGraph.EmptyAudioGraph)
+					AddNewTrack(files[0])
+				}
 			}
 		}
 	}
@@ -203,16 +194,18 @@ class AugeneModel
 	@OptIn(ExperimentalFileSystem::class)
 	fun ProcessNewAudioGraph (selectFileInsteadOfNewFile: Boolean) {
 		if (selectFileInsteadOfNewFile) {
-			val files = Dialogs.ShowOpenFileDialog ("Select existing AudioGraph file",
-				DialogAbstraction.DialogOptions().apply { initialDirectory = ProjectDirectory })
-			if (files.any ())
-				AddNewAudioGraph (files [0])
+			Dialogs.ShowOpenFileDialog ("Select existing AudioGraph file",
+				DialogAbstraction.DialogOptions().apply { initialDirectory = ProjectDirectory }) { files ->
+				if (files.any())
+					AddNewAudioGraph(files[0])
+			}
 		} else {
-			val files = Dialogs.ShowSaveFileDialog ("New AudioGraph file",
-				DialogAbstraction.DialogOptions().apply { initialDirectory = ProjectDirectory })
-			if (files.any ()) {
-				FileSupport(ProjectFileName!!).writeString(files [0], JuceAudioGraph.EmptyAudioGraph)
-				AddNewAudioGraph (files [0])
+			Dialogs.ShowSaveFileDialog ("New AudioGraph file",
+				DialogAbstraction.DialogOptions().apply { initialDirectory = ProjectDirectory }) { files ->
+				if (files.any()) {
+					FileSupport(ProjectFileName!!).writeString(files[0], JuceAudioGraph.EmptyAudioGraph)
+					AddNewAudioGraph(files[0])
+				}
 			}
 		}
 	}
@@ -240,16 +233,18 @@ class AugeneModel
 	@OptIn(ExperimentalFileSystem::class)
 	fun ProcessNewMmlFile (selectFileInsteadOfNewFile: Boolean) {
 		if (selectFileInsteadOfNewFile) {
-			val files = Dialogs.ShowOpenFileDialog ("Select existing MML file",
-				DialogAbstraction.DialogOptions().apply { initialDirectory = ProjectDirectory })
-			if (files.any ())
-				AddNewMmlFile (files [0])
+			Dialogs.ShowOpenFileDialog ("Select existing MML file",
+				DialogAbstraction.DialogOptions().apply { initialDirectory = ProjectDirectory }) { files ->
+				if (files.any())
+					AddNewMmlFile(files[0])
+			}
 		} else {
-			val files = Dialogs.ShowSaveFileDialog ("New MML file",
-				DialogAbstraction.DialogOptions().apply { initialDirectory = ProjectDirectory })
-			if (files.any ()) {
-				FileSupport(ProjectFileName!!).writeString(files [0], "// New MML file")
-				AddNewMmlFile (files [0])
+			Dialogs.ShowSaveFileDialog ("New MML file",
+				DialogAbstraction.DialogOptions().apply { initialDirectory = ProjectDirectory }) { files ->
+				if (files.any()) {
+					FileSupport(ProjectFileName!!).writeString(files[0], "// New MML file")
+					AddNewMmlFile(files[0])
+				}
 			}
 		}
 	}
@@ -269,7 +264,7 @@ class AugeneModel
 
 	fun ProcessLaunchAudioPluginHost (audioGraphFile: String) {
 		if (ConfigAudioPluginHostPath == null)
-			Dialogs.ShowWarning ("AudioPluginHost path is not configured [File > Configure].")
+			Dialogs.ShowWarning ("AudioPluginHost path is not configured [File > Configure].") {}
 		else {
 			ProcessBuilder(ConfigAudioPluginHostPath, GetItemFileAbsolutePath (audioGraphFile)).start()
 		}
@@ -278,14 +273,16 @@ class AugeneModel
 	@OptIn(ExperimentalFileSystem::class)
 	fun ProcessNewMasterPluginFile (selectFileInsteadOfNewFile: Boolean) {
 		if (selectFileInsteadOfNewFile) {
-			val files = Dialogs.ShowOpenFileDialog ("Select existing AudioGraph file as a master plugin")
-			if (files.any ())
-				AddNewMasterPluginFile (files [0])
+			Dialogs.ShowOpenFileDialog ("Select existing AudioGraph file as a master plugin") { files ->
+				if (files.any())
+					AddNewMasterPluginFile(files[0])
+			}
 		} else {
-			val files = Dialogs.ShowSaveFileDialog ("New AudioGraph file as a master plugin")
-			if (files.any ()) {
-				FileSupport(ProjectFileName!!).writeString(files [0], JuceAudioGraph.EmptyAudioGraph)
-				AddNewMasterPluginFile (files [0])
+			Dialogs.ShowSaveFileDialog ("New AudioGraph file as a master plugin") { files ->
+				if (files.any()) {
+					FileSupport(ProjectFileName!!).writeString(files[0], JuceAudioGraph.EmptyAudioGraph)
+					AddNewMasterPluginFile(files[0])
+				}
 			}
 		}
 	}
@@ -467,7 +464,7 @@ class AugeneModel
 
 	fun ProcessPlay () {
 		if (ConfigAugenePlayerPath.isNullOrEmpty())
-			Dialogs!!.ShowWarning ("AugenePlayer path is not configured [File > Configure].")
+			Dialogs.ShowWarning ("AugenePlayer path is not configured [File > Configure].") {}
 		else {
 			ProcessCompile ()
 			if (OutputEditFileName != null)

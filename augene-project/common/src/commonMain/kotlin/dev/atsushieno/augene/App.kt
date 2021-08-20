@@ -18,7 +18,8 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.ComponentContext
 
-val model = AugeneModel()
+val model
+    get() = AugeneModel.instance
 
 @Composable
 fun App() {
@@ -157,7 +158,14 @@ fun AppSettings() {
                 onValueChange = { augenePlayerPathState = it.text },
                 value = TextFieldValue(augenePlayerPathState ?: "")
             )
-            Button(onClick = {}) { Text("Select") }
+            Button(onClick = {
+                model.Dialogs.ShowOpenFileDialog("Select AugenePlayer executable") {
+                    if (it.any())
+                        augenePlayerPathState = it.first()
+                }
+            }) {
+                Text("Select")
+            }
         }
         Row {
             Text("Path to AudioPluginHost")
@@ -165,7 +173,14 @@ fun AppSettings() {
                 onValueChange = { audioPluginHostPathState = it.text },
                 value = TextFieldValue(audioPluginHostPathState ?: "")
             )
-            Button(onClick = {}) { Text("Select") }
+            Button(onClick = {
+                model.Dialogs.ShowOpenFileDialog("Select AugenePlayer executable") {
+                    if (it.any())
+                        audioPluginHostPathState = it.first()
+                }
+            }) {
+                Text("Select")
+            }
         }
         Row {
             Button(onClick = {
