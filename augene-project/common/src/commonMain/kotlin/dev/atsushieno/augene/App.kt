@@ -16,7 +16,6 @@ import androidx.compose.material.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import com.arkivanov.decompose.ComponentContext
 
 val model
     get() = AugeneModel.instance
@@ -49,11 +48,10 @@ fun App() {
             // FAB
             var fabActionMenuState by remember { mutableStateOf(false) }
             if (fabActionMenuState) {
-                Button(onClick = {}) { Text("Load") }
-                Button(onClick = {}) { Text("Save") }
-                Button(onClick = {}) { Text("Configure") }
-                Button(onClick = {}) { Text("Compile") }
-                Button(onClick = {}) { Text("Play") }
+                Button(onClick = { model.ProcessOpenProject() }) { Text("Load") }
+                Button(onClick = { model.ProcessSaveProject() }) { Text("Save") }
+                Button(onClick = { model.ProcessCompile() }) { Text("Compile") }
+                Button(onClick = { model.ProcessPlay() }) { Text("Play") }
             }
             FloatingActionButton(onClick = { fabActionMenuState = !fabActionMenuState }) {
                 Text(if (fabActionMenuState) "-" else "+")
@@ -101,12 +99,12 @@ fun AudioGraphList() {
         val cells = GridCells.Adaptive(0.dp)
         LazyVerticalGrid(cells) {
             val gridScope = this
-            model.Project.AudioGraphs.forEach {
+            model.Project.audioGraphs.forEach {
                 gridScope.item {
-                    Text(it.Id ?: "")
+                    Text(it.id ?: "")
                 }
                 gridScope.item {
-                    Text(it.Source ?: "")
+                    Text(it.source ?: "")
                 }
                 gridScope.item {
                     Button(onClick = {}) {
@@ -130,7 +128,7 @@ fun MasterPluginList() {
         val cells = GridCells.Adaptive(0.dp)
         LazyVerticalGrid(cells) {
             val gridScope = this
-            model.Project.MasterPlugins.forEach { id ->
+            model.Project.masterPlugins.forEach { id ->
                 gridScope.item {
                     Text(id)
                 }

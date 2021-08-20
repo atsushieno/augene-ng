@@ -1,6 +1,7 @@
 package dev.atsushieno.augene
 
 import dev.atsushieno.kotractive.*
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -12,125 +13,116 @@ annotation class XmlAttribute()
 annotation class XmlIgnore()
 annotation class XmlArrayItem(val itemName: String)
 
+@Serializable
 class AugeneProject {
 	companion object {
-		fun Load(filename: String): AugeneProject {
+		fun load(filename: String): AugeneProject {
 			val jsonString = FileSupport(filename).readString(filename)
 			return Json.decodeFromString(jsonString)
 		}
 
 		@OptIn(ExperimentalFileSystem::class)
-		fun Save(project: AugeneProject, filename: String) {
+		fun save(project: AugeneProject, filename: String) {
 			// sanitize absolute paths
-			for (track in project.Tracks)
-				if (track.AudioGraph!!.toPath().isAbsolute)
-					track.AudioGraph = (filename.toPath() / track.AudioGraph!!.toPath()).toString()
+			for (track in project.tracks)
+				if (track.audioGraph!!.toPath().isAbsolute)
+					track.audioGraph = (filename.toPath() / track.audioGraph!!.toPath()).toString()
 
 			val json = Json.encodeToString(project)
 			FileSupport(filename).writeString(filename, json)
 		}
 	}
 
-	@XmlArrayItem("Include")
-	var Includes: MutableList<AugeneInclude>? = null
+	var includes: MutableList<AugeneInclude>? = null
 
-	@XmlArrayItem("AudioGraph")
-	var AudioGraphs: MutableList<AugeneAudioGraph> = mutableListOf()
+	var audioGraphs: MutableList<AugeneAudioGraph> = mutableListOf()
 
-	@XmlArrayItem("AudioGraph")
-	var MasterPlugins: MutableList<String> = mutableListOf()
+	var masterPlugins: MutableList<String> = mutableListOf()
 
-	var Tracks: MutableList<AugeneTrack> = mutableListOf()
+	var tracks: MutableList<AugeneTrack> = mutableListOf()
 
-	@XmlArrayItem("MmlFile")
-	var MmlFiles: MutableList<String> = mutableListOf()
+	var mmlFiles: MutableList<String> = mutableListOf()
 
-	@XmlArrayItem("MmlString")
-	var MmlStrings: MutableList<String> = mutableListOf()
+	var mmlStrings: MutableList<String> = mutableListOf()
 
-	fun CheckIncludeValidity(
+	fun checkIncludeValidity(
 		includedAncestors: MutableList<String>,
 		resolveAbsPath: (String) -> String,
 		errors: MutableList<String>
 	) {
-		for (inc in this.Includes!!) {
-			if (inc.Source == null)
+		for (inc in this.includes!!) {
+			if (inc.source == null)
 				continue
-			val absPath = resolveAbsPath(inc.Source!!)
+			val absPath = resolveAbsPath(inc.source!!)
 			if (includedAncestors.any { it.equals(absPath, true) })
 				errors.add("Recursive inclusion was found: $absPath")
-			val child = Load(absPath)
-			child.CheckIncludeValidity(includedAncestors, resolveAbsPath, errors)
+			val child = load(absPath)
+			child.checkIncludeValidity(includedAncestors, resolveAbsPath, errors)
 		}
 	}
 
 	@OptIn(ExperimentalFileSystem::class)
-	fun AudioGraphsExpandedFullPath(
+	fun expandedAudioGraphsFullPath(
 		resolveAbsPath: (String) -> String,
 		bankMsb: String?,
 		bankLsb: String?
 	): Sequence<AugeneAudioGraph> {
 		val project = this
 		return sequence {
-			project.CheckIncludeValidity(mutableListOf(), resolveAbsPath, mutableListOf())
+			project.checkIncludeValidity(mutableListOf(), resolveAbsPath, mutableListOf())
 			var count = 0
-			for (item in project.AudioGraphs)
+			for (item in project.audioGraphs)
 				yield(AugeneAudioGraph().apply {
-					BankMsb = bankMsb
-					BankLsb = bankLsb
-					Program = count++.toString()
-					Id = item.Id
-					Source = resolveAbsPath(item.Source!!)
+					this.bankMsb = bankMsb
+					this.bankLsb = bankLsb
+					program = count++.toString()
+					id = item.id
+					source = resolveAbsPath(item.source!!)
 				})
-			for (include in project.Includes!!) {
-				val src: String = include.Source ?: continue
+			for (include in project.includes!!) {
+				val src: String = include.source ?: continue
 				val absPath = resolveAbsPath(src)
 				val resolveNestedAbsPath = { s: String -> (FileSystem.SYSTEM.canonicalize(absPath.toPath()).parent!! / s).toString() }
-				val msb = include.BankMsb ?: include.Bank
-				val lsb = include.BankLsb
-				for (nested in Load(resolveAbsPath(src)).AudioGraphsExpandedFullPath(resolveNestedAbsPath, msb, lsb))
+				val msb = include.bankMsb ?: include.bank
+				val lsb = include.bankLsb
+				for (nested in load(resolveAbsPath(src)).expandedAudioGraphsFullPath(resolveNestedAbsPath, msb, lsb))
 					yield(nested)
 			}
 		}
 	}
 }
 
+@Serializable
 class AugeneInclude
 {
-	@XmlAttribute
-	var Bank : String? = null // equivalent to BankMsb
-	@XmlAttribute
-	var BankMsb : String? = null
-	@XmlAttribute
-	var BankLsb : String? = null
-	@XmlAttribute
-	var Source : String? = null
+	var bank : String? = null // equivalent to BankMsb
+	var bankMsb : String? = null
+	var bankLsb : String? = null
+	var source : String? = null
 }
 
+@Serializable
 class AugeneAudioGraph
 {
-	@XmlIgnore
-	internal var Program: String? = null
-	@XmlIgnore
-	internal var BankMsb: String? = null
-	@XmlIgnore
-	internal var BankLsb: String? = null
+	// non-serialized
+	internal var program: String? = null
+	internal var bankMsb: String? = null
+	internal var bankLsb: String? = null
 
-	@XmlAttribute
-	var Id : String? = null
-	@XmlAttribute
-	var Source : String? = null
+	var id : String? = null
+	var source : String? = null
 }
 
+@Serializable
 class AugeneTrack
 {
-	var Id : String? = null
-	var AudioGraph : String? = null
+	var id : String? = null
+	var audioGraph : String? = null
 }
 
 class JuceAudioGraph {
 	companion object {
-		const val EmptyAudioGraph = """<FILTERGRAPH>
+		const val emptyAudioGraph = """<FILTERGRAPH>
 <FILTER uid='5' x='0.5' y='0.1'>
 <PLUGIN name='Audio Input' descriptiveName='' format='Internal' category='I/O devices' manufacturer='JUCE' version='1.0' file='' uid='246006c0' isInstrument='0' fileTime='0' infoUpdateTime='0' numInputs='0' numOutputs='4' isShell='0'/>
 <STATE>0.</STATE>
@@ -158,7 +150,7 @@ class JuceAudioGraph {
 </FILTERGRAPH>
 """
 
-		fun Load ( reader:XmlReader) :  Sequence<JuceAudioGraph> =
+		fun load (reader:XmlReader) :  Sequence<JuceAudioGraph> =
 			sequence {
 				var ret = JuceAudioGraph ()
 				val doc = XDocument.load (reader)
@@ -188,13 +180,13 @@ class JuceAudioGraph {
 						val state = filter.element ("STATE")
 						val prog = plugin.attribute ("programNum")
 						yield (JuceAudioGraph().apply {
-							File = plugin.attribute ("file")?.value
-							Category = plugin.attribute ("category")?.value
-							Manufacturer = plugin.attribute ("manufacturer")?.value
-							Name = plugin.attribute ("name")?.value
-							Uid = plugin.attribute ("uid")?.value
-							ProgramNum = if (prog != null) prog.value.toInt() else 0
-							State = state?.value
+							file = plugin.attribute ("file")?.value
+							category = plugin.attribute ("category")?.value
+							manufacturer = plugin.attribute ("manufacturer")?.value
+							name = plugin.attribute ("name")?.value
+							this.uid = plugin.attribute ("uid")?.value
+							programNum = if (prog != null) prog.value.toInt() else 0
+							this.state = state?.value
 						})
 					}
 					uid = conn.attribute ("dstFilter")?.value
@@ -209,45 +201,45 @@ class JuceAudioGraph {
 	//<STATE>0.</STATE>
 	//
 	// For audio plugins there is something like `type="vst" ` too.
-	var Name : String? = null
-	var DescriptiveName : String? = null
-	var Format : String? = null
-	var Category : String? = null
-	var Manufacturer : String? = null
-	var Version : String? = null
-	var File : String? = null
-	var Uid : String? = null
-	var IsInstrument = 0
-	var FileTime = 0L
-	var InfoUpdateTime = 0L
-	var NumInputs = 0
-	var NumOutputs = 0
-	var IsShell = 0 // not Boolean?
-	var State : String? = null
-	var ProgramNum = 0 // ?
+	var name : String? = null
+	var descriptiveName : String? = null
+	var format : String? = null
+	var category : String? = null
+	var manufacturer : String? = null
+	var version : String? = null
+	var file : String? = null
+	var uid : String? = null
+	var isInstrument = 0
+	var fileTime = 0L
+	var infoUpdateTime = 0L
+	var numInputs = 0
+	var numOutputs = 0
+	var isShell = 0 // not Boolean?
+	var state : String? = null
+	var programNum = 0 // ?
 }
 
 class AugenePluginSpecifier
 {
 	companion object {
-		fun FromAudioGraph (audioGraph: Iterable<JuceAudioGraph> ) : Iterable<AugenePluginSpecifier> =
+		fun fromAudioGraph (audioGraph: Iterable<JuceAudioGraph> ) : Iterable<AugenePluginSpecifier> =
 			audioGraph.map { src -> AugenePluginSpecifier().apply {
-				Type = src.Format
-				Uid = src.Uid
-				Filename = src.File
-				Name = src.Name
-				Manufacturer = src.Manufacturer
-				ProgramNum = src.ProgramNum
-				State = src.State
+				type = src.format
+				uid = src.uid
+				filename = src.file
+				name = src.name
+				manufacturer = src.manufacturer
+				programNum = src.programNum
+				state = src.state
 			} }
 	}
 
 	// They are required by tracktionedit.
-	var Type : String? = null
-	var Uid : String? = null
-	var Filename : String? = null
-	var Name : String? = null
-	var Manufacturer : String? = null
-	var ProgramNum = 0
-	var State : String? = null
+	var type : String? = null
+	var uid : String? = null
+	var filename : String? = null
+	var name : String? = null
+	var manufacturer : String? = null
+	var programNum = 0
+	var state : String? = null
 }
