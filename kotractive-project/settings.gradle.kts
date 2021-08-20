@@ -15,6 +15,6 @@ pluginManagement {
     }
 }
 
-rootProject.name = "kotractive-ng-project"
+rootProject.name = "kotractive-project"
 
 include("kotractive_ksp", "kotractive")

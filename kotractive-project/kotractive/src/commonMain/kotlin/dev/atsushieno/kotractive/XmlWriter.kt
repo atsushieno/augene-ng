@@ -109,7 +109,11 @@ class XmlTextWriter(private val output: StringBuilder) : XmlWriter() {
         get() = state
 
     override fun close() {
-        TODO("Not yet implemented")
+        if (state != WriteState.Closed && state != WriteState.Error) {
+            while (openTags.any())
+                writeEndElement()
+            state = WriteState.Closed
+        }
     }
 
     override fun lookupPrefix(ns: String): String? =
