@@ -16,11 +16,87 @@ annotation class XmlArrayItem(val itemName: String)
 @Serializable
 class AugeneProject {
 	companion object {
-		fun load(filename: String): AugeneProject =
-			load(FileSupport(".").readString(filename))
+		fun load (reader: XmlReader): AugeneProject {
+			val doc = XDocument.load(reader)
+			val ret = AugeneProject()
+			val root = doc.root!!
+			ret.includes.addAll(root.element("Includes")!!.elements("Include").map {
+				AugeneInclude().apply {
+					source = it.attribute("Source")?.value
+					bank = it.attribute("Bank")?.value
+				} })
+			ret.masterPlugins.addAll(root.element("MasterPlugins")!!.elements("MasterPlugin").map { it.value })
+			ret.audioGraphs.addAll(root.element("AudioGraphs")!!.elements("AudioGraph").map {
+				AugeneAudioGraph().apply {
+					id = it.attribute("Id")?.value
+					source = it.attribute("Source")?.value
+				}
+			})
+			ret.tracks.addAll(root.element("Tracks")!!.elements("AugeneTrack").map {
+				AugeneTrack().apply {
+					id = it.element("Id")?.value
+					audioGraph = it.element("AudioGraph")?.value
+				}
+			})
+			ret.mmlFiles.addAll(root.element("MmlFiles")!!.elements("MmlFile").map { it.value })
+			ret.mmlStrings.addAll(root.element("MmlStrings")!!.elements("MmlString").map { it.value })
 
-		fun loadString(text: String): AugeneProject =
-			Json.decodeFromString(text)
+			return ret
+		}
+
+		fun load(fileName: String): AugeneProject =
+			load(XmlTextReader(FileSupport(".").readString(fileName)))
+
+		fun loadJson(jsonText: String): AugeneProject = Json.decodeFromString(jsonText)
+
+		fun save(project: AugeneProject, writer: XmlWriter) {
+			writer.writeStartElement("AugeneProject")
+			writer.writeStartElement("Includes")
+			project.includes.forEach {
+				writer.writeStartElement("Include")
+				writer.writeAttributeString("Bank", it.bank ?: "")
+				writer.writeAttributeString("Source", it.source ?: "")
+				writer.writeEndElement()
+			}
+			writer.writeEndElement()
+
+			writer.writeStartElement("MasterPlugins")
+			project.masterPlugins.forEach {
+				writer.writeElementString("MasterPlugin", it)
+			}
+			writer.writeEndElement()
+
+			writer.writeStartElement("AudioGraphs")
+			project.audioGraphs.forEach {
+				writer.writeStartElement("AudioGraph")
+				writer.writeAttributeString("Id", it.id ?: "")
+				writer.writeAttributeString("Source", it.source ?: "")
+				writer.writeEndElement()
+			}
+			writer.writeEndElement()
+
+			writer.writeStartElement("Tracks")
+			project.tracks.forEach {
+				writer.writeStartElement("AugeneTrack")
+				writer.writeElementString("Id", it.id ?: "")
+				writer.writeElementString("AudioGraph", it.audioGraph ?: "")
+				writer.writeEndElement()
+			}
+			writer.writeEndElement()
+
+			writer.writeStartElement("MmlFiles")
+			project.mmlFiles.forEach {
+				writer.writeElementString("MmlFile", it)
+			}
+			writer.writeEndElement()
+
+			writer.writeStartElement("MmlStrings")
+			project.mmlStrings.forEach {
+				writer.writeElementString("MmlString", it)
+			}
+			writer.writeEndElement()
+			writer.close()
+		}
 
 		@OptIn(ExperimentalFileSystem::class)
 		fun save(project: AugeneProject, filename: String) {
@@ -29,13 +105,12 @@ class AugeneProject {
 				if (track.audioGraph!!.toPath().isAbsolute)
 					track.audioGraph = (filename.toPath() / track.audioGraph!!.toPath()).toString()
 
-			val json = Json.encodeToString(project)
-			FileSupport(".").writeString(filename, json)
+			val sb = StringBuilder()
+			save(project, XmlWriter.create(sb))
+			FileSupport(".").writeString(filename, sb.toString())
 		}
 
-		init {
-
-		}
+		fun saveJson(project: AugeneProject) = Json.encodeToString(project)
 	}
 
 	var includes: MutableList<AugeneInclude> = mutableListOf()

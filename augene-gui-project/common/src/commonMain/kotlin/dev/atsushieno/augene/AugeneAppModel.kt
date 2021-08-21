@@ -65,10 +65,6 @@ class AugeneAppModel : AugeneModel() {
 		}
 	}
 
-	fun processLoadProjectFile (file: String) {
-		loadProjectFile(file)
-	}
-
 	fun processSaveProject () {
 		if (projectFileName == null) {
 			dialogs.ShowSaveFileDialog("Save Augene Project") { files ->
@@ -198,7 +194,7 @@ class AugeneAppModel : AugeneModel() {
 		if (e.fullPath != projectFileName && project.mmlFiles.all { m -> File(proj).parentFile.resolve(m).absolutePath != e.fullPath })
 			return
 		if (_autoReloadProject)
-			processLoadProjectFile (proj)
+			loadProjectFile (proj)
 
 		if (_autoCompileProject)
 			compile ()

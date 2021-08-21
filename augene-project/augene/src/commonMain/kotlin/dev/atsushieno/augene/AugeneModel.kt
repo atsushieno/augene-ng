@@ -56,11 +56,14 @@ open class AugeneModel
 	fun getItemFileAbsolutePath (itemFilename: String) =
 		(projectFileName!!.toPath().parent!! / itemFilename.toPath()).toString()
 
-	fun loadProjectFile (file: String) =
-		loadProjectString(FileSupport(".").readString(file), file)
+	fun loadProjectFile (xmlFile: String) =
+		setProject(AugeneProject.load(xmlFile), xmlFile)
 
-	fun loadProjectString (text: String, baseFileName: String = ".") {
-		project = AugeneProject.loadString (text)
+	fun loadProjectJson (text: String, baseFileName: String = ".") =
+		setProject(AugeneProject.loadJson (text), baseFileName)
+
+	fun setProject(newProject: AugeneProject, baseFileName: String) {
+		project = newProject
 		projectFileName = baseFileName
 		lastProjectFile = projectFileName
 		onProjectLoaded()
