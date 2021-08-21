@@ -38,6 +38,9 @@ class AugeneAppModel : AugeneModel() {
 				xr.moveToContent ()
 			}
 			xr.close()
+
+			if (lastProjectFile != null)
+				loadProjectFile(lastProjectFile!!)
 		} catch (ex: Exception) {
 			println (ex.toString())
 			dialogs.ShowWarning ("Failed to load configuration file. It is ignored.") {}
