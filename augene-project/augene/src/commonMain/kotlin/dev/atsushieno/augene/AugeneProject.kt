@@ -17,7 +17,7 @@ annotation class XmlArrayItem(val itemName: String)
 class AugeneProject {
 	companion object {
 		fun load(filename: String): AugeneProject =
-			load(FileSupport(filename).readString(filename))
+			load(FileSupport(".").readString(filename))
 
 		fun loadString(text: String): AugeneProject =
 			Json.decodeFromString(text)
@@ -30,7 +30,7 @@ class AugeneProject {
 					track.audioGraph = (filename.toPath() / track.audioGraph!!.toPath()).toString()
 
 			val json = Json.encodeToString(project)
-			FileSupport(filename).writeString(filename, json)
+			FileSupport(".").writeString(filename, json)
 		}
 
 		init {

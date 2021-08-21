@@ -57,7 +57,7 @@ open class AugeneModel
 		(projectFileName!!.toPath().parent!! / itemFilename.toPath()).toString()
 
 	fun loadProjectFile (file: String) =
-		loadProjectString(FileSupport(".").readString(file))
+		loadProjectString(FileSupport(".").readString(file), file)
 
 	fun loadProjectString (text: String, baseFileName: String = ".") {
 		project = AugeneProject.loadString (text)
