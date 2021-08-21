@@ -44,7 +44,10 @@ open class MetaType(val simpleName: String, val qualifiedName: String, val baseM
     open fun newInstance() : Any =
         throw IllegalArgumentException("getAddMethod is available only on EditModel element types.")
 
-    val properties = mutableListOf<PropertyInfo>()
+    val declaredProperties = mutableListOf<PropertyInfo>()
+
+    val properties : Iterable<PropertyInfo>
+        get() = declaredProperties + (baseMetaType?.properties ?: listOf())
 
     fun getProperty(name: String) = properties.firstOrNull { p -> p.name == name }
 

@@ -2,6 +2,7 @@ package dev.atsushieno.kotractive
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class EditModelWriterTest {
     @Test
@@ -19,6 +20,7 @@ class EditModelWriterTest {
         val sb = StringBuilder()
         writer.write(sb, EditModelTemplate.CreateNewEmptyEdit())
 
+        assertTrue(sb.toString().length > 100, "unexpectedly short string output: $sb")
         println(sb)
 
         val xr = XmlTextReader(sb.toString())

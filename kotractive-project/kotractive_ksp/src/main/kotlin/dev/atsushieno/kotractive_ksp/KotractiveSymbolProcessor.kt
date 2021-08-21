@@ -91,7 +91,7 @@ internal class MetaType$name : MetaType("$name", "$fullName", $baseTypeSpec) {
                 writer.write("    override fun newInstance() = IllegalStateException()\n")
         }
 
-        // Register properties at init{}
+        // Register declaredProperties at init{}
         writer.write("    init {")
         classDeclaration.declarations.filterIsInstance<KSPropertyDeclaration>().forEach { property ->
             val propertyName = property.simpleName.asString()
@@ -106,7 +106,7 @@ internal class MetaType$name : MetaType("$name", "$fullName", $baseTypeSpec) {
             val optNullableAssignment = if (propertyTypeDecl.nullability == Nullability.NULLABLE) "if (value == null) null else" else ""
             val propertyTypeGenericArgs = if (propertyTypeDecl.arguments.any()) "<${propertyTypeDecl.arguments.map { a -> a.type.toString() }.joinToString(", ")}>" else ""
             writer.write("""
-        properties.add(object: PropertyInfo("$propertyName", type${property.type}, DataType.$dataTypeSpec) {
+        declaredProperties.add(object: PropertyInfo("$propertyName", type${property.type}, DataType.$dataTypeSpec) {
             override val ownerType
                 get() = type$name
             override fun toString() = "${property.qualifiedName!!.asString()}"
