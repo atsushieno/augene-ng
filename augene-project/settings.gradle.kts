@@ -15,6 +15,6 @@ pluginManagement {
     }
 }
 
-rootProject.name = "midi2tracktionedit-project"
+rootProject.name = "augene-project"
 
 include("midi2tracktionedit")
