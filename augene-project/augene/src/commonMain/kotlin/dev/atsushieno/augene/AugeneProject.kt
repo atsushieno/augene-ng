@@ -16,10 +16,11 @@ annotation class XmlArrayItem(val itemName: String)
 @Serializable
 class AugeneProject {
 	companion object {
-		fun load(filename: String): AugeneProject {
-			val jsonString = FileSupport(filename).readString(filename)
-			return Json.decodeFromString(jsonString)
-		}
+		fun load(filename: String): AugeneProject =
+			load(FileSupport(filename).readString(filename))
+
+		fun loadString(text: String): AugeneProject =
+			Json.decodeFromString(text)
 
 		@OptIn(ExperimentalFileSystem::class)
 		fun save(project: AugeneProject, filename: String) {
@@ -30,6 +31,10 @@ class AugeneProject {
 
 			val json = Json.encodeToString(project)
 			FileSupport(filename).writeString(filename, json)
+		}
+
+		init {
+
 		}
 	}
 

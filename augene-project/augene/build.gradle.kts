@@ -20,6 +20,7 @@ plugins {
     id("org.jetbrains.dokka") version "1.5.0"
     id("maven-publish")
     id("signing")
+    kotlin("plugin.serialization") version "1.5.20"
 }
 
 kotlin {

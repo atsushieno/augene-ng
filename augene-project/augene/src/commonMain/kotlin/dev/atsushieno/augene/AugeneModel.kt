@@ -56,9 +56,12 @@ open class AugeneModel
 	fun getItemFileAbsolutePath (itemFilename: String) =
 		(projectFileName!!.toPath().parent!! / itemFilename.toPath()).toString()
 
-	fun loadProjectFile (file: String) {
-		project = AugeneProject.load (file)
-		projectFileName = file
+	fun loadProjectFile (file: String) =
+		loadProjectString(FileSupport(".").readString(file))
+
+	fun loadProjectString (text: String, baseFileName: String = ".") {
+		project = AugeneProject.loadString (text)
+		projectFileName = baseFileName
 		lastProjectFile = projectFileName
 		onProjectLoaded()
 	}
