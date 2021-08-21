@@ -10,6 +10,7 @@ version = "1.0"
 dependencies {
     implementation(project(":common"))
     implementation("androidx.activity:activity-compose:1.3.1")
+    implementation("dev.atsushieno:augene:0.1")
 }
 
 android {

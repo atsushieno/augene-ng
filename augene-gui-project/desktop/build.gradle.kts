@@ -20,6 +20,7 @@ kotlin {
             dependencies {
                 implementation(project(":common"))
                 implementation(compose.desktop.currentOs)
+                implementation("dev.atsushieno:augene:0.1")
             }
         }
         val jvmTest by getting

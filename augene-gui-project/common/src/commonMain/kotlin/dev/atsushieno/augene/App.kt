@@ -25,8 +25,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 
-val model
-    get() = AugeneModel.instance
+val model : AugeneAppModel
+    get() = AugeneAppModel.instance
 
 @Composable
 fun App() {
