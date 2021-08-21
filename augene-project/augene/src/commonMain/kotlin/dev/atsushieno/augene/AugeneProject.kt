@@ -82,7 +82,7 @@ class AugeneProject {
 			for (include in project.includes) {
 				val src: String = include.source ?: continue
 				val absPath = resolveAbsPath(src)
-				val resolveNestedAbsPath = { s: String -> (FileSystem.SYSTEM.canonicalize(absPath.toPath()).parent!! / s).toString() }
+				val resolveNestedAbsPath = { s: String -> (FileSupport.canonicalizePath(absPath).toPath().parent!! / s).toString() }
 				val msb = include.bankMsb ?: include.bank
 				val lsb = include.bankLsb
 				for (nested in load(resolveAbsPath(src)).expandedAudioGraphsFullPath(resolveNestedAbsPath, msb, lsb))
@@ -108,6 +108,9 @@ class AugeneAudioGraph
 	internal var program: String? = null
 	internal var bankMsb: String? = null
 	internal var bankLsb: String? = null
+	fun retrieveProgram() = program
+	fun retrieveBankMsb() = bankMsb
+	fun retrieveBankLsb() = bankLsb
 
 	var id : String? = null
 	var source : String? = null

@@ -2,8 +2,8 @@ package dev.atsushieno.augene
 
 import dev.atsushieno.kotractive.*
 import dev.atsushieno.ktmidi.MidiCC
-import dev.atsushieno.midi2tracktionedit.MidiImportContext
-import dev.atsushieno.midi2tracktionedit.MidiToTracktionEditConverter
+import dev.atsushieno.augene.MidiImportContext
+import dev.atsushieno.augene.MidiToTracktionEditConverter
 import dev.atsushieno.mugene.MmlCompiler
 import dev.atsushieno.mugene.MmlInputSource
 import okio.ExperimentalFileSystem
@@ -52,8 +52,9 @@ class AugeneModel
 
 	lateinit var dialogs: DialogAbstraction
 
+	@OptIn(ExperimentalFileSystem::class)
 	val projectDirectory : String?
-		get() = if (projectFileName == null) null else File(projectFileName!!).parent
+		get() = if (projectFileName == null) null else projectFileName!!.toPath().parent.toString()
 
 	fun loadConfiguration () {
 		val fs = IsolatedStorageFile.getUserStoreForAssembly("augene-ng")
@@ -109,8 +110,9 @@ class AugeneModel
 		return filenameRelative
 	}
 
+	@OptIn(ExperimentalFileSystem::class)
 	fun getItemFileAbsolutePath (itemFilename: String) =
-		File(projectFileName!!).parentFile.resolve(itemFilename).absolutePath
+		(projectFileName!!.toPath().parent!! / itemFilename.toPath()).toString()
 
 	fun processOpenProject () {
 		dialogs.ShowOpenFileDialog ("Open Augene Project") { files ->
@@ -385,9 +387,9 @@ class AugeneModel
 			val lsb = ((bankLSBs.firstOrNull ()?.Val ?: 0) / 128).toString ()
 			val program = (programs.first ().Val / 128).toString ()
 			val ag = audioGraphs.firstOrNull { a ->
-				a.program == program &&
-				(a.bankMsb == msb || a.bankMsb == null && msb == "0") &&
-				(a.bankLsb == lsb || a.bankLsb == null && lsb == "0") }
+				a.retrieveProgram() == program &&
+				(a.retrieveBankMsb() == msb || a.retrieveBankMsb() == null && msb == "0") &&
+				(a.retrieveBankLsb() == lsb || a.retrieveBankLsb() == null && lsb == "0") }
 			if (ag != null) {
 				val existingPlugins = track.Plugins.toTypedArray()
 				track.Plugins.clear ()

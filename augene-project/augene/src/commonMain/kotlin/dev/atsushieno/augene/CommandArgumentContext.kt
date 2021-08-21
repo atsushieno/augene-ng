@@ -1,4 +1,4 @@
-package dev.atsushieno.midi2tracktionedit
+package dev.atsushieno.augene
 
 class CommandArgumentContext(val midiFileContent: ByteArray, val tracktionEditTemplateFileContent: String) {
 

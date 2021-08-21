@@ -1,4 +1,4 @@
-package dev.atsushieno.midi2tracktionedit
+package dev.atsushieno.augene
 
 import dev.atsushieno.kotractive.*
 import dev.atsushieno.ktmidi.GeneralMidi

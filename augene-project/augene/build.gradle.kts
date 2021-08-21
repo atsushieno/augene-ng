@@ -35,8 +35,7 @@ kotlin {
             useJUnit()
         }
     }
-    js(LEGACY) {
-        binaries.executable()
+    js(BOTH) {
         nodejs {
             testTask {
                 useKarma {
@@ -46,7 +45,7 @@ kotlin {
             }
             useCommonJs()
         }
-        //browser()
+        //browser() - okio FileSystem.SYSTEM is not available on browsers yet.
     }
     val hostOs = System.getProperty("os.name")
     val isMingwX64 = hostOs.startsWith("Windows")
@@ -61,11 +60,12 @@ kotlin {
 
     
     sourceSets {
-        val androidMain by getting {
-            dependencies {
-                implementation("androidx.startup:startup-runtime:1.1.0")
-            }
+        all {
+            languageSettings.useExperimentalAnnotation("kotlin.RequiresOptIn")
+            languageSettings.useExperimentalAnnotation("okio.ExperimentalFileSystem")
         }
+
+        val androidMain by getting
         val androidTest by getting {
             dependencies {
                 implementation(kotlin("test-junit"))
@@ -74,7 +74,11 @@ kotlin {
         }
         val commonMain by getting {
             dependencies {
+                implementation("com.squareup.okio:okio-multiplatform:3.0.0-alpha.9")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2")
+
                 implementation("dev.atsushieno:ktmidi:0.3.8")
+                implementation("dev.atsushieno:mugene:0.2.16")
                 implementation("dev.atsushieno:kotractive:0.1")
             }
         }
@@ -85,7 +89,11 @@ kotlin {
         }
         val jvmMain by getting
         val jvmTest by getting
-        val jsMain by getting
+        val jsMain by getting {
+            dependencies {
+                implementation("com.squareup.okio:okio-nodefilesystem-js:3.0.0-alpha.9")
+            }
+        }
         val jsTest by getting {
             dependencies {
                 implementation(kotlin("test-js"))

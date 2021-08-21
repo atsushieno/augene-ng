@@ -30,8 +30,7 @@ kotlin {
             useJUnit()
         }
     }
-    js(LEGACY) {
-        binaries.executable()
+    js(BOTH) {
         nodejs {
             testTask {
                 // FIXME: we want to enable tests, but can't until this error gets fixed in KSP.
@@ -45,7 +44,7 @@ kotlin {
             }
             useCommonJs()
         }
-        //browser()
+        browser()
     }
     // e: Could not find "/media/atsushi/extssd0/sources/ktmidi/augene-ng/kotractive-project/kotractive/build/generated/ksp/nativeMain/classes" in [/media/atsushi/extssd0/sources/ktmidi/augene-ng/kotractive-project, /home/atsushi/.konan/klib, /home/atsushi/.konan/kotlin-native-prebuilt-linux-1.5.21/klib/common, /home/atsushi/.konan/kotlin-native-prebuilt-linux-1.5.21/klib/platform/linux_x64]
     /*
