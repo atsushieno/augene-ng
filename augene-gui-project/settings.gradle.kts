@@ -7,7 +7,7 @@ pluginManagement {
     }
     
 }
-rootProject.name = "augene-project"
+rootProject.name = "augene-gui-project"
 
 include(":android")
 include(":desktop")
