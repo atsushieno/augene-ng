@@ -1,5 +1,6 @@
 package dev.atsushieno.kotractive
 
+import dev.atsushieno.missingdot.xml.XmlTextReader
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

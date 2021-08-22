@@ -1,5 +1,11 @@
 package dev.atsushieno.kotractive
 
+import dev.atsushieno.missingdot.xml.IXmlLineInfo
+import dev.atsushieno.missingdot.xml.XmlException
+import dev.atsushieno.missingdot.xml.XmlNodeType
+import dev.atsushieno.missingdot.xml.XmlReader
+import dev.atsushieno.missingdot.xml.XmlTextReader
+
 class EditModelReader {
     companion object {
         fun toPascalCase(camelCase: String): String {

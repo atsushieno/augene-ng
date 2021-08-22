@@ -1,5 +1,7 @@
 package dev.atsushieno.kotractive
 
+import dev.atsushieno.missingdot.xml.XmlWriter
+import dev.atsushieno.missingdot.xml.XmlTextWriter
 
 class EditModelWriter {
     companion object {

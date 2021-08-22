@@ -33,10 +33,9 @@ kotlin {
     js(BOTH) {
         nodejs {
             testTask {
-                // FIXME: we want to enable tests, but can't until this error gets fixed in KSP.
+                // FIXME: we want to enable tests, but can't until this error gets fixed.
                 //   :kotractive:jsNodeTest: java.lang.IllegalStateException: command '/home/atsushi/.gradle/nodejs/node-v14.15.4-linux-x64/bin/node' exited with errors (exit code: 1)
                 enabled = false
-
                 useKarma {
                     useChromeHeadless()
                     webpackConfig.cssSupport.enabled = true
@@ -77,6 +76,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.2.1")
+                implementation("dev.atsushieno.missing-dot:missingdot:v0.1")
                 if (configurations.get("ksp").dependencies.all { p -> p.name != ":kotractive_ksp" })
                     configurations.get("ksp").dependencies.add(project(":kotractive_ksp"))
             }
