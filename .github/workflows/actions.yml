@@ -1,0 +1,48 @@
+name: build dist
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  linux-build:
+    name: build on linux
+    runs-on: ubuntu-20.04
+    steps:
+    - name: checkout
+      uses: actions/checkout@v1
+      with:
+        submodules: recursive
+    - name: apt update
+      run: |
+        sudo apt-get update
+    - name: set up JDK 11
+      uses: actions/setup-java@v1
+      with:
+        java-version: 11
+    - name: build kotractive
+      run: cd kotractive-project && ./gradlew --warning-mode all publishToMavenLocal
+    - name: build augene
+      run: cd augene-project && ./gradlew --warning-mode all publishToMavenLocal
+    - name: build augene-gui
+      run: cd augene-gui-project && ./gradlew --warning-mode all package
+    - name: upload build failure logs
+      if: failure()
+      uses: actions/upload-artifact@v2
+      with:
+        name: test-failure-logs
+        path: |
+          kotractive-project/kotractive/build/reports/
+          augene-project/augene/build/reports/
+          augene-gui-project/common/build/reports/
+          augene-gui-project/android/build/reports/
+          augene-gui-project/desktop/build/reports/
+    - name: upload artifact
+      if: success()
+      uses: actions/upload-artifact@v2
+      with:
+        name: missing-dot-artifacts
+        path: |
+          kotractive-project/kotractive/build/libs/*.jar
+          augene-project/augene/build/outputs/aar/*.aar
+
