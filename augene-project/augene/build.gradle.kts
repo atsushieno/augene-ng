@@ -12,6 +12,7 @@ repositories {
     mavenLocal()
     google()
     mavenCentral()
+    maven { url = uri("https://jitpack.io") }
 }
 
 plugins {
@@ -79,7 +80,7 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2")
 
                 implementation("dev.atsushieno:ktmidi:0.3.8")
-                implementation("dev.atsushieno:mugene:0.2.15")
+                implementation("dev.atsushieno:mugene:0.2.16")
                 implementation("dev.atsushieno:kotractive:0.1")
             }
         }
