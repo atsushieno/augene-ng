@@ -2,6 +2,7 @@ package dev.atsushieno.augene
 
 import dev.atsushieno.kotractive.*
 import dev.atsushieno.ktmidi.MidiCC
+import dev.atsushieno.missingdot.xml.XmlReader
 import dev.atsushieno.mugene.MmlCompiler
 import dev.atsushieno.mugene.MmlInputSource
 import okio.ExperimentalFileSystem

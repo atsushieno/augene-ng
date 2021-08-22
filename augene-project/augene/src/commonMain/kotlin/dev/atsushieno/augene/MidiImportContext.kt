@@ -3,6 +3,7 @@ package dev.atsushieno.augene
 import dev.atsushieno.kotractive.*
 import dev.atsushieno.ktmidi.MidiMusic
 import dev.atsushieno.ktmidi.read
+import dev.atsushieno.missingdot.xml.XmlTextReader
 
 enum class MarkerImportStrategy {
     Default,
