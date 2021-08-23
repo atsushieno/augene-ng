@@ -1,7 +1,5 @@
 package dev.atsushieno.augene
 
-import java.io.File
-
 // FIXME: implement
 class FileSystemWatcher {
     private val listeners = mutableListOf<(Any, FileSystemWatcherEventArgs) -> Unit>()

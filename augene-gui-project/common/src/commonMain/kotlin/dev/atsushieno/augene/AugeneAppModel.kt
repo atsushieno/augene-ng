@@ -4,7 +4,7 @@ import dev.atsushieno.missingdot.xml.XmlNodeType
 import dev.atsushieno.missingdot.xml.XmlReader
 import dev.atsushieno.missingdot.xml.XmlWriter
 import okio.ExperimentalFileSystem
-import java.io.File
+import okio.Path.Companion.toPath
 
 class AugeneAppModel : AugeneModel() {
 	companion object {
@@ -190,11 +190,12 @@ class AugeneAppModel : AugeneModel() {
 		_autoCompileProject = value
 	}
 
+	@OptIn(ExperimentalFileSystem::class)
 	private fun onFileEvent(o: Any, e: FileSystemWatcherEventArgs) {
 		if (!_autoReloadProject && !_autoCompileProject)
 			return
 		val proj: String = projectFileName ?: return
-		if (e.fullPath != projectFileName && project.mmlFiles.all { m -> File(proj).parentFile.resolve(m).absolutePath != e.fullPath })
+		if (e.fullPath != projectFileName && project.mmlFiles.all { m -> (proj.toPath().parent!! / m).toString() != e.fullPath })
 			return
 		if (_autoReloadProject)
 			loadProjectFile (proj)
@@ -248,12 +249,13 @@ class AugeneAppModel : AugeneModel() {
 
 	var lastLoadedProjectFileName : String? = null
 
+	@OptIn(ExperimentalFileSystem::class)
 	fun appOnProjectLoaded() {
 		if (lastLoadedProjectFileName != projectFileName) {
 			// FIXME: it is kind of hack, but so far we unify history with config.
 			saveConfiguration()
 
-			project_file_watcher.path = File(projectFileName!!).parent
+			project_file_watcher.path = projectFileName?.toPath()?.parent?.toString()
 			if (!project_file_watcher.enableRaisingEvents)
 				project_file_watcher.enableRaisingEvents = true
 
