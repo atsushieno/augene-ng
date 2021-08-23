@@ -1,0 +1,49 @@
+diff --git a/extras/AudioPluginHost/CMakeLists.txt b/extras/AudioPluginHost/CMakeLists.txt
+index fb1fb92950..9aa28eb9b3 100644
+--- a/extras/AudioPluginHost/CMakeLists.txt
++++ b/extras/AudioPluginHost/CMakeLists.txt
+@@ -53,7 +53,24 @@ target_compile_definitions(AudioPluginHost PRIVATE
+     JUCE_WASAPI=1
+     JUCE_WEB_BROWSER=0)
+ 
++find_package(PkgConfig REQUIRED)
++
++pkg_check_modules(LILV lilv-0)
++pkg_check_modules(SUIL suil-0)
++
++target_include_directories(AudioPluginHost PRIVATE
++    ${LILV_INCLUDE_DIRS}
++    ${SUIL_INCLUDE_DIRS}
++    "../../../../../../external/jlv2/modules")
++
++juce_add_modules(
++    ALIAS_NAMESPACE jlv2
++    ../../../../../../external/jlv2/modules/jlv2_host)
++
+ target_link_libraries(AudioPluginHost PRIVATE
++    ${LILV_LIBRARIES}
++    ${SUIL_LIBRARIES}
++    jlv2::jlv2_host
+     juce::juce_audio_utils
+     juce::juce_cryptography
+     juce::juce_dsp
+diff --git a/extras/AudioPluginHost/Source/UI/MainHostWindow.cpp b/extras/AudioPluginHost/Source/UI/MainHostWindow.cpp
+index dfd4927c85..645d333e79 100644
+--- a/extras/AudioPluginHost/Source/UI/MainHostWindow.cpp
++++ b/extras/AudioPluginHost/Source/UI/MainHostWindow.cpp
+@@ -26,6 +26,7 @@
+ #include <JuceHeader.h>
+ #include "MainHostWindow.h"
+ #include "../Plugins/InternalPlugins.h"
++#include "jlv2_host/jlv2_host.h"
+ 
+ 
+ //==============================================================================
+@@ -79,6 +80,7 @@ MainHostWindow::MainHostWindow()
+ {
+     formatManager.addDefaultFormats();
+     formatManager.addFormat (new InternalPluginFormat());
++    formatManager.addFormat (new jlv2::LV2PluginFormat());
+ 
+     auto safeThis = SafePointer<MainHostWindow> (this);
+     RuntimePermissions::request (RuntimePermissions::recordAudio,
