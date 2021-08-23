@@ -51,21 +51,33 @@ kotlin {
     val isMingwX64 = hostOs.startsWith("Windows")
 
     val nativeTarget = when {
-        hostOs == "Mac OS X" -> macosX64("native")
-        hostOs == "Linux" -> linuxX64("native")
-        isMingwX64 -> mingwX64("native")
+        hostOs == "Mac OS X" -> macosX64("native") {
+            binaries {
+                staticLib()
+                sharedLib()
+            }
+        }
+        hostOs == "Linux" -> linuxX64("native") {
+            binaries {
+                staticLib()
+                sharedLib()
+            }
+        }
+        isMingwX64 -> mingwX64("native") {
+            binaries {
+                staticLib()
+                sharedLib()
+            }
+        }
         else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
     }*/
 
     sourceSets {
         val androidMain by getting {
             dependencies {
-                implementation("androidx.startup:startup-runtime:1.1.0")
                 if (configurations.get("ksp").dependencies.all { p -> p.name != ":kotractive_ksp" })
                     configurations.get("ksp").dependencies.add(project(":kotractive_ksp"))
             }
-            // This cannot be enabled because it seems to bring in extraneous files from different targets.
-            //kotlin.srcDir("build/generated/ksp/androidMain/kotlin")
         }
         val androidTest by getting {
             dependencies {
@@ -80,22 +92,17 @@ kotlin {
                 if (configurations.get("ksp").dependencies.all { p -> p.name != ":kotractive_ksp" })
                     configurations.get("ksp").dependencies.add(project(":kotractive_ksp"))
             }
-            // This cannot be enabled because it seems to bring in extraneous files from different targets.
-            //kotlin.srcDir("build/generated/ksp/commonMain/kotlin")
         }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
             }
-            //kotlin.srcDir("build/generated/ksp/commonTest/kotlin")
         }
         val jvmMain by getting {
             dependencies {
                 if (configurations.get("ksp").dependencies.all { p -> p.name != ":kotractive_ksp" })
                     configurations.get("ksp").dependencies.add(project(":kotractive_ksp"))
             }
-            // This cannot be enabled because it seems to bring in extraneous files from different targets.
-            //kotlin.srcDir("build/generated/ksp/jvmMain/kotlin")
         }
         val jvmTest by getting
         val jsMain by getting {
@@ -103,16 +110,21 @@ kotlin {
                 if (configurations.get("ksp").dependencies.all { p -> p.name != ":kotractive_ksp" })
                     configurations.get("ksp").dependencies.add(project(":kotractive_ksp"))
             }
-            // This cannot be enabled because it seems to bring in extraneous files from different targets.
-            //kotlin.srcDir("build/generated/ksp/jsMain/kotlin")
         }
         val jsTest by getting {
             dependencies {
                 implementation(kotlin("test-js"))
             }
         }
-        //val nativeMain by getting
-        //val nativeTest by getting
+        /*
+        val nativeMain by getting {
+            dependencies {
+                if (configurations.get("ksp").dependencies.all { p -> p.name != ":kotractive_ksp" })
+                    configurations.get("ksp").dependencies.add(project(":kotractive_ksp"))
+            }
+        }
+        val nativeTest by getting
+        */
     }
 }
 
