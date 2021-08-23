@@ -1,8 +1,8 @@
 package dev.atsushieno.augene
 
-import dev.atsushieno.kotractive.XmlNodeType
-import dev.atsushieno.kotractive.XmlReader
-import dev.atsushieno.kotractive.XmlWriter
+import dev.atsushieno.missingdot.xml.XmlNodeType
+import dev.atsushieno.missingdot.xml.XmlReader
+import dev.atsushieno.missingdot.xml.XmlWriter
 import okio.ExperimentalFileSystem
 import java.io.File
 
