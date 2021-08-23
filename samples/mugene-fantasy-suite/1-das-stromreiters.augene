@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AugeneProject xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Tracks>
+    <AugeneTrack>
+      <Id>1</Id>
+      <AudioGraph>sample.filtergraph</AudioGraph>
+    </AugeneTrack>
+    <AugeneTrack>
+      <Id>2</Id>
+      <AudioGraph>sample2.filtergraph</AudioGraph>
+    </AugeneTrack>
+    <AugeneTrack>
+      <Id>3</Id>
+      <AudioGraph>sample3.filtergraph</AudioGraph>
+    </AugeneTrack>
+  </Tracks>
+  <MmlFiles>
+    <MmlFile>1-das-stromreiters.mugene</MmlFile>
+  </MmlFiles>
+</AugeneProject>

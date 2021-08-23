@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AugeneProject xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <MasterPlugins>
+    <AudioGraph>sample.master.filtergraph</AudioGraph>
+  </MasterPlugins>
+  <Tracks>
+    <AugeneTrack>
+      <Id>1</Id>
+      <AudioGraph>sample.filtergraph</AudioGraph>
+    </AugeneTrack>
+    <AugeneTrack>
+      <Id>2</Id>
+      <AudioGraph>sample2.filtergraph</AudioGraph>
+    </AugeneTrack>
+    <AugeneTrack>
+      <Id>3</Id>
+      <AudioGraph>sample3.filtergraph</AudioGraph>
+    </AugeneTrack>
+  </Tracks>
+  <MmlFiles>
+    <MmlFile>sample.mugene</MmlFile>
+  </MmlFiles>
+  <MmlStrings>
+    <MmlString>1    @0 V110 v100 o5 l8 cegcegeg  &gt; c1 </MmlString>
+  </MmlStrings>
+</AugeneProject>
