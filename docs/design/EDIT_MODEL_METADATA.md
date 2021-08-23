@@ -1,6 +1,6 @@
 # EditModelMetadata: under the hood
 
-augene-ng is originally written in C#, in a repository called [https://github.com/atsushieno/ntracktive](ntracktive), and its `EditModel` class made full use of .NET Reflection API as well as XML API.
+augene-ng is originally written in C#, in a repository called [ntracktive](https://github.com/atsushieno/ntracktive), and its `EditModel` class made full use of .NET Reflection API as well as XML API.
 
 The actual use of XML API involves XmlReader, XmlWriter, XmlSerializer and XLinq, and apart from XmlSerializer they were not hard to reimplement in Kotlin. And we replaced use of XmlSerializer with only tens of lines of code with XmlReader and XmlWriter. The XML implementation is now split into [missing-dot](https://github.com/atsushieno/missing-dot) project, for possible future API addition.
 
