@@ -16,6 +16,8 @@ add_subdirectory(juce-symlink)
 juce_add_gui_app(AugenePlayer
 	PRODUCT_NAME "AugenePlayer")
 
+juce_generate_juce_header(AugenePlayer)
+
 target_compile_definitions(AugenePlayer PRIVATE
     JUCE_ALSA=1
     JUCE_DIRECTSOUND=1
@@ -95,3 +97,4 @@ target_link_libraries(AugenePlayer PRIVATE
 	${SUIL_LIBRARIES}
 	)
 endif()
+
