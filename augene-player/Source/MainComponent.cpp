@@ -134,6 +134,44 @@ MainComponent::MainComponent()
     };
 
     settingsButton.onClick  = [this] { showAudioDeviceSettings (engine); };
+
+    exportButton.onClick = [this, &formatManager] {
+        auto temp = std::make_unique<tracktion_engine::Edit> (engine, createEmptyEdit (engine), tracktion_engine::Edit::EditRole::forEditing, nullptr, 1);
+
+        auto& pluginManager = engine.getPluginManager();
+        auto& deviceManager = engine.getDeviceManager();
+        File configDir{File::getSpecialLocation(File::userHomeDirectory).getFullPathName() + "/.local/augene-ng/"};
+        if (!configDir.exists())
+            configDir.createDirectory();
+        File pluginDataXml{configDir.getFullPathName() + "/plugin-metadata.xml"};
+        if (pluginDataXml.exists())
+            pluginDataXml.deleteFile();
+        auto outputStream = pluginDataXml.createOutputStream();
+
+        outputStream->writeText("<Plugins>\n", false, false, nullptr);
+        for (auto& pluginInfo : pluginManager.knownPluginList.getTypes()) {
+            auto format = String::formatted(
+                    "Failed to instantiate " + pluginInfo.name + " (" + pluginInfo.fileOrIdentifier + ")");
+            auto pluginStartElement = String::formatted("  <Plugin type='%s' name='%s' uid='%d' fileOrIdentifier='%s'>\n",
+                                                        pluginInfo.pluginFormatName.toRawUTF8(),
+                                                        pluginInfo.name.toRawUTF8(), pluginInfo.uid,
+                                                        pluginInfo.fileOrIdentifier.toRawUTF8());
+            auto instance = formatManager.createPluginInstance(pluginInfo, deviceManager.getSampleRate(),
+                                                               deviceManager.getBlockSize(), format);
+            if (!instance)
+                continue;
+            outputStream->writeText(pluginStartElement, false, false, nullptr);
+            for (auto &para: instance->getParameters()) {
+                auto msg = String::formatted("    <Parameter index='%d' name='%s' />\n", para->getParameterIndex(),
+                                             para->getName(4096).toRawUTF8());
+                outputStream->writeText(msg, false, false, nullptr);
+            }
+            outputStream->writeText("  </Plugin>\n", false, false, nullptr);
+        }
+        outputStream->writeText("</Plugins>\n", false, false, nullptr);
+        outputStream->flush();
+    };
+
     updatePlayButtonText();
     editNameLabel.setJustificationType (Justification::centred);
     addAndMakeVisible(&selectFileButton);
@@ -141,6 +179,7 @@ MainComponent::MainComponent()
     addAndMakeVisible(&settingsButton);
     addAndMakeVisible(&playPauseButton);
     addAndMakeVisible(&stopButton);
+    addAndMakeVisible(&exportButton);
     addAndMakeVisible(&editNameLabel);
 
     const File editFile (editFilePath);
@@ -171,7 +210,8 @@ void MainComponent::resized()
     selectFileButton.setBounds (topR.removeFromLeft (topR.getWidth() / 3).reduced (2));
     pluginsButton.setBounds (topR.removeFromLeft (topR.getWidth() / 2).reduced (2));
     settingsButton.setBounds (topR.reduced (2));
-    playPauseButton.setBounds (nextR.removeFromLeft (nextR.getWidth() / 2).reduced (2));
-    stopButton.setBounds (nextR.reduced (2));
+    playPauseButton.setBounds (nextR.removeFromLeft (nextR.getWidth() / 3).reduced (2));
+    stopButton.setBounds (nextR.removeFromLeft (nextR.getWidth() / 2).reduced (2));
+    exportButton.setBounds (nextR.reduced (2));
     editNameLabel.setBounds (r);
 }

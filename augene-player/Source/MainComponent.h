@@ -79,7 +79,9 @@ private:
     efsw::WatchID watchID;
     int32_t projectItemIDSource{0};
 
-    TextButton selectFileButton { "Open File" }, pluginsButton { "Plugins" }, settingsButton { "Settings" }, playPauseButton { "Play" }, stopButton { "Stop" };
+    TextButton selectFileButton { "Open File" }, pluginsButton { "Plugins" },
+        settingsButton { "Settings" }, exportButton { "Export Plugin Metadata" },
+        playPauseButton { "Play" }, stopButton { "Stop" };
     Label editNameLabel { "No Edit Loaded" };
 
     //==============================================================================
