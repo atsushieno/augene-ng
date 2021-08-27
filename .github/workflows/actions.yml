@@ -41,9 +41,11 @@ jobs:
       if: success()
       uses: actions/upload-artifact@v2
       with:
-        name: missing-dot-artifacts
+        name: augene-ng-artifacts
         path: |
           kotractive-project/kotractive/build/libs/*.jar
           augene-project/augene/build/outputs/aar/*.aar
+          augene-gui-project/desktop/build/compose/binaries/main/deb/*.msi
+          augene-gui-project/desktop/build/compose/binaries/main/deb/*.dmg
           augene-gui-project/desktop/build/compose/binaries/main/deb/*.deb
 
