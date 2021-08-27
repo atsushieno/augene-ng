@@ -138,8 +138,6 @@ MainComponent::MainComponent()
     settingsButton.onClick  = [this] { showAudioDeviceSettings (engine); };
 
     exportButton.onClick = [this, &formatManager] {
-        auto temp = std::make_unique<tracktion_engine::Edit> (engine, createEmptyEdit (engine), tracktion_engine::Edit::EditRole::forEditing, nullptr, 1);
-
         auto& pluginManager = engine.getPluginManager();
         auto& deviceManager = engine.getDeviceManager();
         File configDir{File::getSpecialLocation(File::userHomeDirectory).getFullPathName() + "/.local/augene-ng/"};
