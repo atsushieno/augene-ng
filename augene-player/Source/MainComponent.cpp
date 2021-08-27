@@ -43,6 +43,8 @@ void showAudioDeviceSettings (tracktion_engine::Engine& engine)
 #endif
 }
 
+const char* escapeJson(const juce::String src) { return src.replace("\"", "\\\"").toRawUTF8(); }
+
 MainComponent::MainComponent()
 {
     setSize (600, 400);
@@ -143,32 +145,40 @@ MainComponent::MainComponent()
         File configDir{File::getSpecialLocation(File::userHomeDirectory).getFullPathName() + "/.local/augene-ng/"};
         if (!configDir.exists())
             configDir.createDirectory();
-        File pluginDataXml{configDir.getFullPathName() + "/plugin-metadata.xml"};
+        File pluginDataXml{configDir.getFullPathName() + "/plugin-metadata.json"};
         if (pluginDataXml.exists())
             pluginDataXml.deleteFile();
         auto outputStream = pluginDataXml.createOutputStream();
 
-        outputStream->writeText("<Plugins>\n", false, false, nullptr);
+        outputStream->writeText("[\n", false, false, nullptr);
+        bool subsequentPlugin{false};
         for (auto& pluginInfo : pluginManager.knownPluginList.getTypes()) {
             auto format = String::formatted(
                     "Failed to instantiate " + pluginInfo.name + " (" + pluginInfo.fileOrIdentifier + ")");
-            auto pluginStartElement = String::formatted("  <Plugin type='%s' name='%s' uid='%d' fileOrIdentifier='%s'>\n",
-                                                        pluginInfo.pluginFormatName.toRawUTF8(),
-                                                        pluginInfo.name.toRawUTF8(), pluginInfo.uid,
-                                                        pluginInfo.fileOrIdentifier.toRawUTF8());
+            auto pluginStartElement = String::formatted("%s  {\"type\": \"%s\", \"name\": \"%s\", \"unique-id\": \"%d\",\n   \"file\": \"%s\", \"parameters\": [",
+                                                        subsequentPlugin ? ",\n" : "",
+                                                        escapeJson(pluginInfo.pluginFormatName),
+                                                        escapeJson(pluginInfo.name), pluginInfo.uid,
+                                                        escapeJson(pluginInfo.fileOrIdentifier));
             auto instance = formatManager.createPluginInstance(pluginInfo, deviceManager.getSampleRate(),
                                                                deviceManager.getBlockSize(), format);
             if (!instance)
                 continue;
+            subsequentPlugin = true;
             outputStream->writeText(pluginStartElement, false, false, nullptr);
+
+            bool subsequentParameter{false};
             for (auto &para: instance->getParameters()) {
-                auto msg = String::formatted("    <Parameter index='%d' name='%s' />\n", para->getParameterIndex(),
-                                             para->getName(4096).toRawUTF8());
+                auto msg = String::formatted("%s\n    {\"index\": \"%d\", \"name\": \"%s\"}",
+                                             subsequentParameter ? "," : "",
+                                             para->getParameterIndex(),
+                                             escapeJson(para->getName(4096)));
                 outputStream->writeText(msg, false, false, nullptr);
+                subsequentParameter = true;
             }
-            outputStream->writeText("  </Plugin>\n", false, false, nullptr);
+            outputStream->writeText("\n  ]}", false, false, nullptr);
         }
-        outputStream->writeText("</Plugins>\n", false, false, nullptr);
+        outputStream->writeText("\n]\n", false, false, nullptr);
         outputStream->flush();
     };
 
