@@ -11,10 +11,9 @@ buildscript {
 // This is a workaround for https://youtrack.jetbrains.com/issue/KT-44884
 configurations.matching { it.name != "kotlinCompilerPluginClasspath" }.all {
     resolutionStrategy.eachDependency {
-        version = requested.version
+        version = requested.version!!
         if (requested.group == "org.jetbrains.kotlinx" &&
-            requested.name.startsWith("kotlinx-coroutines") &&
-            version != null && !version.contains("native-mt")
+                requested.name.startsWith("kotlinx-coroutines") && !(version as String).contains("native-mt")
         ) {
             useVersion("$version-native-mt")
         }
