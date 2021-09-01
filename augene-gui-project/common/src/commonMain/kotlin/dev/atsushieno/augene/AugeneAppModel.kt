@@ -61,6 +61,16 @@ class AugeneAppModel : AugeneModel() {
 
 	var refreshRequested : () -> Unit = {}
 
+	fun processCreateNewProject () {
+		dialogs.ShowSaveFileDialog ("Name a new Augene Project") { files ->
+			if (files.any()) {
+				projectFileName = files[0]
+				project = AugeneProject()
+				processSaveProject()
+			}
+		}
+	}
+
 	fun processOpenProject () {
 		dialogs.ShowOpenFileDialog ("Open Augene Project") { files ->
 			if (files.any())

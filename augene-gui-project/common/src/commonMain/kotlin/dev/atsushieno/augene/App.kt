@@ -55,6 +55,10 @@ fun App() {
             if (fabActionMenuState) {
                 Button(onClick = {
                     fabActionMenuState = false
+                    model.processCreateNewProject()
+                }) { Text("New") }
+                Button(onClick = {
+                    fabActionMenuState = false
                     model.processOpenProject()
                 }) { Text("Load") }
                 Button(onClick = {
@@ -102,6 +106,9 @@ fun MmlList() {
             Button(onClick = { model.processNewMmlFile(false) }) {
                 Text("New MML File")
             }
+            Button(onClick = { model.processNewMmlFile(true) }) {
+                Text("Add existing MML file")
+            }
         }
         model.project.mmlFiles.forEach {
             Row {
@@ -134,7 +141,10 @@ fun TrackMappingList() {
 fun AudioGraphList() {
     Column {
         Button(onClick = { model.processNewAudioGraph(false) }) {
-            Text("New AudioGraph")
+            Text("New AudioGraph file")
+        }
+        Button(onClick = { model.processNewAudioGraph(true) }) {
+            Text("Add existing AudioGraph file")
         }
         model.project.audioGraphs.forEach {
             Row {
@@ -151,8 +161,11 @@ fun AudioGraphList() {
 @Composable
 fun MasterPluginList() {
     Column {
-        Button(onClick = {}) {
-            Text("New AudioGraph")
+        Button(onClick = { model.processNewMasterPluginFile(false) }) {
+            Text("New AudioGraph file")
+        }
+        Button(onClick = { model.processNewMasterPluginFile(true) }) {
+            Text("Add existing AudioGraph file")
         }
         model.project.masterPlugins.forEach {
             Row {
