@@ -103,12 +103,32 @@ class AugeneProject {
 			writer.close()
 		}
 
+		private fun canBeRelative(basePath: String, candidatePath: String) =
+			candidatePath.startsWith(basePath.toPath().parent.toString())
+		private fun relativize(basePath: String, candidatePath: String) =
+			candidatePath.substring(basePath.toPath().parent.toString().length + 1)
+
 		@OptIn(ExperimentalFileSystem::class)
 		fun save(project: AugeneProject, filename: String) {
 			// sanitize absolute paths
-			for (track in project.tracks)
-				if (track.audioGraph!!.toPath().isAbsolute)
-					track.audioGraph = (filename.toPath() / track.audioGraph!!.toPath()).toString()
+
+			for (ag in project.audioGraphs)
+				if (ag.source!!.toPath().isAbsolute)
+					// FIXME: we want to have `Path.relativize()` but there is no such implementation in MPP world.
+					if (canBeRelative(filename, ag.source!!))
+						ag.source = relativize(filename, ag.source!!)
+			project.mmlFiles.forEachIndexed { index, s ->
+				if (s.toPath().isAbsolute)
+				// FIXME: we want to have `Path.relativize()` but there is no such implementation in MPP world.
+					if (canBeRelative(filename, s))
+						project.mmlFiles[index] = relativize(filename, s)
+			}
+			project.masterPlugins.forEachIndexed { index, s ->
+				if (s.toPath().isAbsolute)
+				// FIXME: we want to have `Path.relativize()` but there is no such implementation in MPP world.
+					if (canBeRelative(filename, s))
+						project.masterPlugins[index] = relativize(filename, s)
+			}
 
 			val sb = StringBuilder()
 			save(project, XmlWriter.create(sb))
