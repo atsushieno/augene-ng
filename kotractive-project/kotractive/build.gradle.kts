@@ -24,13 +24,16 @@ kotlin {
     }
     jvm {
         compilations.all {
-            kotlinOptions.jvmTarget = "1.8"
+            kotlinOptions.jvmTarget = "14"
         }
         testRuns["test"].executionTask.configure {
             useJUnit()
         }
     }
-    js(BOTH) {
+    // FIXME: we want to enable BOTH, but can't until this error gets fixed.
+    // > Failed to calculate the value of task ':kotractive:compileTestDevelopmentExecutableKotlinJsIr' property 'entryModule$kotlin_gradle_plugin'.
+    //   > Collection has more than one element.
+    js(LEGACY) {
         nodejs {
             testTask {
                 // FIXME: we want to enable tests, but can't until this error gets fixed.
@@ -43,7 +46,14 @@ kotlin {
             }
             useCommonJs()
         }
-        browser()
+        browser {
+            testTask {
+                // FIXME: we want to enable tests, but can't until this error gets fixed.
+                //   :kotractive:jsNodeTest: java.lang.IllegalStateException: command '/home/atsushi/.gradle/nodejs/node-v14.15.4-linux-x64/bin/node' exited with errors (exit code: 1)
+                enabled = false
+            }
+            useCommonJs()
+        }
     }
     // e: Could not find "/media/atsushi/extssd0/sources/ktmidi/augene-ng/kotractive-project/kotractive/build/generated/ksp/nativeMain/classes" in [/media/atsushi/extssd0/sources/ktmidi/augene-ng/kotractive-project, /home/atsushi/.konan/klib, /home/atsushi/.konan/kotlin-native-prebuilt-linux-1.5.21/klib/common, /home/atsushi/.konan/kotlin-native-prebuilt-linux-1.5.21/klib/platform/linux_x64]
     /*
@@ -75,8 +85,6 @@ kotlin {
     sourceSets {
         val androidMain by getting {
             dependencies {
-                if (configurations.get("ksp").dependencies.all { p -> p.name != ":kotractive_ksp" })
-                    configurations.get("ksp").dependencies.add(project(":kotractive_ksp"))
             }
         }
         val androidTest by getting {
@@ -88,7 +96,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.2.1")
-                implementation("dev.atsushieno.missing-dot:missingdot:v0.1")
+                implementation("dev.atsushieno:missingdot:0.1")
                 if (configurations.get("ksp").dependencies.all { p -> p.name != ":kotractive_ksp" })
                     configurations.get("ksp").dependencies.add(project(":kotractive_ksp"))
             }
@@ -100,15 +108,11 @@ kotlin {
         }
         val jvmMain by getting {
             dependencies {
-                if (configurations.get("ksp").dependencies.all { p -> p.name != ":kotractive_ksp" })
-                    configurations.get("ksp").dependencies.add(project(":kotractive_ksp"))
             }
         }
         val jvmTest by getting
         val jsMain by getting {
             dependencies {
-                if (configurations.get("ksp").dependencies.all { p -> p.name != ":kotractive_ksp" })
-                    configurations.get("ksp").dependencies.add(project(":kotractive_ksp"))
             }
         }
         val jsTest by getting {
@@ -119,8 +123,6 @@ kotlin {
         /*
         val nativeMain by getting {
             dependencies {
-                if (configurations.get("ksp").dependencies.all { p -> p.name != ":kotractive_ksp" })
-                    configurations.get("ksp").dependencies.add(project(":kotractive_ksp"))
             }
         }
         val nativeTest by getting

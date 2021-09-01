@@ -17,4 +17,4 @@ pluginManagement {
 
 rootProject.name = "augene-project"
 
-include("augene")
+include("augene", "augene-console")

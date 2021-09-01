@@ -49,9 +49,9 @@ kotlin {
         }
         //browser() - okio FileSystem.SYSTEM is not available on browsers yet.
     }
+    /*
     val hostOs = System.getProperty("os.name")
     val isMingwX64 = hostOs.startsWith("Windows")
-    /*
     val nativeTarget = when {
         hostOs == "Mac OS X" -> macosX64("native")
         hostOs == "Linux" -> linuxX64("native")
@@ -60,7 +60,6 @@ kotlin {
     }
     */
 
-    
     sourceSets {
         all {
             languageSettings.useExperimentalAnnotation("kotlin.RequiresOptIn")
@@ -79,9 +78,9 @@ kotlin {
                 implementation("com.squareup.okio:okio-multiplatform:3.0.0-alpha.9")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2")
 
-                implementation("dev.atsushieno:ktmidi:0.3.8")
+                implementation("dev.atsushieno:ktmidi:0.3.10")
                 implementation("dev.atsushieno:mugene:0.2.16")
-                implementation("dev.atsushieno.missing-dot:missingdot:0.1")
+                implementation("dev.atsushieno:missingdot:0.1")
                 implementation("dev.atsushieno:kotractive:0.1")
             }
         }
