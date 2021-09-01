@@ -462,6 +462,7 @@ open class PluginElementBase
 	var MacroParameters : MacroParametersElement? = null
 	var ModifierAssignments : ModifierAssignmentsElement? = null
 	var FacePlate : FacePlateElement? = null
+	var AutomationCurves : MutableList<AutomationCurveElement> = mutableListOf()
 }
 
 
@@ -469,11 +470,22 @@ class FilterElement : PluginElementBase()
 {
 }
 
-
 class PluginElement : PluginElementBase()
 {
 }
 
+class AutomationCurveElement
+{
+	var ParamID : Int = 0
+	var Points : MutableList<PointElement> = mutableListOf()
+}
+
+class PointElement
+{
+	var t : Double = 0.0
+	var v : Double = 0.0
+	var c : Double = 0.0
+}
 
 class ModifierAssignmentsElement
 {

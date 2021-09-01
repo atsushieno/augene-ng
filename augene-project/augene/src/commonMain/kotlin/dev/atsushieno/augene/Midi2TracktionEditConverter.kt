@@ -10,6 +10,7 @@ import dev.atsushieno.ktmidi.MidiTrack
 import dev.atsushieno.ktmidi.mergeTracks
 import kotlin.math.pow
 
+private val SMF_SYSEX_EVENT = 0xF0
 private val SMF_META_EVENT = 0xFF
 internal fun Byte.toUnsigned() : Int = if (this < 0) this + 0x100 else this.toInt()
 
@@ -162,6 +163,8 @@ println("GLOBAL MARKERS: ${globalMarkers.size}")
         var timeSigNumerator = 4
         var timeSigDenominator = 4
         var currentBpm = 120.0
+        var currentAutomationTarget: String? = null
+        var currentAutomationTargetAsNumber: Int? = null
 
         for (msg in mtrack.messages) {
             currentTotalTime += msg.deltaTime
@@ -236,8 +239,72 @@ println("GLOBAL MARKERS: ${globalMarkers.size}")
                         Val = msg.event.msb * 128 + msg.event.lsb
                     })
                 else -> { // sysex or meta
-                    if (msg.event.eventType.toInt() == SMF_META_EVENT) {
-                        when (msg.event.metaType.toInt()) {
+                    if (msg.event.eventType.toUnsigned() == SMF_SYSEX_EVENT) {
+                        val sysex = msg.event.extraData
+                        // Check if it is augene-specific sysex
+                        if (sysex != null && sysex[0] == 0x7D.toByte() && sysex.size > 10 &&
+                            sysex.drop(1).take(9).toByteArray().decodeToString() == "augene-ng") {
+                            if (sysex[10] == 0.toByte()) {
+                                if (sysex.size > 14) {
+                                    // send automation parameter
+                                    val targetParameter = sysex[11] + sysex[12] * 0x80
+                                    val value = sysex[13] + sysex[14] * 0x80
+
+                                    if (!ttrack.AutomationTracks.any { it.CurrentAutoParamPluginID == currentAutomationTargetAsNumber && it.CurrentAutoParamTag == targetParameter }) {
+                                        val aTrack = AutomationTrackElement().apply {
+                                            Id = context.generateNewID()
+                                            CurrentAutoParamPluginID = currentAutomationTargetAsNumber
+                                            CurrentAutoParamTag = targetParameter
+                                            MacroParameters = MacroParametersElement().apply { Id = context.generateNewID() }
+                                            Modifiers = ModifiersElement()
+                                        }
+                                        ttrack.AutomationTracks.add(aTrack)
+                                    }
+                                    val plugin = ttrack.Plugins.firstOrNull { it.Uid == currentAutomationTarget }
+                                    if (plugin != null) {
+                                        var aCurve = plugin.AutomationCurves.firstOrNull { it.ParamID == targetParameter }
+                                        if (aCurve == null) {
+                                            aCurve = AutomationCurveElement().apply { ParamID = targetParameter }
+                                            plugin.AutomationCurves.add(aCurve)
+                                        }
+                                        aCurve.Points.add(PointElement().apply {
+                                            t = tTime
+                                            v = value.toDouble()
+                                            c = 0.0 // FIXME: what is this?
+                                        })
+                                    }
+                                    else
+                                        println("!!! AUTOMATION TARGET PLUGIN NOT FOUND in the track: $currentAutomationTarget")
+                                }
+                                else
+                                    println("!!! INSUFFICIENT AUTOMATION SEND SYSEX BUFFER")
+                            } else {
+                                // set automation target parameter by name
+                                val nameLen = sysex[10].toUnsigned()
+                                if (sysex.size >= 1 + 9 + 1 + nameLen) { // 7D, "augene-ng", nameLen byte, name
+                                    currentAutomationTarget =
+                                        sysex.drop(11).take(nameLen).toByteArray().decodeToString()
+                                    var target = ttrack.Plugins.firstOrNull { it.Uid == currentAutomationTarget }
+                                    if (target == null) {
+                                        // create a stub PluginElement.
+                                        target = PluginElement().apply {
+                                            Name = "!!! STUB !!! REPLACE THIS !!!"
+                                            Uid = currentAutomationTarget
+                                            Id = context.generateNewID()
+                                        }
+                                        ttrack.Plugins.add(target)
+                                    }
+                                    currentAutomationTargetAsNumber = target.Id!!.toInt()
+                                    println("AUTOMATION TARGET PLUGIN: $currentAutomationTarget ($currentAutomationTargetAsNumber)")
+                                }
+                                else
+                                    // FIXME: replace these println hacks with some viable logging stuff.
+                                    println("!!! INSUFFICIENT AUTOMATION TARGET PLUGIN SYSEX BUFFER")
+                            }
+                        }
+                    }
+                    if (msg.event.eventType.toUnsigned() == SMF_META_EVENT) {
+                        when (msg.event.metaType.toUnsigned()) {
                             MidiMetaType.TRACK_NAME ->
                                 ttrack.Id = msg.event.extraData.contentToString()
                             MidiMetaType.INSTRUMENT_NAME -> // This does not exist in TracktionEdit; ntracktive extends this.

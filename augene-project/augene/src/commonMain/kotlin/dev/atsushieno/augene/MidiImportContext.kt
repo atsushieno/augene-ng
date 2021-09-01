@@ -4,6 +4,7 @@ import dev.atsushieno.kotractive.*
 import dev.atsushieno.ktmidi.MidiMusic
 import dev.atsushieno.ktmidi.read
 import dev.atsushieno.missingdot.xml.XmlTextReader
+import kotlin.random.Random
 
 enum class MarkerImportStrategy {
     Default,
@@ -22,6 +23,9 @@ class MidiImportContext {
         this.midi = midi
         this.edit = edit
     }
+
+    // FIXME: it is so hacky.
+    fun generateNewID() : String = Random.nextInt().toString()
 
     var cleanupExistingTracks = true
 
