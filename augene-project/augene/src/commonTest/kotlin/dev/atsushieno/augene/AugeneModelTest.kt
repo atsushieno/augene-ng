@@ -6,7 +6,7 @@ import kotlin.test.assertEquals
 
 class AugeneModelTest {
     @Test
-    fun load() {
+    fun loadJson() {
         val json = """
 {"audioGraphs":[{"id":"1","source":"test1.filtergraph"}],"mmlFiles":["test-augene-ng.mugene"]}
 """

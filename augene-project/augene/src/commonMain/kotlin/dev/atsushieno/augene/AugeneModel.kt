@@ -148,16 +148,12 @@ open class AugeneModel
 	var onMasterPluginsDeleted : () -> Unit = {}
 
 	@OptIn(ExperimentalFileSystem::class)
-	fun resolvePathRelativetoProject (pathSpec: String) : String =
-		FileSupport.canonicalizePath((projectFileName!!.toPath().parent!! / pathSpec).toString())
-
-	@OptIn(ExperimentalFileSystem::class)
 	fun compile () {
 		if (projectFileName == null)
 			throw IllegalStateException ("To compile the project, ProjectFileName must be specified in prior")
 
 		val fileSupport = FileSupport(projectFileName!!)
-		val abspath = { s:String? -> resolvePathRelativetoProject(s!!) }
+		val abspath = { s:String? -> fileSupport.resolvePathRelativeToProject(s!!) }
 		val compiler = MmlCompiler.create()
 		val mmlFilesAbs = project.mmlFiles.map { f -> abspath (f) }
 		val mmls = mmlFilesAbs.map { f -> MmlInputSource (f, fileSupport.readString(f)) } +
@@ -271,7 +267,7 @@ open class AugeneModel
 			return if (lastIndex > 0) path.substring(0, lastIndex) + ext else path
 		}
 
-		val outfile = outputEditFileName ?: changeExtension(abspath ((projectDirectory!!.toPath() / projectFileName!!).toString()), ".tracktionedit")
+		val outfile = outputEditFileName ?: changeExtension(abspath (projectFileName!!), ".tracktionedit")
 		val sb = StringBuilder()
 		EditModelWriter().write(sb, edit)
 		fileSupport.writeString(outfile, sb.toString())

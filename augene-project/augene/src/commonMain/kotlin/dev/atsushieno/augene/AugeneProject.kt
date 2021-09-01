@@ -5,6 +5,7 @@ import dev.atsushieno.missingdot.xml.XElement
 import dev.atsushieno.missingdot.xml.XmlReader
 import dev.atsushieno.missingdot.xml.XmlTextReader
 import dev.atsushieno.missingdot.xml.XmlWriter
+import dev.atsushieno.missingdot.xml.XmlTextWriter
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
@@ -49,7 +50,7 @@ class AugeneProject {
 		}
 
 		fun load(fileName: String): AugeneProject =
-			load(XmlTextReader(FileSupport(".").readString(fileName)))
+			load(XmlTextReader(FileSupport(fileName).readString(fileName)))
 
 		fun loadJson(jsonText: String): AugeneProject = Json.decodeFromString(jsonText)
 
@@ -131,7 +132,7 @@ class AugeneProject {
 			}
 
 			val sb = StringBuilder()
-			save(project, XmlWriter.create(sb))
+			save(project, XmlTextWriter(sb).apply { indent = true })
 			FileSupport(".").writeString(filename, sb.toString())
 		}
 

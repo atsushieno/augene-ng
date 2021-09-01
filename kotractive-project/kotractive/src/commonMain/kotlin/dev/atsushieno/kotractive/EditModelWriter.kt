@@ -47,8 +47,10 @@ class EditModelWriter {
     }
 
     fun write(stringBuilder: StringBuilder, o: Any) {
-        XmlTextWriter(stringBuilder).apply { namespaces = false }.also {
-            write(it, o, null)
+        XmlTextWriter(stringBuilder).apply {
+            namespaces = false
+            indent = true
+            write(this, o, null)
         }
     }
 

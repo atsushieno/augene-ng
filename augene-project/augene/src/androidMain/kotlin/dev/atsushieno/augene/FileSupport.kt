@@ -1,1 +1,22 @@
-../../../../../jvmMain/kotlin/dev/atsushieno/augene/FileSupport.kt
+package dev.atsushieno.augene
+
+import okio.FileSystem
+import okio.Path.Companion.toPath
+
+internal actual fun pwd() =
+    System.getProperty("user.dir")
+
+internal actual fun readStringFromFileSystem(fullPath: String) =
+    FileSystem.SYSTEM.read(fullPath.toPath()) { this.readUtf8() }
+
+internal actual fun writeStringToFileSystem(fullPath: String, text: String) {
+    FileSystem.SYSTEM.write(fullPath.toPath()) { this.writeUtf8(text) }
+}
+
+internal actual fun canonicalizeFilePath(path: String) : String {
+    return FileSystem.SYSTEM.canonicalize(path.toPath()).toString()
+}
+
+internal actual fun resolveFilePath(basePath: String, targetPath: String) : String {
+    TODO("Not implemented") // FileSystem.SYSTEM does not exist yet!
+}

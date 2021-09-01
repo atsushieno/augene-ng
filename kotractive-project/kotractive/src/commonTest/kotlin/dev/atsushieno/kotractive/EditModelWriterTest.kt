@@ -11,7 +11,7 @@ class EditModelWriterTest {
         val writer = EditModelWriter()
         val sb = StringBuilder()
         writer.write(sb, EditElement())
-        val xml = "<EDIT creationTime=\"0\" />"
+        val xml = "<EDIT creationTime=\"0\" />\n"
         assertEquals(xml, sb.toString())
     }
 

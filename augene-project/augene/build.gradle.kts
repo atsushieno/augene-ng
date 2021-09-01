@@ -40,6 +40,9 @@ kotlin {
     js(LEGACY) { // it depends on mugene which does not support BOTH
         nodejs {
             testTask {
+                // FIXME: enable this once this error got fixed:
+                // Module not found: Error: Can't resolve 'os' in '/media/atsushi/extssd0/sources/ktmidi/augene-ng/augene-project/build/js/node_modules/okio-parent-okio-js-legacy'
+                enabled = false
                 useKarma {
                     useChromeHeadless()
                     webpackConfig.cssSupport.enabled = true
