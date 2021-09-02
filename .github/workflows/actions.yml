@@ -21,11 +21,11 @@ jobs:
       with:
         java-version: 16
     - name: build kotractive
-      run: cd kotractive-project && ./gradlew --warning-mode all publishToMavenLocal
+      run: cd kotractive-project && ./gradlew --warning-mode all build publishToMavenLocal
     - name: build augene
-      run: cd augene-project && ./gradlew --warning-mode all publishToMavenLocal
+      run: cd augene-project && ./gradlew --warning-mode all build publishToMavenLocal
     - name: build augene-gui
-      run: cd augene-gui-project && ./gradlew --warning-mode all package
+      run: cd augene-gui-project && ./gradlew --warning-mode all build package
     - name: upload build failure logs
       if: failure()
       uses: actions/upload-artifact@v2
