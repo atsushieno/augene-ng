@@ -56,37 +56,22 @@ kotlin {
         }
     }
     // e: Could not find "/media/atsushi/extssd0/sources/ktmidi/augene-ng/kotractive-project/kotractive/build/generated/ksp/nativeMain/classes" in [/media/atsushi/extssd0/sources/ktmidi/augene-ng/kotractive-project, /home/atsushi/.konan/klib, /home/atsushi/.konan/kotlin-native-prebuilt-linux-1.5.21/klib/common, /home/atsushi/.konan/kotlin-native-prebuilt-linux-1.5.21/klib/platform/linux_x64]
-    /*
     val hostOs = System.getProperty("os.name")
     val isMingwX64 = hostOs.startsWith("Windows")
 
     val nativeTarget = when {
-        hostOs == "Mac OS X" -> macosX64("native") {
-            binaries {
-                staticLib()
-                sharedLib()
-            }
-        }
-        hostOs == "Linux" -> linuxX64("native") {
-            binaries {
-                staticLib()
-                sharedLib()
-            }
-        }
-        isMingwX64 -> mingwX64("native") {
-            binaries {
-                staticLib()
-                sharedLib()
-            }
-        }
+        hostOs == "Mac OS X" -> macosX64("native")
+        hostOs == "Linux" -> linuxX64("native")
+        isMingwX64 -> mingwX64("native")
         else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
-    }*/
+    }
+    nativeTarget.binaries {
+        staticLib()
+        sharedLib()
+    }
 
     sourceSets {
-        val androidMain by getting {
-            dependencies {
-            }
-        }
+        val androidMain by getting
         val androidTest by getting {
             dependencies {
                 implementation(kotlin("test-junit"))
@@ -106,27 +91,16 @@ kotlin {
                 implementation(kotlin("test"))
             }
         }
-        val jvmMain by getting {
-            dependencies {
-            }
-        }
+        val jvmMain by getting
         val jvmTest by getting
-        val jsMain by getting {
-            dependencies {
-            }
-        }
+        val jsMain by getting
         val jsTest by getting {
             dependencies {
                 implementation(kotlin("test-js"))
             }
         }
-        /*
-        val nativeMain by getting {
-            dependencies {
-            }
-        }
+        val nativeMain by getting
         val nativeTest by getting
-        */
     }
 }
 
