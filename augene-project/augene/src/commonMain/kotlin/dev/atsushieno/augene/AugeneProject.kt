@@ -11,12 +11,7 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import okio.ExperimentalFileSystem
-import okio.FileSystem
 import okio.Path.Companion.toPath
-
-annotation class XmlAttribute()
-annotation class XmlIgnore()
-annotation class XmlArrayItem(val itemName: String)
 
 @Serializable
 class AugeneProject {

@@ -8,6 +8,7 @@ import dev.atsushieno.ktmidi.MidiMessage
 import dev.atsushieno.ktmidi.MidiMetaType
 import dev.atsushieno.ktmidi.MidiTrack
 import dev.atsushieno.ktmidi.mergeTracks
+import dev.atsushieno.missingdot.xml.XmlReader
 import kotlin.math.pow
 
 private val SMF_SYSEX_EVENT = 0xF0
@@ -21,29 +22,12 @@ class MidiToTracktionEditConverter(private var context: MidiImportContext) {
     private var globalMarkers = arrayOf(MidiMessage(Int.MAX_VALUE, MidiEvent(0)))
 
     fun process(midiFileContent: ByteArray, tracktionEditFileContent: String) : String {
-        context = CommandArgumentContext(midiFileContent, tracktionEditFileContent).createImportContext()
+        context = MidiImportContext.create(midiFileContent, tracktionEditFileContent)
         importMusic()
         val sb = StringBuilder()
         EditModelWriter().write(sb, context.edit)
         return sb.toString()
     }
-
-    /* It is not doable ATM, as there is no File access API in Kotlin MPP.
-
-    fun Process (args: Array<String>) {
-        var argumentContext = GetContextFromCommandArguments (args)
-        context = argumentContext.createImportContext()
-        ImportMusic ()
-        EditModelWriter ().Write (Console.Out, context.edit)
-    }
-
-    fun GetContextFromCommandArguments (args: Array<String>): CommandArgumentContext {
-        var context =  CommandArgumentContext ()
-        context.MidiFile = args.firstOrNull ()
-        context.TracktionEditTemplateFile = args.drop (1).firstOrNull ()
-        return context
-    }
-    */
 
     fun importMusic() {
         if (consumed)
@@ -72,11 +56,18 @@ println("GLOBAL MARKERS: ${globalMarkers.size}")
             }
         }
 
-        for (mtrack in context.midi.tracks) {
-            val trackName = populateTrackName(mtrack)
-            val ttrack = TrackElement().apply { Name = trackName }
+        for (midiTrack in context.midi.tracks) {
+            val ttrack = TrackElement().apply {
+                Name = populateTrackName(midiTrack)
+                Extension_InstrumentName = populateInstrumentName(midiTrack)
+
+                val graph = context.mappedPlugins[Extension_InstrumentName ?: ""]
+                if (graph != null)
+                    for (p in AugeneModel.toTracktion(AugenePluginSpecifier.fromAudioGraph(graph)))
+                        Plugins.add(p.apply { Id = context.generateNewID() })
+            }
             context.edit.Tracks.add(ttrack)
-            importTrack(mtrack, ttrack)
+            importTrack(midiTrack, ttrack)
             if (!ttrack.Clips.any() && !ttrack.Clips.any())
                 context.edit.Tracks.remove(ttrack)
             else {
@@ -120,10 +111,10 @@ println("GLOBAL MARKERS: ${globalMarkers.size}")
             if (clip != null) {
                 clip!!.PatternGenerator = PatternGeneratorElement()
                 clip!!.PatternGenerator?.Progression = ProgressionElement()
-                val e = seq.Events.filter { it.getMetaType().simpleName == "AbstractMidiEventElement" }.lastOrNull()
+                val e = seq.Events.lastOrNull { it.getMetaType().simpleName == "AbstractMidiEventElement" }
                 if (e != null) {
                     val note = e as NoteElement?
-                    val extend = if (note != null) note.L else 0
+                    val extend = note?.L ?: 0
                     clip?.Length = e.B + extend.toDouble()
                 } else if (!seq.Events.any())
                     ttrack.Clips.remove(clip!!)
@@ -142,7 +133,7 @@ println("GLOBAL MARKERS: ${globalMarkers.size}")
             val name = if (nextGlobalMarker.event.extraData == null) null else nextGlobalMarker.event.extraData!!.drop(
                 nextGlobalMarker.event.extraDataOffset
             ).take(nextGlobalMarker.event.extraDataLength)
-                .toByteArray().contentToString()
+                .toByteArray().decodeToString()
             clip = MidiClipElement().apply {
                 Type = "midi"
                 Speed = 1.0
@@ -158,7 +149,7 @@ println("GLOBAL MARKERS: ${globalMarkers.size}")
         nextClip()
 
         ttrack.Modifiers = ModifiersElement()
-        val noteDeltaTimes = Array<Int>(16 * 128) { 0 }  // new int [16, 128];
+        val noteDeltaTimes = Array(16 * 128) { 0 }  // new int [16, 128];
         val notes = Array<NoteElement?>(16 * 128) { null } // new NoteElement? [16,128];
         var timeSigNumerator = 4
         var timeSigDenominator = 4
@@ -288,7 +279,7 @@ println("GLOBAL MARKERS: ${globalMarkers.size}")
                                     if (target == null) {
                                         // create a stub PluginElement.
                                         target = PluginElement().apply {
-                                            Name = "!!! STUB !!! REPLACE THIS !!!"
+                                            Name = ttrack.Extension_InstrumentName ?: "!!! STUB !!! REPLACE THIS !!!"
                                             Uid = currentAutomationTarget
                                             Id = context.generateNewID()
                                         }
@@ -306,14 +297,13 @@ println("GLOBAL MARKERS: ${globalMarkers.size}")
                     if (msg.event.eventType.toUnsigned() == SMF_META_EVENT) {
                         when (msg.event.metaType.toUnsigned()) {
                             MidiMetaType.TRACK_NAME ->
-                                ttrack.Id = msg.event.extraData.contentToString()
+                                ttrack.Id = msg.event.extraData?.decodeToString()
                             MidiMetaType.INSTRUMENT_NAME -> // This does not exist in TracktionEdit; ntracktive extends this.
-                                ttrack.Extension_InstrumentName = msg.event.extraData.contentToString()
+                                ttrack.Extension_InstrumentName = msg.event.extraData?.decodeToString()
                             MidiMetaType.MARKER ->
                                 when (context.markerImportStrategy) {
-                                    MarkerImportStrategy.PerTrack -> {
-                                        // TODO: implement
-                                    }
+                                    MarkerImportStrategy.PerTrack -> TODO("implement")
+                                    else -> {}
                                 }
                             MidiMetaType.TEMPO -> {
                                 currentBpm =
@@ -358,17 +348,24 @@ println("GLOBAL MARKERS: ${globalMarkers.size}")
 
     private fun populateTrackName(track: MidiTrack): String? {
         val tnEv = track.messages.map { m -> m.event }
-            .firstOrNull { e -> e.eventType.toInt() == SMF_META_EVENT && e.metaType.toInt() == MidiMetaType.TRACK_NAME }
+            .firstOrNull { e -> e.eventType.toUnsigned() == SMF_META_EVENT && e.metaType.toUnsigned() == MidiMetaType.TRACK_NAME }
         var trackName =
             if (tnEv?.extraData != null) tnEv.extraData!!.drop(tnEv.extraDataOffset).take(tnEv.extraDataLength)
-                .toByteArray().contentToString() else null
+                .toByteArray().decodeToString() else null
         val progChgs =
             track.messages.map { m -> m.event }.filter { e -> e.eventType.toInt() == MidiChannelStatus.PROGRAM }
                 .toTypedArray()
         val firstProgramChangeValue = if (progChgs.isNotEmpty()) progChgs[0].msb else -1
         if (0 <= firstProgramChangeValue && firstProgramChangeValue < GeneralMidi.INSTRUMENT_NAMES.size)
-            trackName = GeneralMidi.INSTRUMENT_NAMES[firstProgramChangeValue.toInt()]
+            trackName = GeneralMidi.INSTRUMENT_NAMES[firstProgramChangeValue.toUnsigned()]
         return trackName
+    }
+
+    private fun populateInstrumentName(track: MidiTrack): String? {
+        val inEv = track.messages.map { m -> m.event }
+            .firstOrNull { e -> e.eventType.toUnsigned() == SMF_META_EVENT && e.metaType.toUnsigned() == MidiMetaType.INSTRUMENT_NAME }
+        return if (inEv?.extraData != null) inEv.extraData!!.drop(inEv.extraDataOffset).take(inEv.extraDataLength)
+                .toByteArray().decodeToString() else null
     }
 }
 

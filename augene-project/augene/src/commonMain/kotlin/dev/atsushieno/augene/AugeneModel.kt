@@ -3,6 +3,7 @@ package dev.atsushieno.augene
 import dev.atsushieno.kotractive.*
 import dev.atsushieno.ktmidi.MidiCC
 import dev.atsushieno.missingdot.xml.XmlReader
+import dev.atsushieno.missingdot.xml.XmlTextReader
 import dev.atsushieno.mugene.MmlCompiler
 import dev.atsushieno.mugene.MmlInputSource
 import okio.ExperimentalFileSystem
@@ -154,17 +155,26 @@ open class AugeneModel
 
 		val fileSupport = FileSupport(projectFileName!!)
 		val abspath = { s:String? -> fileSupport.resolvePathRelativeToProject(s!!) }
+
+		// compile into MidiMusic.
 		val compiler = MmlCompiler.create()
 		val mmlFilesAbs = project.mmlFiles.map { f -> abspath (f) }
 		val mmls = mmlFilesAbs.map { f -> MmlInputSource (f, fileSupport.readString(f)) } +
 			project.mmlStrings.map { s -> MmlInputSource ("(no file)", s) }
 		val music = compiler.compile (false, mmls.toTypedArray())
+
+		// load filtergraphs here so that they can be referenced at importing.
+		val audioGraphs = project.expandedAudioGraphsFullPath (abspath, null, null).asIterable ().toMutableList()
+		val juceAudioGraphs = audioGraphs.filter { it.source != null && it.id != null }.map {
+			val text = fileSupport.readString(abspath(it.source))
+			it.id!! to JuceAudioGraph.load(XmlReader.create(text)).asIterable()
+		}.toMap()
+
+		// prepare tracktionedit
 		val edit = EditElement ()
-		val converter = MidiToTracktionEditConverter (MidiImportContext (music, edit))
+		val converter = MidiToTracktionEditConverter (MidiImportContext (music, edit, audioGraphs, juceAudioGraphs))
 		converter.importMusic ()
 		val dstTracks = edit.Tracks.filterIsInstance<TrackElement>()
-
-		val audioGraphs = project.expandedAudioGraphsFullPath (abspath, null, null).asIterable ().toList()
 
 		// Assign numeric IDs to those unnamed tracks.
 		for (n in dstTracks.indices)
@@ -204,23 +214,8 @@ open class AugeneModel
 			}
 		}
 
-		// Step 2: assign audio graphs by INSTRUMENTNAME (if named). It will overwrite bank mapping.
-		for (track in edit.Tracks.filterIsInstance<TrackElement> ()) {
-			if (track.Extension_InstrumentName == null)
-				continue
-			val existingPlugins = track.Plugins.toTypedArray()
-			track.Plugins.clear ()
-			val ag = audioGraphs.firstOrNull { a -> a.id == track.Extension_InstrumentName }
-			if (ag != null) {
-				val text = fileSupport.readString(abspath (ag.source))
-				val graph = JuceAudioGraph.load(XmlReader.create(text)).asIterable()
-				for (p in toTracktion(AugenePluginSpecifier.fromAudioGraph(graph)))
-					track.Plugins.add(p)
-			}
-			// recover volume and level at the end.
-			for (p in existingPlugins)
-				track.Plugins.add (p)
-		}
+		// there used to be Step 2: assign audio graphs by INSTRUMENTNAME (if named). It will overwrite bank mapping.
+		// (Now it is done at Midi2TracktionEditConverter.importMusic() as PLUGIN elements should be already populated there.)
 
 		// Step 3: assign audio graphs by TRACKNAME (if named). It will overwrite all above.
 		for (track in project.tracks) {
@@ -247,7 +242,7 @@ open class AugeneModel
 		}
 
 		for (masterPlugin in project.masterPlugins) {
-			// AudioGraph may be either a ID reference or a filename.
+			// AudioGraph may be either an ID reference or a filename.
 			val ag = audioGraphs.firstOrNull { a -> a.id == masterPlugin }
 			val agFile = ag?.source ?: masterPlugin
 			/* FIXME: maybe enable this proactive file check?

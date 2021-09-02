@@ -13,15 +13,22 @@ enum class MarkerImportStrategy {
     PerTrack,
 }
 
-class MidiImportContext {
-    constructor (commandArgumentContext: CommandArgumentContext) {
-        midi = LoadSmf(commandArgumentContext.midiFileContent)
-        edit = LoadEdit(commandArgumentContext.tracktionEditTemplateFileContent)
-    }
+class MidiImportContext(val midi: MidiMusic, val edit: EditElement, val audioGraphs: List<AugeneAudioGraph>, val mappedPlugins: Map<String, Iterable<JuceAudioGraph>>) {
 
-    constructor(midi: MidiMusic, edit: EditElement) {
-        this.midi = midi
-        this.edit = edit
+    companion object {
+        fun create(midiFileData: ByteArray, editFileContent: String) =
+            MidiImportContext(loadSmf(midiFileData), loadEdit(editFileContent), listOf(), mapOf())
+
+        private fun loadEdit(editFileContent: String): EditElement {
+            XmlTextReader(editFileContent).also {
+                it.namespaces = false
+                return EditModelReader().read(it)
+            }
+        }
+
+        private fun loadSmf(midiFileData: ByteArray): MidiMusic {
+            return MidiMusic().apply { this.read(midiFileData.toList()) }
+        }
     }
 
     // FIXME: it is so hacky.
@@ -31,18 +38,5 @@ class MidiImportContext {
 
     var markerImportStrategy = MarkerImportStrategy.Default
 
-    val midi: MidiMusic
-    val edit: EditElement
-
-    fun LoadEdit(editFileContent: String): EditElement {
-        XmlTextReader(editFileContent).also {
-            it.namespaces = false
-            return EditModelReader().read(it)
-        }
-    }
-
-    fun LoadSmf(midiFileData: ByteArray): MidiMusic {
-        return MidiMusic().apply { this.read(midiFileData.toList()) }
-    }
 }
 

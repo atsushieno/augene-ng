@@ -2,7 +2,7 @@
   <Includes />
   <MasterPlugins />
   <AudioGraphs>
-    <AudioGraph Id="1" Source="opnplug.filtergraph" />
+    <AudioGraph Id="opn" Source="opnplug.filtergraph" />
 </AudioGraphs>
   <Tracks />
   <MmlFiles>

@@ -3,7 +3,7 @@
     __MIDI #F0, #7D, "augene-ng", 0, \
     $parameterID % #80, $parameterID / #80, $val % #80, $val / #80 } 
 // generate
-#macro OPNPLUG { AUDIO_PLUGIN_USE 11, "-1472549978" } // specify unique-id in UTF-8 string in sysex
+#macro OPNPLUG { AUDIO_PLUGIN_USE 8, "a83aaba6" } // specify unique-id in UTF-8 string in sysex
 #macro OPNPLUG_MASTER_VOLUME val { AUDIO_PLUGIN_PARAMETER 0, $val }
 #macro OPNPLUG_EMULATOR val { AUDIO_PLUGIN_PARAMETER 1, $val }
 #macro OPNPLUG_CHIP_COUNT val { AUDIO_PLUGIN_PARAMETER 2, $val }
@@ -11,5 +11,5 @@
 #macro OPNPLUG_PART\1_OPERATOR\1_LEVEL val { AUDIO_PLUGIN_PARAMETER 4, $val }
 #macro OPNPLUG_PART\1_OPERATOR\3_LEVEL val { AUDIO_PLUGIN_PARAMETER 5, $val }
 
-1	INSTRUMENTNAME "1" CH0 @1 OPNPLUG OPNPLUG_PART\1_OPERATOR\1_LEVEL 4096
+1	INSTRUMENTNAME "opn" CH0 @1 OPNPLUG OPNPLUG_PART\1_OPERATOR\1_LEVEL 4096
 
