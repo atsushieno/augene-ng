@@ -10,7 +10,7 @@ buildscript {
 
 plugins {
     id("com.android.library") version "4.1.3"
-    id("com.google.devtools.ksp") version "1.5.30-1.0.0-beta08"
+    id("com.google.devtools.ksp") version "1.5.30-1.0.0-beta09"
     id("org.jetbrains.kotlin.multiplatform") version "1.5.30"
     id("org.jetbrains.dokka") version "1.5.0"
     id("maven-publish")
@@ -96,7 +96,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.2.1")
-                implementation("dev.atsushieno:missingdot:0.1")
+                implementation("dev.atsushieno:missingdot:0.1.2")
                 if (configurations.get("ksp").dependencies.all { p -> p.name != ":kotractive_ksp" })
                     configurations.get("ksp").dependencies.add(project(":kotractive_ksp"))
             }
