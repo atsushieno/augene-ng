@@ -25,7 +25,7 @@ jobs:
     - name: build augene
       run: cd augene-project && ./gradlew --warning-mode all build publishToMavenLocal
     - name: build augene-gui
-      run: cd augene-gui-project && ./gradlew --warning-mode all build
+      run: cd augene-gui-project && ./gradlew --warning-mode all check
     - name: upload build failure logs
       if: failure()
       uses: actions/upload-artifact@v2

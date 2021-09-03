@@ -2,7 +2,7 @@ import org.jetbrains.compose.compose
 
 plugins {
     kotlin("multiplatform")
-    id("org.jetbrains.compose") version "1.0.0-alpha1-rc4"
+    id("org.jetbrains.compose") version "1.0.0-alpha3"
     id("com.android.library")
     id("maven-publish")
 }
@@ -21,7 +21,7 @@ kotlin {
                 api(compose.foundation)
                 api(compose.material)
 
-                implementation("com.squareup.okio:okio:3.0.0-alpha.9")
+                implementation("com.squareup.okio:okio-multiplatform:3.0.0-alpha.9")
 
                 implementation("dev.atsushieno:ktmidi:0.3.10")
                 implementation("dev.atsushieno:mugene:0.2.17")
