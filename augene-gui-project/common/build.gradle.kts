@@ -12,7 +12,7 @@ kotlin {
         compilations.all { kotlinOptions.jvmTarget = "1.8" }
     }
     jvm("desktop") {
-        compilations.all { kotlinOptions.jvmTarget = "16" }
+        compilations.all { kotlinOptions.jvmTarget = "11" }
     }
     sourceSets {
         val commonMain by getting {
