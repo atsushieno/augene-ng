@@ -1,4 +1,4 @@
-package dev.atsushieno.augene
+package dev.atsushieno.augene.gui
 
 import okio.ExperimentalFileSystem
 import okio.FileSystem

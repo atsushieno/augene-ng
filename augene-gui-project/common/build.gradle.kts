@@ -2,18 +2,17 @@ import org.jetbrains.compose.compose
 
 plugins {
     kotlin("multiplatform")
-    id("org.jetbrains.compose") version "1.0.0-alpha1-rc4"
+    id("org.jetbrains.compose") version "1.0.0-alpha3"
     id("com.android.library")
     id("maven-publish")
-    kotlin("plugin.serialization") version "1.5.20"
 }
 
 kotlin {
-    android()
+    android {
+        compilations.all { kotlinOptions.jvmTarget = "1.8" }
+    }
     jvm("desktop") {
-        compilations.all {
-            kotlinOptions.jvmTarget = "16"
-        }
+        compilations.all { kotlinOptions.jvmTarget = "11" }
     }
     sourceSets {
         val commonMain by getting {
@@ -22,8 +21,7 @@ kotlin {
                 api(compose.foundation)
                 api(compose.material)
 
-                implementation("com.squareup.okio:okio:3.0.0-alpha.9")
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2")
+                implementation("com.squareup.okio:okio-multiplatform:3.0.0-alpha.9")
 
                 implementation("dev.atsushieno:ktmidi:0.3.10")
                 implementation("dev.atsushieno:mugene:0.2.17")

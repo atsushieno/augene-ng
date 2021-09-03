@@ -19,13 +19,12 @@ plugins {
 
 kotlin {
     android {
+        compilations.all { kotlinOptions.jvmTarget = "1.8" }
         publishLibraryVariantsGroupedByFlavor = true
         publishLibraryVariants("debug", "release")
     }
     jvm {
-        compilations.all {
-            kotlinOptions.jvmTarget = "14"
-        }
+        compilations.all { kotlinOptions.jvmTarget = "1.8" }
         testRuns["test"].executionTask.configure {
             useJUnit()
         }

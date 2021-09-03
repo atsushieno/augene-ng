@@ -1,4 +1,4 @@
-package dev.atsushieno.augene
+package dev.atsushieno.augene.gui
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

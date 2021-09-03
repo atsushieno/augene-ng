@@ -1,4 +1,4 @@
-package dev.atsushieno.augene
+package dev.atsushieno.augene.gui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

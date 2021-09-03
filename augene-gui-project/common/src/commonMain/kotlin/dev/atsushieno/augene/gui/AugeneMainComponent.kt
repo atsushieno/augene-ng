@@ -1,4 +1,4 @@
-package dev.atsushieno.augene
+package dev.atsushieno.augene.gui
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.RouterState
