@@ -39,7 +39,7 @@ function generatePluginMacro(plugin) {
         "\n" +
         "#macro " + name + " { AUDIO_PLUGIN_USE " + uniqueId.length + ", \"" + uniqueId + "\" }\n";
     plugin.parameters.forEach(para => {
-        if (para.name.match(/MIDI_CC_[0-9]+|[0-9]+/))
+        if (para.name.match(/MIDI CC [0-9]+\|[0-9]+/))
             return;
         var paraName = escapeName(para.name);
         s += "#macro " + name + "_" + paraName + " val { AUDIO_PLUGIN_PARAMETER " + para.index + ", $val }\n";
