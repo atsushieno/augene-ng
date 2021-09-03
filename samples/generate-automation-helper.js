@@ -30,14 +30,22 @@ function escapeName(s) {
 function generatePluginMacro(plugin) {
     var name = escapeName(plugin.name);
     var uniqueId = plugin["unique-id"];
-    console.log("#macro AUDIO_PLUGIN_USE nameLen:number, ident:string {  __MIDI #F0, #7D, \"augene-ng\", $nameLen, $ident, #F7 }");
-    console.log("#macro AUDIO_PLUGIN_PARAMETER parameterID:number, val:number { \\");
-    console.log("    __MIDI #F0, #7D, \"augene-ng\", 0, \\");
-    console.log("    $parameterID % #80, $parameterID / #80, $val % #80, $val / #80 } ");
-    console.log("");
-    console.log("#macro " + name + " { AUDIO_PLUGIN_USE " + uniqueId.length + ", \"" + uniqueId + "\" }");
+    var fsname = name.replaceAll("\\", "");
+
+    var s = "#macro AUDIO_PLUGIN_USE nameLen:number, ident:string {  __MIDI #F0, #7D, \"augene-ng\", $nameLen, $ident, #F7 }\n" +
+        "#macro AUDIO_PLUGIN_PARAMETER parameterID:number, val:number { \\\n" +
+        "    __MIDI #F0, #7D, \"augene-ng\", 0, \\\n" +
+        "    $parameterID % #80, $parameterID / #80, $val % #80, $val / #80 } \n" +
+        "\n" +
+        "#macro " + name + " { AUDIO_PLUGIN_USE " + uniqueId.length + ", \"" + uniqueId + "\" }\n";
     plugin.parameters.forEach(para => {
+        if (para.name.match(/MIDI_CC_[0-9]+|[0-9]+/))
+            return;
         var paraName = escapeName(para.name);
-        console.log("#macro " + name + "_" + paraName + " val { AUDIO_PLUGIN_PARAMETER " + para.index + ", $val }");    
+        s += "#macro " + name + "_" + paraName + " val { AUDIO_PLUGIN_PARAMETER " + para.index + ", $val }\n";
+    });
+    fs.writeFile("audio-plugins/" + plugin.type + "_" + fsname + ".mugene", s, {}, (err) => {
+        if (err != null)
+            console.log(err);
     });
 }
