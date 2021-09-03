@@ -1,5 +1,5 @@
-import dev.atsushieno.augene.DialogAbstraction
-import dev.atsushieno.augene.model
+import dev.atsushieno.augene.gui.DialogAbstraction
+import dev.atsushieno.augene.gui.model
 import java.io.File
 import javax.swing.JFileChooser
 import javax.swing.JFrame
