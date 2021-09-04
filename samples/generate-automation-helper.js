@@ -5,7 +5,7 @@ main();
 
 function main() {
 
-    fs.readFile(os.homedir() + "/.local/augene-ng/plugin-metadata.json",  {}, (err, data) => {
+    fs.readFile(os.homedir() + "/.config/augene-ng/plugin-metadata.json",  {}, (err, data) => {
         if (err)
             console.log(err);
         else {

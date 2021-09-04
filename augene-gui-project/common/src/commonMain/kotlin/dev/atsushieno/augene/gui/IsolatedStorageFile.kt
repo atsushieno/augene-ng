@@ -14,7 +14,7 @@ private constructor(private val basePath: Path) {
         fun getUserStoreForAssembly(applicationDirectoryName: String) : IsolatedStorageFile {
             // FIXME: give different subdir name for Windows
             val home = System.getProperty("user.home")
-            val dir = home.toPath() / ".local".toPath() / applicationDirectoryName.toPath()
+            val dir = home.toPath() / ".config".toPath() / applicationDirectoryName.toPath()
             if (!FileSystem.SYSTEM.exists(dir))
                 FileSystem.SYSTEM.createDirectory(dir)
             return IsolatedStorageFile(dir)
