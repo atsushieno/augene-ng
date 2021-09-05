@@ -4,6 +4,10 @@ internal actual fun createFileWatcherContext(watcher: FileWatcher): Any  {
     TODO("Not implemented")
 }
 
+internal actual fun releaseFileWatcherContext(watcher: FileWatcher) {
+    TODO("Not implemented")
+}
+
 internal actual fun updateFileChangeListenerStatus(watcher: FileWatcher) {
     TODO("Not implemented")
 }

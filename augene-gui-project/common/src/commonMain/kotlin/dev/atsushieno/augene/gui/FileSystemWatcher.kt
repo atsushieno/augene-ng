@@ -37,6 +37,10 @@ class FileWatcher {
             updateFileChangeListenerStatus(this)
         }
 
+    fun terminate() {
+        releaseFileWatcherContext(this)
+    }
+
     init {
         platformContext = createFileWatcherContext(this)
     }
@@ -45,6 +49,7 @@ class FileWatcher {
 class FileSystemWatcherEventArgs(val fullPath: String) // not sure if we should support change type as it may not be available on all platforms.
 
 internal expect fun createFileWatcherContext(watcher: FileWatcher): Any
+internal expect fun releaseFileWatcherContext(watcher: FileWatcher)
 internal expect fun updateFileChangeListenerStatus(watcher: FileWatcher)
 internal expect fun addFileWatcherTargetPath(watcher: FileWatcher, pathToBeWatched: String?)
 internal expect fun removeFileWatcherTargetPath(watcher: FileWatcher, pathToBeWatched: String?)

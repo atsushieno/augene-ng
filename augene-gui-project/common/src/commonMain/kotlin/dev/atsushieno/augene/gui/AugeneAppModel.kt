@@ -19,6 +19,10 @@ class AugeneAppModel : AugeneModel() {
 		const val ConfigXmlFile = "augene-config.xml"
 	}
 
+	fun processExit() {
+		fileWatcher.terminate()
+	}
+
 	fun loadConfiguration () {
 		val fs = IsolatedStorageFile.getUserStoreForAssembly("augene-ng")
 		if (!fs.fileExists (ConfigXmlFile))

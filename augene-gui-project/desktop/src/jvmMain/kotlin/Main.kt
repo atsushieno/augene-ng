@@ -7,4 +7,5 @@ fun main() = singleWindowApplication {
     model.dialogs = SwingDialogs(this.window)
     model.loadConfiguration()
     App()
+    model.processExit()
 }

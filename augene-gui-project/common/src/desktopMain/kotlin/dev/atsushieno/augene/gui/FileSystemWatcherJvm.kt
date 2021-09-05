@@ -41,6 +41,12 @@ class FileWatcherJvmContext(val watcher: FileWatcher) : FileSystemListener {
 
 internal actual fun createFileWatcherContext(watcher: FileWatcher): Any = FileWatcherJvmContext(watcher)
 
+internal actual fun releaseFileWatcherContext(watcher: FileWatcher) {
+    val ctx = watcher.platformContext as FileWatcherJvmContext
+    ctx.impl.unwatchPaths()
+    ctx.impl.close()
+}
+
 internal actual fun updateFileChangeListenerStatus(watcher: FileWatcher) {
     val ctx = watcher.platformContext as FileWatcherJvmContext
     ctx.updateStatus(watcher.enableRaisingEvents)
