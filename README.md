@@ -41,13 +41,16 @@ To compose your own music, create new audiograph and new MML for each list, whic
 
 ## augene-player
 
-There are two primary steps to build the whole "augene" application. The first step is "augene-player" part, which is a JUCE based C++ application. It is a typical JUCE application project so you can build it with the following steps:
+There are two primary steps to build the whole "augene" application. The first step is "augene-player" part, which is a JUCE based C++ application. It is a typical JUCE application project. You can build it with the following steps:
 
-- Build Projucer if you don't have it yet (follow JUCE documentation)
-- launch Projucer, open `AugenePlayer.jucer`, and save projects, or run `Projucer --resave AugenePlayer.jucer`.
-- Build the project for your platform. Project files are under `Build/*` e.g. `Build/LinuxMakefile`.
-
-For Linux environment there is a shorthand script `build.sh` and for Mac environment there is `build-osx.sh` (not actively maintained, so it might need some fixes from time to time). Since LV2 integration via [lvtk/jlv2](https://github.com/lvtk/jlv2) is enabled, you'll need LV2 packages installed on MacOS too.
+```
+cd augene-player
+ln -s ../external/tracktion_engine/modules/juce juce-symlink
+mkdir build
+cd build
+cmake ..
+make
+```
 
 ### Enabling VST2
 
@@ -186,6 +189,8 @@ Then you can `#include` this macro, and write your track MML like:
 // not quite sure if this 127 works just as 127, you might need some multiplication
 1	INSTRUMENTNAME "opn" CH0 @1 OPNPLUG OPNPLUG_PART\1_OPERATOR\1_LEVEL 127
 ```
+
+Wherever you have the same set of audio plugins installed on your system, you can generate the same set of macro definitions and therefore the MML should be compatible across environment, whereas the plugin unique IDs might be different.
 
 
 # Authoring Tips
