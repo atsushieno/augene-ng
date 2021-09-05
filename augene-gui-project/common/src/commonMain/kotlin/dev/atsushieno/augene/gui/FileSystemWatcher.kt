@@ -1,19 +1,50 @@
 package dev.atsushieno.augene.gui
 
-// FIXME: implement
-class FileSystemWatcher {
-    private val listeners = mutableListOf<(Any, FileSystemWatcherEventArgs) -> Unit>()
+interface FileSystemEventListener {
+    fun onEvent(filePath: String, eventType: FileWatcher.EventType)
+}
 
-    fun addChangeListener(listener: (Any, FileSystemWatcherEventArgs) -> Unit) {
+// FIXME: implement
+class FileWatcher {
+    enum class EventType {
+        Created,
+        Modified,
+        Deleted
+    }
+
+    lateinit var platformContext: Any
+    private val listeners = mutableListOf<FileSystemEventListener>()
+
+    fun addChangeListener(listener: FileSystemEventListener) {
         listeners.add(listener)
     }
 
-    fun removeChangeListener(listener: (Any, FileSystemWatcherEventArgs) -> Unit) {
+    fun removeChangeListener(listener: FileSystemEventListener) {
         listeners.remove(listener) // does this even work?
     }
 
-    var path: String? = null
-    var enableRaisingEvents : Boolean = false
+    fun onEvent(filePath: String, eventType: EventType) = listeners.forEach { it.onEvent(filePath, eventType) }
+
+    fun addTargetPath(filePath: String) = addFileWatcherTargetPath(this, filePath)
+
+    fun removeTargetPath(filePath: String) = removeFileWatcherTargetPath(this, filePath)
+
+    private var enabled = false
+    var enableRaisingEvents : Boolean
+        get() = enabled
+        set(value) {
+            enabled = value
+            updateFileChangeListenerStatus(this)
+        }
+
+    init {
+        platformContext = createFileWatcherContext(this)
+    }
 }
 
-class FileSystemWatcherEventArgs(val fullPath: String)
+class FileSystemWatcherEventArgs(val fullPath: String) // not sure if we should support change type as it may not be available on all platforms.
+
+internal expect fun createFileWatcherContext(watcher: FileWatcher): Any
+internal expect fun updateFileChangeListenerStatus(watcher: FileWatcher)
+internal expect fun addFileWatcherTargetPath(watcher: FileWatcher, pathToBeWatched: String?)
+internal expect fun removeFileWatcherTargetPath(watcher: FileWatcher, pathToBeWatched: String?)

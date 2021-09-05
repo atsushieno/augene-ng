@@ -21,6 +21,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import com.arkivanov.decompose.value.getValue
 
 val model : AugeneAppModel
     get() = AugeneAppModel.instance
@@ -180,9 +181,10 @@ fun MasterPluginList() {
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AppSettings() {
-    val cells = GridCells.Adaptive(2.dp)
     var augenePlayerPathState by remember { mutableStateOf(model.configAugenePlayerPath) }
     var audioPluginHostPathState by remember { mutableStateOf(model.configAudioPluginHostPath) }
+    var autoReloadState by remember { model.autoReloadProject }
+    var autoRecompileState by remember { model.autoRecompileProject }
 
     Column {
         Row {
@@ -219,23 +221,21 @@ fun AppSettings() {
             Button(onClick = {
                 model.configAugenePlayerPath = augenePlayerPathState
                 model.configAudioPluginHostPath = audioPluginHostPathState
+                model.autoReloadProject.value = autoReloadState
+                model.autoRecompileProject.value = autoRecompileState
                 model.saveConfiguration()
             }) {
                 Text("Apply")
             }
         }
-        var autoReloadState by remember { mutableStateOf(false) }
         Row {
             Checkbox(checked = autoReloadState, onCheckedChange = {
-                model.setAutoReloadProject(it)
                 autoReloadState = it
             })
             Text("Auto reload project")
         }
-        var autoRecompileState by remember { mutableStateOf(false) }
         Row {
             Checkbox(checked = autoRecompileState, onCheckedChange = {
-                model.setAutoRecompileProject(it)
                 autoRecompileState = it
             })
             Text("Auto compile project")

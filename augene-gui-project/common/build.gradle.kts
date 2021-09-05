@@ -52,6 +52,9 @@ kotlin {
         val desktopMain by getting {
             dependencies {
                 implementation("com.arkivanov.decompose:extensions-compose-jetpack:0.3.1")
+                implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.5.30")
+                implementation("org.slf4j:slf4j-api:1.7.32")
+                implementation("org.slf4j:slf4j-simple:1.7.32")
             }
         }
         val desktopTest by getting

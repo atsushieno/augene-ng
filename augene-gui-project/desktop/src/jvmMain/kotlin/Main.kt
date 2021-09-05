@@ -1,5 +1,6 @@
 import dev.atsushieno.augene.gui.App
 import androidx.compose.ui.window.singleWindowApplication
+import dev.atsushieno.augene.gui.SwingDialogs
 import dev.atsushieno.augene.gui.model
 
 fun main() = singleWindowApplication {

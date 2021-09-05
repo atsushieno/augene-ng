@@ -208,3 +208,5 @@ There are couple of dependencies in this application:
 - [Tracktion/tracktion_engine](https://github.com/Tracktion/tracktion_engine/) - ditto.
 - [lvtk/jlv2](https://github.com/lvtk/jlv2) - ditto (in jlv2_host).
 - [SpartanJ/efsw](https://github.com/SpartanJ/efsw) - MIT.
+- [dogla/filesystem-watcher](https://github.com/dogla/filesystem-watcher) - Apache 2.0. The sources are converted from Java to Kotlin and directly embedded in augene-gui-project.
+

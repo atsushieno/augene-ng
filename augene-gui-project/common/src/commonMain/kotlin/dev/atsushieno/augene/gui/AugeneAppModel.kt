@@ -1,12 +1,14 @@
 package dev.atsushieno.augene.gui
 
+import androidx.compose.runtime.mutableStateOf
+import com.arkivanov.decompose.value.MutableValue
 import dev.atsushieno.augene.AugeneModel
 import dev.atsushieno.augene.AugeneProject
 import dev.atsushieno.augene.FileSupport
 import dev.atsushieno.augene.JuceAudioGraph
 import dev.atsushieno.missingdot.xml.XmlNodeType
 import dev.atsushieno.missingdot.xml.XmlReader
-import dev.atsushieno.missingdot.xml.XmlWriter
+import dev.atsushieno.missingdot.xml.XmlTextWriter
 import okio.ExperimentalFileSystem
 import okio.Path.Companion.toPath
 
@@ -38,6 +40,8 @@ class AugeneAppModel : AugeneModel() {
 					"AugenePlayer" -> configAugenePlayerPath = s
 					"AudioPluginHost" -> configAudioPluginHostPath = s
 					"LastProjectFile" -> lastProjectFile = s
+					"AutoReloadProject" -> autoReloadProject.value = s.toBoolean()
+					"AutoCompileProject" -> autoRecompileProject.value = s.toBoolean()
 				}
 				xr.moveToContent ()
 			}
@@ -54,11 +58,13 @@ class AugeneAppModel : AugeneModel() {
 	fun saveConfiguration () {
 		val fs = IsolatedStorageFile.getUserStoreForAssembly("augene-ng")
 		val sb = StringBuilder()
-		val xw = XmlWriter.create(sb)
+		val xw = XmlTextWriter(sb).apply { indent = true }
 		xw.writeStartElement("config")
 		xw.writeElementString("AugenePlayer", configAugenePlayerPath ?: "")
 		xw.writeElementString("AudioPluginHost", configAudioPluginHostPath ?: "")
 		xw.writeElementString("LastProjectFile", lastProjectFile ?: "")
+		xw.writeElementString("AutoReloadProject", autoReloadProject.value.toString())
+		xw.writeElementString("AutoCompileProject", autoRecompileProject.value.toString())
 		xw.close()
 		fs.writeFileContentString(ConfigXmlFile, sb.toString())
 	}
@@ -194,35 +200,30 @@ class AugeneAppModel : AugeneModel() {
 		unregisterMasterPluginFiles(filesToUnregister)
 	}
 
-	fun setAutoReloadProject(value: Boolean) {
-		_autoReloadProject = value
-
-		updateAutoReloadSetup ()
-	}
-
-	fun setAutoRecompileProject(value: Boolean) {
-		_autoCompileProject = value
-	}
-
 	@OptIn(ExperimentalFileSystem::class)
-	private fun onFileEvent(o: Any, e: FileSystemWatcherEventArgs) {
-		if (!_autoReloadProject && !_autoCompileProject)
+	private fun onFileEvent(filePath: String, eventType: FileWatcher.EventType) {
+		if (!autoReloadProject.value && !autoRecompileProject.value)
 			return
 		val proj: String = projectFileName ?: return
-		if (e.fullPath != projectFileName && project.mmlFiles.all { m -> (proj.toPath().parent!! / m).toString() != e.fullPath })
-			return
-		if (_autoReloadProject)
-			loadProjectFile (proj)
-
-		if (_autoCompileProject)
-			compile ()
+		if (filePath == projectFileName || project.mmlFiles.any { m -> (proj.toPath().parent!! / m).toString() == filePath }) {
+			if (autoReloadProject.value)
+				loadProjectFile(proj)
+			if (autoRecompileProject.value)
+				compile ()
+		}
+		// FIXME: otherwise, it is raised for content files. Reload and trigger recompilation.
 	}
 
 	private fun updateAutoReloadSetup () {
-		project_file_watcher.addChangeListener { o, e -> onFileEvent(o, e) }
 	}
 
-	private val project_file_watcher = FileSystemWatcher()
+	private val fileWatcherEventListener = object: FileSystemEventListener {
+		override fun onEvent(filePath: String, eventType: FileWatcher.EventType) = onFileEvent(filePath, eventType)
+	}
+
+	private val fileWatcher = FileWatcher().apply {
+		addChangeListener(fileWatcherEventListener)
+	}
 
 	fun processCompile () {
 		if (projectFileName == null)
@@ -251,9 +252,9 @@ class AugeneAppModel : AugeneModel() {
 			ProcessBuilder("xdg-open", fullPath).start()
 	}
 
-	private var _autoReloadProject: Boolean = false
+	var autoReloadProject = mutableStateOf(false)
 
-	private var _autoCompileProject : Boolean = false
+	var autoRecompileProject = mutableStateOf(false)
 
 	var configAudioPluginHostPath: String? = null
 
@@ -269,9 +270,11 @@ class AugeneAppModel : AugeneModel() {
 			// FIXME: it is kind of hack, but so far we unify history with config.
 			saveConfiguration()
 
-			project_file_watcher.path = projectFileName?.toPath()?.parent?.toString()
-			if (!project_file_watcher.enableRaisingEvents)
-				project_file_watcher.enableRaisingEvents = true
+			val path = projectFileName?.toPath()?.parent?.toString()
+			if (path != null)
+				fileWatcher.addTargetPath(path)
+			if (!fileWatcher.enableRaisingEvents)
+				fileWatcher.enableRaisingEvents = true
 
 			updateAutoReloadSetup ()
 		}
