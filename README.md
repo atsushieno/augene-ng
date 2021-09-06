@@ -166,7 +166,7 @@ Now, its our (augene's, particularly its `Midi2TracktionEditConverter`'s) role o
 - `00h` to indicate the actual parameter control: the next two bytes represents the parameter ID by LSB and MSB, then the next two bytes for the parameter value LSB and MSB.
 - non-zero byte to indicate a string length, followed by the actual ASCII string that indicates the plugin's unique ID (`uid` or `uniqueID`) that is being used from there in the track.
 
-Indicating plugin's unique ID and parameter index is not intuitive for MML authoring. It's better to use some macros that wraps those constants. There is a helper Node.JS script `generate-automation-helper.js` that parses `~/.config/augene-ng/plugin-metadata.json` and generates a bunch of `.mugene` MML files for each audio plugins that are listed within the JSON, into `audio-plugins` directory. The generated MML looks like this:
+Indicating plugin's unique ID and parameter index is not intuitive for MML authoring. It's better to use some macros that wraps those constants. There is a helper Node.JS script `generate-automation-helper.js` that parses `~/.config/augene-ng/plugin-metadata.json` and generates a bunch of `.mugene` MML files for each audio plugins that are listed within the JSON, into `~/.config/augene-ng/audio-plugins` directory. The generated MML looks like this:
 
 ```
 #macro AUDIO_PLUGIN_USE nameLen:number, ident:string {  __MIDI #F0, #7D, "augene-ng", $nameLen, $ident, #F7 }
