@@ -128,7 +128,7 @@ class AugeneProject {
 
 			val sb = StringBuilder()
 			save(project, XmlTextWriter(sb).apply { indent = true })
-			FileSupport(".").writeString(filename, sb.toString())
+			FileSupport(filename).writeString(filename, sb.toString()) // use of filename as FileSupport looks awkward, but anyways...
 		}
 
 		fun saveJson(project: AugeneProject) = Json.encodeToString(project)

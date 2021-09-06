@@ -213,7 +213,7 @@ class AugeneAppModel : AugeneModel() {
 			if (autoReloadProject.value)
 				loadProjectFile(proj)
 			if (autoRecompileProject.value)
-				compile ()
+				compile (createOrOverwriteProject = true)
 		}
 		// FIXME: otherwise, it is raised for content files. Reload and trigger recompilation.
 	}
@@ -233,7 +233,7 @@ class AugeneAppModel : AugeneModel() {
 		if (projectFileName == null)
 			processSaveProject ()
 		if (projectFileName != null)
-			compile ()
+			compile (createOrOverwriteProject = true)
 	}
 
 	fun processPlay () {

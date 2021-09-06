@@ -6,6 +6,7 @@ import okio.Path.Companion.toPath
 internal expect fun pwd() : String
 internal expect fun readStringFromFileSystem(fullPath: String) : String
 internal expect fun writeStringToFileSystem(fullPath: String, text: String)
+internal expect fun writeBinaryToFileSystem(fullPath: String, binary: ByteArray)
 internal expect fun canonicalizeFilePath(path: String) : String
 internal expect fun resolveFilePath(basePath: String, targetPath: String) : String
 
@@ -28,5 +29,8 @@ class FileSupport(baseFileName: String) {
 
     @OptIn(ExperimentalFileSystem::class)
     fun writeString(file: String, text: String) = writeStringToFileSystem(absPath(file), text)
+
+    @OptIn(ExperimentalFileSystem::class)
+    fun writeBytes(file: String, binary: ByteArray) = writeBinaryToFileSystem(absPath(file), binary)
 
 }

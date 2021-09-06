@@ -13,6 +13,10 @@ internal actual fun writeStringToFileSystem(fullPath: String, text: String) {
     FileSystem.SYSTEM.write(fullPath.toPath()) { this.writeUtf8(text) }
 }
 
+internal actual fun writeBinaryToFileSystem(fullPath: String, binary: ByteArray) {
+    FileSystem.SYSTEM.write(fullPath.toPath()) { this.write(binary) }
+}
+
 internal actual fun canonicalizeFilePath(path: String) : String {
     return FileSystem.SYSTEM.canonicalize(path.toPath()).toString()
 }
