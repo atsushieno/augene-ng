@@ -18,7 +18,7 @@ The application consists of the following software and libraries behind:
 
 NOTE: before using augene, you most likely have to build things (explained in the next section).
 
-launch `augene-gui` application. It is a cross-platform Kotlin/JVM Compose for Desktop GUI application.
+launch `augene-editor` application. It is a cross-platform Kotlin/JVM Compose for Desktop GUI application.
 
 **TODO: rewrite here**
 
@@ -56,7 +56,7 @@ make
 
 If you have VST2 SDK and would like to add support for VST2, open AugenePlayer.jucer in Projucer (and probably AudioPluginHost.jucer if you once tried to build it from build.sh) on Projucer and select `juce_audio_processors` module and enable VST(2) there, then save project.
 
-## kotractive, augene, and augene-gui
+## kotractive, augene, and augene-editor
 
 Another chunk of the application is the augene project builder (or "editor") which builds Compose for Desktop based GUI app/tool.
 
@@ -64,12 +64,12 @@ Due to current limitation of Kotlin Multiplatform project structure, there are 3
 
 - `kotractive`, which provides basic "tracktionedit" file data model using [`ksp`](https://github.com/google/ksp/), in Kotlin Multiplatform
 - `augene`, which provides Augene project data model and manipulator API, in Kotlin Multiplatform
-- `augene-gui`, which is a GUI application project using Compose for Desktop Multiplatform, JVM-only
+- `augene-editor`, which is a GUI application project using Compose for Desktop Multiplatform, JVM-only
 
 ```
 $ cd kotracktive && ./gradlew publishToMavenLocal && cd ..
 $ cd augene && ./gradlew publishToMavenLocal && cd ..
-$ cd augene-gui && ./gradlew package && cd ..
+$ cd augene-editor && ./gradlew package && cd ..
 ```
 
 
@@ -213,5 +213,5 @@ There are couple of dependencies in this application:
 - [Tracktion/tracktion_engine](https://github.com/Tracktion/tracktion_engine/) - ditto.
 - [lvtk/jlv2](https://github.com/lvtk/jlv2) - ditto (in jlv2_host).
 - [SpartanJ/efsw](https://github.com/SpartanJ/efsw) - MIT.
-- [dogla/filesystem-watcher](https://github.com/dogla/filesystem-watcher) - Apache 2.0. The sources are converted from Java to Kotlin and directly embedded in augene-gui-project.
+- [dogla/filesystem-watcher](https://github.com/dogla/filesystem-watcher) - Apache 2.0. The sources are converted from Java to Kotlin and directly embedded in augene-editor-project.
 

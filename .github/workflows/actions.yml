@@ -24,8 +24,8 @@ jobs:
       run: cd kotractive-project && ./gradlew --warning-mode all build publishToMavenLocal
     - name: build augene
       run: cd augene-project && ./gradlew --warning-mode all build publishToMavenLocal
-    - name: build augene-gui
-      run: cd augene-gui-project && ./gradlew --warning-mode all check
+    - name: build augene-editor
+      run: cd augene-editor-project && ./gradlew --warning-mode all check
     - name: upload build failure logs
       if: failure()
       uses: actions/upload-artifact@v2
@@ -34,9 +34,9 @@ jobs:
         path: |
           kotractive-project/kotractive/build/reports/
           augene-project/augene/build/reports/
-          augene-gui-project/common/build/reports/
-          augene-gui-project/android/build/reports/
-          augene-gui-project/desktop/build/reports/
+          augene-editor-project/common/build/reports/
+          augene-editor-project/android/build/reports/
+          augene-editor-project/desktop/build/reports/
     - name: upload artifact
       if: success()
       uses: actions/upload-artifact@v2
@@ -45,7 +45,7 @@ jobs:
         path: |
           kotractive-project/kotractive/build/libs/*.jar
           augene-project/augene/build/outputs/aar/*.aar
-          augene-gui-project/desktop/build/compose/binaries/main/deb/*.msi
-          augene-gui-project/desktop/build/compose/binaries/main/deb/*.dmg
-          augene-gui-project/desktop/build/compose/binaries/main/deb/*.deb
+          augene-editor-project/desktop/build/compose/binaries/main/deb/*.msi
+          augene-editor-project/desktop/build/compose/binaries/main/deb/*.dmg
+          augene-editor-project/desktop/build/compose/binaries/main/deb/*.deb
 
