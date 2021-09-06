@@ -256,7 +256,6 @@ class JuceAudioGraph {
 
 		fun load (reader:XmlReader) :  Sequence<JuceAudioGraph> =
 			sequence {
-				var ret = JuceAudioGraph ()
 				val doc = XDocument.load (reader)
 				val input = doc.root!!.elements ("FILTER").firstOrNull { e ->
 					e.elements ("PLUGIN").any { p -> p.attribute ("name")?.value.equals("Midi Input", true) ?: false && // it is MIDI Input since Waveform11 (maybe)
@@ -295,7 +294,6 @@ class JuceAudioGraph {
 					}
 					uid = conn.attribute ("dstFilter")?.value
 				}
-				yield(ret)
 			}
 		}
 

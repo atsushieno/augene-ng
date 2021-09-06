@@ -168,7 +168,7 @@ open class AugeneModel
 		val audioGraphs = project.expandedAudioGraphsFullPath (abspath, null, null).asIterable ().toMutableList()
 		val juceAudioGraphs = audioGraphs.filter { it.source != null && it.id != null }.map {
 			val text = fileSupport.readString(abspath(it.source))
-			it.id!! to JuceAudioGraph.load(XmlReader.create(text)).asIterable()
+			it.id!! to JuceAudioGraph.load(XmlReader.create(text)).toList()
 		}.toMap()
 
 		// prepare tracktionedit
