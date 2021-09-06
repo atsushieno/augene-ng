@@ -19,3 +19,6 @@ internal actual fun canonicalizeFilePath(path: String) : String =
 
 internal actual fun resolveFilePath(basePath: String, targetPath: String) : String =
     TODO("Not implemented") // FileSystem.SYSTEM does not exist yet!
+
+internal actual fun fileExists(fullPath: String): Boolean =
+    TODO("Not implemented") // FileSystem.SYSTEM does not exist yet!

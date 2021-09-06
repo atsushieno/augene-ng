@@ -24,3 +24,6 @@ internal actual fun canonicalizeFilePath(path: String) : String {
 internal actual fun resolveFilePath(basePath: String, targetPath: String) : String {
     return java.nio.file.Path.of(basePath).resolve(targetPath).toString()
 }
+
+internal actual fun fileExists(fullPath: String): Boolean =
+    FileSystem.SYSTEM.exists(fullPath.toPath())

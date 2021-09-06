@@ -9,6 +9,7 @@ internal expect fun writeStringToFileSystem(fullPath: String, text: String)
 internal expect fun writeBinaryToFileSystem(fullPath: String, binary: ByteArray)
 internal expect fun canonicalizeFilePath(path: String) : String
 internal expect fun resolveFilePath(basePath: String, targetPath: String) : String
+internal expect fun fileExists(fullPath: String): Boolean
 
 class FileSupport(baseFileName: String) {
 
@@ -33,4 +34,5 @@ class FileSupport(baseFileName: String) {
     @OptIn(ExperimentalFileSystem::class)
     fun writeBytes(file: String, binary: ByteArray) = writeBinaryToFileSystem(absPath(file), binary)
 
+    fun exists(file: String) = fileExists(absPath(file))
 }

@@ -150,7 +150,7 @@ open class AugeneModel
 	var onMasterPluginsDeleted : () -> Unit = {}
 
 	@OptIn(ExperimentalFileSystem::class)
-	fun compile (createOrOverwriteProject: Boolean = false) {
+	fun compile () {
 		if (projectFileName == null)
 			throw IllegalStateException ("To compile the project, ProjectFileName must be specified in prior")
 
@@ -273,8 +273,7 @@ open class AugeneModel
 		fileSupport.writeString(outfile, sb.toString())
 		outputEditFileName = outfile
 
-		if (createOrOverwriteProject)
-			createTracktionProjectBinary(outfile, projectId, getFileNameWithoutExtension(projectFileName!!))
+		createTracktionProjectBinary(outfile, projectId, getFileNameWithoutExtension(projectFileName!!))
 	}
 
 	private fun getFileNameWithoutExtension(fileName: String) : String {
@@ -285,6 +284,8 @@ open class AugeneModel
 
 	private fun createTracktionProjectBinary(editFile: String, projectId: Int, projectName: String) {
 		val tracktionFile = editFile.substring(0, editFile.lastIndexOf('.')) + ".tracktion"
+		if (FileSupport(tracktionFile).exists(tracktionFile))
+			return
 
 		val bytes = mutableListOf<Byte>()
 		bytes.addAll("TP01".encodeToByteArray().toTypedArray())
