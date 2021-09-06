@@ -18,7 +18,7 @@ class EditModelWriter {
                 return toHexBinaryString(obj)
 
 			return when (pi.propertyMetaType.typeCode) {
-				TypeCode.Boolean -> if (obj is Boolean) "1" else "0"
+				TypeCode.Boolean -> if (obj as Boolean) "1" else "0"
 				else -> obj.toString()
 			}
         }
