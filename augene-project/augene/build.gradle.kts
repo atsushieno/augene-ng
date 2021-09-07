@@ -80,7 +80,7 @@ kotlin {
 
                 implementation("dev.atsushieno:ktmidi:0.3.10")
                 implementation("dev.atsushieno:mugene:0.2.17")
-                implementation("dev.atsushieno:missingdot:0.1.2")
+                implementation("dev.atsushieno:missingdot:0.1.4")
                 implementation("dev.atsushieno:kotractive:0.1")
             }
         }

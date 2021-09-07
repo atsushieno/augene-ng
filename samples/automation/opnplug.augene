@@ -3,10 +3,10 @@
   <MasterPlugins />
   <AudioGraphs>
     <AudioGraph Id="opn" Source="opnplug.filtergraph" />
-</AudioGraphs>
+  </AudioGraphs>
   <Tracks />
   <MmlFiles>
     <MmlFile>opnplug.mugene</MmlFile>
-</MmlFiles>
+  </MmlFiles>
   <MmlStrings />
 </AugeneProject>

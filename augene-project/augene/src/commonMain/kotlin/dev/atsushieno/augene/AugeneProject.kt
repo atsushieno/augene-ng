@@ -128,7 +128,7 @@ class AugeneProject {
 
 			val sb = StringBuilder()
 			save(project, XmlTextWriter(sb).apply { indent = true })
-			FileSupport(".").writeString(filename, sb.toString())
+			FileSupport(filename).writeString(filename, sb.toString()) // use of filename as FileSupport looks awkward, but anyways...
 		}
 
 		fun saveJson(project: AugeneProject) = Json.encodeToString(project)
@@ -256,7 +256,6 @@ class JuceAudioGraph {
 
 		fun load (reader:XmlReader) :  Sequence<JuceAudioGraph> =
 			sequence {
-				var ret = JuceAudioGraph ()
 				val doc = XDocument.load (reader)
 				val input = doc.root!!.elements ("FILTER").firstOrNull { e ->
 					e.elements ("PLUGIN").any { p -> p.attribute ("name")?.value.equals("Midi Input", true) ?: false && // it is MIDI Input since Waveform11 (maybe)
@@ -295,7 +294,6 @@ class JuceAudioGraph {
 					}
 					uid = conn.attribute ("dstFilter")?.value
 				}
-				yield(ret)
 			}
 		}
 

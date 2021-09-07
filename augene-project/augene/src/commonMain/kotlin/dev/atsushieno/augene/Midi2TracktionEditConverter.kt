@@ -107,11 +107,12 @@ println("GLOBAL MARKERS: ${globalMarkers.size}")
         var seq = SequenceElement() // dummy, but it's easier to hush CS8602...
         var currentTotalTime = 0
 
+        val abstractMidiEventElementType = ModelCatalog.allTypes.first { it.simpleName == "AbstractMidiEventElement" }
         val terminateClip = {
             if (clip != null) {
                 clip!!.PatternGenerator = PatternGeneratorElement()
                 clip!!.PatternGenerator?.Progression = ProgressionElement()
-                val e = seq.Events.lastOrNull { it.getMetaType().simpleName == "AbstractMidiEventElement" }
+                val e = seq.Events.lastOrNull { abstractMidiEventElementType.isAssignableFrom(it.getMetaType()) }
                 if (e != null) {
                     val note = e as NoteElement?
                     val extend = note?.L ?: 0

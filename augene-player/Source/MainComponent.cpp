@@ -140,7 +140,7 @@ MainComponent::MainComponent()
     exportButton.onClick = [this, &formatManager] {
         auto& pluginManager = engine.getPluginManager();
         auto& deviceManager = engine.getDeviceManager();
-        File configDir{File::getSpecialLocation(File::userHomeDirectory).getFullPathName() + "/.local/augene-ng/"};
+        File configDir{File::getSpecialLocation(File::userHomeDirectory).getFullPathName() + "/.config/augene-ng/"};
         if (!configDir.exists())
             configDir.createDirectory();
         File pluginDataXml{configDir.getFullPathName() + "/plugin-metadata.json"};

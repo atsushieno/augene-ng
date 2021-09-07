@@ -80,7 +80,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.2.1")
-                implementation("dev.atsushieno:missingdot:0.1.2")
+                implementation("dev.atsushieno:missingdot:0.1.4")
                 if (configurations.get("ksp").dependencies.all { p -> p.name != ":kotractive_ksp" })
                     configurations.get("ksp").dependencies.add(project(":kotractive_ksp"))
             }

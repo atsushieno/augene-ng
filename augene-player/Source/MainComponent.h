@@ -1,8 +1,13 @@
 
 #pragma once
 
-#include "../JuceLibraryCode/JuceHeader.h"
+#include <juce_core/juce_core.h>
+#include <juce_audio_basics/juce_audio_basics.h>
+#include <juce_graphics/juce_graphics.h>
+#include <tracktion_engine/tracktion_engine.h>
 #include "efsw/efsw.hpp"
+
+using namespace juce;
 
 class MainComponent
     : public Component, public ChangeListener
@@ -71,7 +76,7 @@ private:
     };
 
     //==============================================================================
-    tracktion_engine::Engine engine { ProjectInfo::projectName };
+    tracktion_engine::Engine engine { "augene-player" };
     std::unique_ptr<tracktion_engine::Edit> edit;
     String editFilePath;
     std::unique_ptr<efsw::FileWatcher> fileWatcher;

@@ -8,6 +8,7 @@ import dev.atsushieno.mugene.MmlCompiler
 import dev.atsushieno.mugene.MmlInputSource
 import okio.ExperimentalFileSystem
 import okio.Path.Companion.toPath
+import kotlin.random.Random
 
 open class AugeneModel
 {
@@ -167,7 +168,7 @@ open class AugeneModel
 		val audioGraphs = project.expandedAudioGraphsFullPath (abspath, null, null).asIterable ().toMutableList()
 		val juceAudioGraphs = audioGraphs.filter { it.source != null && it.id != null }.map {
 			val text = fileSupport.readString(abspath(it.source))
-			it.id!! to JuceAudioGraph.load(XmlReader.create(text)).asIterable()
+			it.id!! to JuceAudioGraph.load(XmlReader.create(text)).toList()
 		}.toMap()
 
 		// prepare tracktionedit
@@ -262,10 +263,95 @@ open class AugeneModel
 			return if (lastIndex > 0) path.substring(0, lastIndex) + ext else path
 		}
 
+		// Project ID, 00nnnnnnh. It is identical with the one in .tracktionedit EDIT element's attribute.
+		val projectId = Random.nextInt() and 0xFFFFFF
+		edit.ProjectID = edit.ProjectID ?: "${projectId}/${Random.nextInt()}" // not sure if it is correct format
+
 		val outfile = outputEditFileName ?: changeExtension(abspath (projectFileName!!), ".tracktionedit")
 		val sb = StringBuilder()
 		EditModelWriter().write(sb, edit)
 		fileSupport.writeString(outfile, sb.toString())
 		outputEditFileName = outfile
+
+		createTracktionProjectBinary(outfile, projectId, getFileNameWithoutExtension(projectFileName!!))
 	}
+
+	private fun getFileNameWithoutExtension(fileName: String) : String {
+		val name = fileName.toPath().name
+		val lastIndex = name.lastIndexOf('.')
+		return if (lastIndex < 0) name else name.substring(0, lastIndex)
+	}
+
+	private fun createTracktionProjectBinary(editFile: String, projectId: Int, projectName: String) {
+		val tracktionFile = editFile.substring(0, editFile.lastIndexOf('.')) + ".tracktion"
+		if (FileSupport(tracktionFile).exists(tracktionFile))
+			return
+
+		val bytes = mutableListOf<Byte>()
+		bytes.addAll("TP01".encodeToByteArray().toTypedArray())
+		bytes.addAll(projectId.toBytes())
+		bytes.addAll(0.toBytes()) // object indexes begins fill later
+		bytes.addAll(0.toBytes()) // end of contents? fill later
+		// number of properties.
+		// Tracktion Waveform creates "name" and "description", but we don't need latter (it's just the created date there either).
+		bytes.addAll(1.toBytes())
+		// for each property, repeat: null-terminated property name, numBytes including null terminator, utf8 string data
+		bytes.addAll("name".encodeToByteArray().toTypedArray())
+		bytes.add(0) // null-terminator
+		bytes.addAll((projectName.length + 1).toBytes())
+		bytes.addAll(projectName.encodeToByteArray().toTypedArray())
+		bytes.add(0) // null-terminator
+
+		val objectsOffset = bytes.size
+
+		// Then Tracktion writes object items here. Contents first.
+		// Once all contents are put, then Tracktion supplies ItemIDs and FileOffsets afterwards.
+
+		// There is only one object in this template: edit file
+		// - the file name without extension, null-terminated
+		// - a string "edit", null-terminated
+		// - a string "Created as the default edit for this project)|MediaObjectCategory|1", null-terminated
+		// - the file name *with* extension, null-terminated
+
+		bytes.addAll(getFileNameWithoutExtension(editFile).encodeToByteArray().toTypedArray())
+		bytes.add(0) // null-terminator
+		bytes.addAll("edit".encodeToByteArray().toTypedArray())
+		bytes.add(0) // null-terminator
+		bytes.addAll("Created as the default edit for this project)|MediaObjectCategory|1".encodeToByteArray().toTypedArray())
+		bytes.add(0) // null-terminator
+		bytes.addAll(editFile.toPath().name.encodeToByteArray().toTypedArray())
+		bytes.add(0) // null-terminator
+
+		// - 0000
+		// - 0 0 28h 40h : still unknown
+
+		val objectsFooterOffset = bytes.size
+
+		bytes.addAll(1.toBytes()) // number of objects. The second item is the index list...?
+		bytes.addAll(0x03166153.toBytes()) // itemID
+		bytes.addAll(objectsOffset.toBytes()) // index at stream. In this template, objectsOffset is the location.
+
+		val searchIndexesOffset = bytes.size
+
+		// Then it writes "search indices". Number of indices first, then contents:
+		// - word, null-terminated
+		// - numIDs, short
+		// - ids (don't know what those IDs actually point to)
+		// Probably setting 0 means no index and safe to ignore everything else?
+		bytes.addAll(0.toBytes())
+
+		//	alter the sizes
+		val result = bytes.take(8) + objectsFooterOffset.toBytes().toList() + searchIndexesOffset.toBytes().toList() + bytes.drop(16)
+		FileSupport(editFile).writeBytes(tracktionFile, result.toByteArray())
+	}
+}
+
+private fun Int.toBytes() : Array<Byte> {
+	val ret = MutableList(4) { 0.toUByte() }
+	var v = this.toUInt()
+	for (i in 0 .. 3) {
+		ret[i] = (v % 0x100u).toUByte()
+		v /= 0x100u
+	}
+	return ret.map { u -> u.toByte() }.toTypedArray()
 }
