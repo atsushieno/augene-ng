@@ -21,9 +21,9 @@ jobs:
       with:
         java-version: 11
     - name: build kotractive
-      run: cd kotractive-project && ./gradlew --warning-mode all build publishToMavenLocal
+      run: cd kotractive-project && ./gradlew --warning-mode all build publishToMavenLocal -x compileTestKotlinNative
     - name: build augene
-      run: cd augene-project && ./gradlew --warning-mode all build publishToMavenLocal
+      run: cd augene-project && ./gradlew --warning-mode all build publishToMavenLocal -x compileTestKotlinNative -x linkDebugTestNative
     - name: build augene-editor
       run: cd augene-editor-project && ./gradlew --warning-mode all check
     - name: upload build failure logs
