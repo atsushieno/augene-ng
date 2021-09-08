@@ -10,7 +10,7 @@ buildscript {
 
 plugins {
     id("com.android.library") version "4.1.3"
-    id("com.google.devtools.ksp") version "1.5.30-1.0.0-beta09"
+    id("com.google.devtools.ksp") version "1.5.30-1.0.0"
     id("org.jetbrains.kotlin.multiplatform") version "1.5.30"
     id("org.jetbrains.dokka") version "1.5.0"
     id("maven-publish")
