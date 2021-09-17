@@ -233,7 +233,12 @@ class AugeneAppModel : AugeneModel() {
 		if (projectFileName == null)
 			processSaveProject ()
 		if (projectFileName != null)
-			compile ()
+			try {
+				compile()
+			} catch (ex: Exception) {
+				println(ex)
+				dialogs.ShowWarning("Compilation error: ${ex.message}") {}
+			}
 	}
 
 	fun processPlay () {
