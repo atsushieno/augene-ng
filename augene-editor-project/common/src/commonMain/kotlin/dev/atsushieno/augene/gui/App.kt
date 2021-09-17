@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Text
@@ -21,14 +20,16 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import com.arkivanov.decompose.value.getValue
+import dev.atsushieno.composempp.material.AlertDialog
 
 val model : AugeneAppModel
     get() = AugeneAppModel.instance
 
 @Composable
+@OptIn(ExperimentalMaterialApi::class)
 fun App() {
     MaterialTheme {
+        val warningDialogMessage by remember { model.warningDialogMessage }
 
         Column(verticalArrangement = Arrangement.Bottom) {
 
@@ -87,6 +88,14 @@ fun App() {
                     BottomNavigationItem(selected = tabIndex == index, onClick = { tabIndex = index}, label = { Text(l) }, icon = {})
                 }
             }
+        }
+
+        if (warningDialogMessage.isNotEmpty()) {
+            val closeDialog = { model.warningDialogMessage.value = "" }
+            dev.atsushieno.composempp.material.AlertDialog(onDismissRequest = closeDialog,
+                confirmButton = { Button(onClick = closeDialog) { Text("OK") } },
+                text = { Text(warningDialogMessage) }
+            )
         }
     }
 }

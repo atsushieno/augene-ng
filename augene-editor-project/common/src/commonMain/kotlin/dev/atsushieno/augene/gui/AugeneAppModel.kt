@@ -237,7 +237,8 @@ class AugeneAppModel : AugeneModel() {
 				compile()
 			} catch (ex: Exception) {
 				println(ex)
-				dialogs.ShowWarning("Compilation error: ${ex.message}") {}
+				//dialogs.ShowWarning("Compilation error: ${ex.message}") {}
+				model.warningDialogMessage.value = ex.message!!
 			}
 	}
 
@@ -304,4 +305,6 @@ class AugeneAppModel : AugeneModel() {
 		onMasterPluginAdded = { refreshRequested.invoke () }
 		onMasterPluginsDeleted = { refreshRequested.invoke () }
 	}
+
+	var warningDialogMessage = mutableStateOf("")
 }

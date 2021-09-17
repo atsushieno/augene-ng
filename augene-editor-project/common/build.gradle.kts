@@ -28,6 +28,7 @@ kotlin {
                 implementation("dev.atsushieno:kotractive:0.1")
                 implementation("dev.atsushieno:augene:0.1")
                 implementation("dev.atsushieno:missingdot:0.1.4")
+                implementation("dev.atsushieno:compose-mpp:0.1")
 
                 implementation("com.arkivanov.decompose:decompose:0.3.1")
             }
