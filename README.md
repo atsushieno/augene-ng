@@ -193,11 +193,6 @@ Then you can `#include` this macro, and write your track MML like:
 Wherever you have the same set of audio plugins installed on your system, you can generate the same set of macro definitions and therefore the MML should be compatible across environment, whereas the plugin unique IDs might be different.
 
 
-# Authoring Tips
-
-If you are Tracktion Waveform user, you would like to examine the output `*.tracktionedit` file with Waveform. To do so, you will have to manually create a tracktion project (it is a binary file that Augene.exe does not support generation) and let it point to the edit file. To make it happen, you will most likely have to name your `*.augene` project file as `(projectname) Edit 1.augene`, or rename your edit in the track directly to match your project file.
-
-
 # License
 
 The augene-player part (JUCE application) is released under the GPLv3 license.
