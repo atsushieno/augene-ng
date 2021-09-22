@@ -180,6 +180,11 @@ MainComponent::MainComponent()
         outputStream->flush();
     };
 
+    watchFileToggleButton.setToggleState(true, NotificationType::dontSendNotification);
+    watchFileToggleButton.onClick = [&] { watchFileChanges = watchFileToggleButton.getToggleState(); };
+    hotReloadToggleButton.setToggleState(true, NotificationType::dontSendNotification);
+    hotReloadToggleButton.onClick = [&] { enableHotReload = hotReloadToggleButton.getToggleState(); };
+
     updatePlayButtonText();
     editNameLabel.setJustificationType (Justification::centred);
     addAndMakeVisible(&selectFileButton);
@@ -188,7 +193,8 @@ MainComponent::MainComponent()
     addAndMakeVisible(&playPauseButton);
     addAndMakeVisible(&stopButton);
     addAndMakeVisible(&exportButton);
-    addAndMakeVisible(&editNameLabel);
+    addAndMakeVisible(&watchFileToggleButton);
+    addAndMakeVisible(&hotReloadToggleButton);
 
     const File editFile (editFilePath);
     if (editFile.existsAsFile())
@@ -213,14 +219,17 @@ void MainComponent::paint (Graphics& g)
 void MainComponent::resized()
 {
     auto r = getLocalBounds();
-    auto topR = r.removeFromTop (30);
-    auto nextR = r.removeFromTop (30);
-    selectFileButton.setBounds (topR.removeFromLeft (topR.getWidth() / 3).reduced (2));
-    pluginsButton.setBounds (topR.removeFromLeft (topR.getWidth() / 2).reduced (2));
-    settingsButton.setBounds (topR.reduced (2));
-    playPauseButton.setBounds (nextR.removeFromLeft (nextR.getWidth() / 3).reduced (2));
-    stopButton.setBounds (nextR.removeFromLeft (nextR.getWidth() / 2).reduced (2));
-    exportButton.setBounds (nextR.reduced (2));
+    auto firstRowR = r.removeFromTop (30);
+    auto secondRowR = r.removeFromTop (30);
+    auto thirdRowR = r.removeFromTop(30);
+    selectFileButton.setBounds (firstRowR.removeFromLeft (firstRowR.getWidth() / 3).reduced (2));
+    pluginsButton.setBounds (firstRowR.removeFromLeft (firstRowR.getWidth() / 2).reduced (2));
+    settingsButton.setBounds (firstRowR.reduced (2));
+    playPauseButton.setBounds (secondRowR.removeFromLeft (secondRowR.getWidth() / 3).reduced (2));
+    stopButton.setBounds (secondRowR.removeFromLeft (secondRowR.getWidth() / 2).reduced (2));
+    exportButton.setBounds (secondRowR.reduced (2));
+    watchFileToggleButton.setBounds(thirdRowR.removeFromLeft(thirdRowR.getWidth() / 3).reduced (2));
+    hotReloadToggleButton.setBounds(thirdRowR.reduced (2));
     editNameLabel.setBounds (r);
 }
 
@@ -281,7 +290,7 @@ void MainComponent::unloadEditFile()
 
 void MainComponent::processFileWatcherDetectedUpdate(String fullPath)
 {
-    if(edit == nullptr)
+    if(edit == nullptr || !watchFileChanges)
         return;
     // The filewatcher implementation is weird.
     // It keeps sending the event until undefined-ish time has passed.
@@ -293,7 +302,21 @@ void MainComponent::processFileWatcherDetectedUpdate(String fullPath)
         augeneWatchListener.reset(nullptr);
         fileWatcher.reset(nullptr);
 
-        tryHotReloadEdit();
+        auto& transport = edit->getTransport();
+        bool wasPlaying = transport.isPlaying();
+        if (wasPlaying)
+            transport.stop(true, true);
+
+        if (enableHotReload)
+            tryHotReloadEdit();
+        else
+            loadEditFile();
+
+        auto& newTransport = edit->getTransport();
+        newTransport.addChangeListener (this);
+        newTransport.setCurrentPosition(0);
+        if (wasPlaying)
+            newTransport.play(true);
 
         startFileWatcher();
     });
@@ -316,11 +339,6 @@ void MainComponent::tryHotReloadEdit()
     File editFile{editFilePath};
     auto itemId = tracktion_engine::ProjectItemID::createNewID(projectItemIDSource);
     auto newEdit = std::make_unique<tracktion_engine::Edit> (engine, tracktion_engine::loadEditFromFile (engine, editFile, itemId), tracktion_engine::Edit::forExamining, nullptr, 0);
-
-    auto& transport = edit->getTransport();
-    bool wasPlaying = transport.isPlaying();
-    if (wasPlaying)
-        transport.stop(true, true);
 
     std::vector<tracktion_engine::Track*> tracksFoundInNewEdit{};
     for (auto& trackNE : newEdit->getTrackList()) {
@@ -372,10 +390,4 @@ void MainComponent::tryHotReloadEdit()
     edit->tempoSequence.copyFrom(newEdit->tempoSequence);
 
     edit->flushState();
-
-    auto& newTransport = edit->getTransport();
-    newTransport.setCurrentPosition(0);
-    if (wasPlaying)
-        newTransport.play(true);
-        //togglePlay(*edit);
 }

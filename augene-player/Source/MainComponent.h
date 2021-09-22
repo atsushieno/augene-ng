@@ -60,10 +60,12 @@ private:
     std::unique_ptr<AugeneWatchListener> augeneWatchListener;
     efsw::WatchID watchID;
     int32_t projectItemIDSource{0};
+    bool watchFileChanges{true}, enableHotReload{true};
 
     TextButton selectFileButton { "Open File" }, pluginsButton { "Plugins" },
-        settingsButton { "Settings" }, exportButton { "Export Plugin Metadata" },
+        settingsButton { "Audio Settings" }, exportButton { "Export Plugin Metadata" },
         playPauseButton { "Play" }, stopButton { "Stop" };
+    ToggleButton watchFileToggleButton{"Watch File Changes"}, hotReloadToggleButton{"Enable Hot Reload"};
     Label editNameLabel { "No Edit Loaded" };
 
     //==============================================================================
