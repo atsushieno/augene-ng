@@ -224,21 +224,32 @@ void MainComponent::resized()
     editNameLabel.setBounds (r);
 }
 
-void MainComponent::loadEditFile()
-{
-    File editFile{editFilePath};
-    auto itemId = tracktion_engine::ProjectItemID::createNewID(++projectItemIDSource);
-    edit = std::make_unique<tracktion_engine::Edit> (engine, tracktion_engine::loadEditFromFile (engine, editFile, itemId), tracktion_engine::Edit::forEditing, nullptr, 0);
-    auto& transport = edit->getTransport();
-    transport.addChangeListener (this);
+Random randomInstance{};
 
+void MainComponent::startFileWatcher()
+{
     if (!augeneWatchListener.get()) {
+        File editFile{editFilePath};
         fileWatcher = std::make_unique<efsw::FileWatcher>();
         fileWatcher->watch();
         augeneWatchListener = std::make_unique<AugeneWatchListener>(this);
         watchID = fileWatcher->addWatch(editFile.getParentDirectory().getFullPathName().toStdString(),
                                         augeneWatchListener.get());
     }
+}
+
+void MainComponent::loadEditFile()
+{
+    File editFile{editFilePath};
+    if (projectItemIDSource == 0)
+        projectItemIDSource = editFilePath.hashCode();
+    auto itemId = tracktion_engine::ProjectItemID::createNewID(projectItemIDSource);
+    edit = std::make_unique<tracktion_engine::Edit> (engine, tracktion_engine::loadEditFromFile (engine, editFile, itemId), tracktion_engine::Edit::forEditing, nullptr, 0);
+    edit->state.setProperty(tracktion_engine::IDs::appVersion, String{"0.1.0"}, nullptr);
+    auto& transport = edit->getTransport();
+    transport.addChangeListener (this);
+
+    startFileWatcher();
 
     editNameLabel.setText (editFile.getFileNameWithoutExtension(), dontSendNotification);
 
@@ -268,7 +279,7 @@ void MainComponent::unloadEditFile()
     File editFile{editFilePath};
 }
 
-void MainComponent::fileUpdated(String fullPath)
+void MainComponent::processFileWatcherDetectedUpdate(String fullPath)
 {
     if(edit == nullptr)
         return;
@@ -279,16 +290,86 @@ void MainComponent::fileUpdated(String fullPath)
     fileWatcher->removeWatch(watchID);
 
     MessageManager::callAsync([&](){
-        auto& transport = edit->getTransport();
-        bool wasPlaying = transport.isPlaying();
-        if (wasPlaying)
-            togglePlay(*edit.get());
-        transport.stop(true, true);
         augeneWatchListener.reset(nullptr);
         fileWatcher.reset(nullptr);
-        unloadEditFile();
-        loadEditFile();
-        if (wasPlaying)
-            togglePlay(*edit.get()); // note that this "edit" is another instance than above.
+
+        tryHotReloadEdit();
+
+        startFileWatcher();
     });
+}
+
+void MainComponent::tryHotReloadEdit()
+{
+    if (projectItemIDSource == 0) {
+        // No previously loaded edit. Give up.
+        loadEditFile();
+        return;
+    }
+    auto hash = editFilePath.hashCode();
+    if (projectItemIDSource != hash) {
+        // Previous edit was different file. Give up.
+        loadEditFile();
+        return;
+    }
+
+    File editFile{editFilePath};
+    auto itemId = tracktion_engine::ProjectItemID::createNewID(projectItemIDSource);
+    auto newEdit = std::make_unique<tracktion_engine::Edit> (engine, tracktion_engine::loadEditFromFile (engine, editFile, itemId), tracktion_engine::Edit::forExamining, nullptr, 0);
+
+    auto& transport = edit->getTransport();
+    bool wasPlaying = transport.isPlaying();
+    if (wasPlaying)
+        transport.stop(true, true);
+
+    std::vector<tracktion_engine::Track*> tracksFoundInNewEdit{};
+    for (auto& trackNE : newEdit->getTrackList()) {
+        std::cerr << trackNE->getName() << std::endl;
+        auto trackEX = std::find_if(edit->getTrackList().begin(), edit->getTrackList().end(), [trackNE](tracktion_engine::Track* t) {
+            return t->getName() == trackNE->getName();
+        });
+        if (trackEX != edit->getTrackList().end()) {
+            tracktion_engine::ClipTrack* clipTrackNE{nullptr};
+            auto clipTrackEX = dynamic_cast<tracktion_engine::ClipTrack*>(*trackEX);
+            if (clipTrackEX != nullptr) {
+                clipTrackNE = dynamic_cast<tracktion_engine::ClipTrack *>(trackNE);
+                if (clipTrackNE == nullptr)
+                    // it became different kind of track. Do not treat it as identical.
+                    continue;
+            }
+
+            tracksFoundInNewEdit.emplace_back(*trackEX);
+            auto tempoTrack = dynamic_cast<tracktion_engine::TempoTrack*>(*trackEX);
+            if (tempoTrack != nullptr)
+                continue; // we handle this in tempoSequence.
+            if (clipTrackEX != nullptr) {
+                // Replace clip content and automation tracks
+                const auto& clips = clipTrackEX->getClips();
+                clipTrackEX->deleteRegion(tracktion_engine::EditTimeRange(0, edit->getLength()), nullptr);
+                for (auto* clip : clipTrackNE->getClips())
+                    clipTrackEX->addClip(clip);
+            }
+        } else {
+            std::cerr << "Track " << trackNE->getName() << " was not found in old edit. Adding." << std::endl;
+            edit->insertTrack(trackNE->state, edit->state, edit->state.getChild(0), nullptr);
+            edit->getTrackList().objects.add(trackNE);
+        }
+    }
+    std::vector<tracktion_engine::Track*> tracksToRemove{};
+    for (auto& trackEX : edit->getTrackList())
+        if (std::find(tracksFoundInNewEdit.begin(), tracksFoundInNewEdit.end(), trackEX) == tracksFoundInNewEdit.end())
+            tracksToRemove.emplace_back(trackEX);
+    for (auto trackEX : tracksToRemove)
+        edit->deleteTrack(trackEX);
+
+    edit->tempoSequence.deleteRegion(tracktion_engine::EditTimeRange(0, edit->getLength()));
+    edit->tempoSequence.copyFrom(newEdit->tempoSequence);
+
+    edit->flushState();
+
+    auto& newTransport = edit->getTransport();
+    newTransport.setCurrentPosition(0);
+    if (wasPlaying)
+        newTransport.play(true);
+        //togglePlay(*edit);
 }

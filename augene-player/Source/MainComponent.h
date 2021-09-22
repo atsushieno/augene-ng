@@ -32,7 +32,7 @@ public:
         }
     }
 
-    void fileUpdated(String fullPath);
+    void processFileWatcherDetectedUpdate(String fullPath);
 
 private:
     class AugeneWatchListener : public efsw::FileWatchListener {
@@ -48,7 +48,7 @@ private:
             String filenameJ = String{filename};
             String fullPath = File{dirJ}.getChildFile(filenameJ).getFullPathName();
             if (action == efsw::Actions::Modified || action == efsw::Actions::Delete)
-                owner->fileUpdated(fullPath);
+                owner->processFileWatcherDetectedUpdate(fullPath);
         }
     };
 
@@ -81,6 +81,10 @@ private:
     void unloadEditFile();
 
     void loadEditFile();
+
+    void tryHotReloadEdit();
+
+    void startFileWatcher();
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };
