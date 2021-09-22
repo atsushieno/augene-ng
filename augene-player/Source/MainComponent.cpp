@@ -223,3 +223,72 @@ void MainComponent::resized()
     exportButton.setBounds (nextR.reduced (2));
     editNameLabel.setBounds (r);
 }
+
+void MainComponent::loadEditFile()
+{
+    File editFile{editFilePath};
+    auto itemId = tracktion_engine::ProjectItemID::createNewID(++projectItemIDSource);
+    edit = std::make_unique<tracktion_engine::Edit> (engine, tracktion_engine::loadEditFromFile (engine, editFile, itemId), tracktion_engine::Edit::forEditing, nullptr, 0);
+    auto& transport = edit->getTransport();
+    transport.addChangeListener (this);
+
+    if (!augeneWatchListener.get()) {
+        fileWatcher = std::make_unique<efsw::FileWatcher>();
+        fileWatcher->watch();
+        augeneWatchListener = std::make_unique<AugeneWatchListener>(this);
+        watchID = fileWatcher->addWatch(editFile.getParentDirectory().getFullPathName().toStdString(),
+                                        augeneWatchListener.get());
+    }
+
+    editNameLabel.setText (editFile.getFileNameWithoutExtension(), dontSendNotification);
+
+    /*
+    for (auto track : edit->getTrackList()) {
+        if (!track->isAudioTrack())
+            continue;
+        dynamic_cast<tracktion_engine::AudioTrack*>(track)->freezeTrackAsync();
+    }
+
+    for (auto track : edit->getTrackList()) {
+        while (true) {
+            Thread::sleep(50);
+            if (track->isFrozen(tracktion_engine::Track::FreezeType::anyFreeze))
+                break;
+        }
+    }
+    */
+}
+
+void MainComponent::unloadEditFile()
+{
+    auto& transport = edit->getTransport();
+    if (transport.isPlaying())
+        transport.stop (true, false);
+    edit.reset(nullptr);
+    File editFile{editFilePath};
+}
+
+void MainComponent::fileUpdated(String fullPath)
+{
+    if(edit == nullptr)
+        return;
+    // The filewatcher implementation is weird.
+    // It keeps sending the event until undefined-ish time has passed.
+    // To avoid such a mess, we just disable the entire watcher and recreate ones every time.
+    // It's stupid, but not in a critical performance issue.
+    fileWatcher->removeWatch(watchID);
+
+    MessageManager::callAsync([&](){
+        auto& transport = edit->getTransport();
+        bool wasPlaying = transport.isPlaying();
+        if (wasPlaying)
+            togglePlay(*edit.get());
+        transport.stop(true, true);
+        augeneWatchListener.reset(nullptr);
+        fileWatcher.reset(nullptr);
+        unloadEditFile();
+        loadEditFile();
+        if (wasPlaying)
+            togglePlay(*edit.get()); // note that this "edit" is another instance than above.
+    });
+}
