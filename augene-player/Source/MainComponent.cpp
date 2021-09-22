@@ -348,6 +348,12 @@ void MainComponent::tryHotReloadEdit()
                 clipTrackEX->deleteRegion(tracktion_engine::EditTimeRange(0, edit->getLength()), nullptr);
                 for (auto* clip : clipTrackNE->getClips())
                     clipTrackEX->addClip(clip);
+                for (auto subTrack : clipTrackEX->getAllSubTracks(true))
+                    edit->deleteTrack(subTrack);
+                for (auto subTrack : clipTrackNE->getAllSubTracks(true)) {
+                    tracktion_engine::TrackInsertPoint tip{clipTrackEX, nullptr};
+                    edit->insertTrack(tip, subTrack->state, nullptr);
+                }
             }
         } else {
             std::cerr << "Track " << trackNE->getName() << " was not found in old edit. Adding." << std::endl;
