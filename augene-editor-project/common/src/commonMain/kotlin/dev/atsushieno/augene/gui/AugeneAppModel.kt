@@ -55,7 +55,7 @@ class AugeneAppModel : AugeneModel() {
 				loadProjectFile(lastProjectFile!!)
 		} catch (ex: Exception) {
 			println (ex.toString())
-			dialogs.ShowWarning ("Failed to load configuration file. It is ignored.") {}
+			model.warningDialogMessage.value = "Failed to load configuration file. It is ignored."
 		}
 	}
 
@@ -177,7 +177,7 @@ class AugeneAppModel : AugeneModel() {
 
 	fun processLaunchAudioPluginHost (audioGraphFile: String) {
 		if (configAudioPluginHostPath == null)
-			dialogs.ShowWarning ("AudioPluginHost path is not configured [File > Configure].") {}
+			model.warningDialogMessage.value = "AudioPluginHost path is not configured [File > Configure]."
 		else {
 			ProcessBuilder(configAudioPluginHostPath, getItemFileAbsolutePath (audioGraphFile)).start()
 		}
@@ -237,14 +237,13 @@ class AugeneAppModel : AugeneModel() {
 				compile()
 			} catch (ex: Exception) {
 				println(ex)
-				//dialogs.ShowWarning("Compilation error: ${ex.message}") {}
-				model.warningDialogMessage.value = ex.message!!
+				model.warningDialogMessage.value = "Compilation error: ${ex.message}"
 			}
 	}
 
 	fun processPlay () {
 		if (configAugenePlayerPath.isNullOrEmpty())
-			dialogs.ShowWarning ("AugenePlayer path is not configured [File > Configure].") {}
+			model.warningDialogMessage.value = "AugenePlayer path is not configured [File > Configure]."
 		else {
 			processCompile ()
 			if (outputEditFileName != null)
