@@ -1,0 +1,5 @@
+<AugeneProject>
+  <AudioGraphs>
+    <AudioGraph Id="sf2_realistic" Source="juicysf-realistic.filtergraph" />
+  </AudioGraphs>
+</AugeneProject>

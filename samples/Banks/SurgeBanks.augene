@@ -1,0 +1,8 @@
+<AugeneProject>
+  <AudioGraphs>
+    <AudioGraph Id="surge1" Source="surge1.filtergraph" />
+    <AudioGraph Id="surge_dirtyPpad" Source="surge-dirtypad.filtergraph" />
+    <AudioGraph Id="surge_gumdrops" Source="surge-gumdrops.filtergraph" />
+    <AudioGraph Id="surge_sixway" Source="surge-sixway.filtergraph" />
+  </AudioGraphs>
+</AugeneProject>

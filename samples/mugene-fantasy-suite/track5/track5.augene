@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AugeneProject>
+  <Includes>
+    <Include Bank="1" Source="../../Banks/SfzBanks.augene" />
+    <Include Bank="2" Source="../../Banks/SF2Banks.augene" />
+    <Include Bank="3" Source="../../Banks/SurgeBanks.augene" />
+  </Includes>
+  <MasterPlugins />
+  <MmlFiles>
+    <MmlFile>track5.mugene</MmlFile>
+  </MmlFiles>
+  <MmlStrings />
+</AugeneProject>
