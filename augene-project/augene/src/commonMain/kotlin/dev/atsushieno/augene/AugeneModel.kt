@@ -35,6 +35,7 @@ open class AugeneModel
 	var projectFileName: String? = null
 
 	var outputEditFileName: String? = null
+	var dryRun = false
 
 	var lastProjectFile: String? = null
 
@@ -270,6 +271,10 @@ open class AugeneModel
 		val outfile = outputEditFileName ?: changeExtension(abspath (projectFileName!!), ".tracktionedit")
 		val sb = StringBuilder()
 		EditModelWriter().write(sb, edit)
+
+		if (dryRun)
+			return
+
 		fileSupport.writeString(outfile, sb.toString())
 		outputEditFileName = outfile
 

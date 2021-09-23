@@ -114,7 +114,7 @@ println("GLOBAL MARKERS: ${globalMarkers.size}")
                 clip!!.PatternGenerator?.Progression = ProgressionElement()
                 val e = seq.Events.lastOrNull { abstractMidiEventElementType.isAssignableFrom(it.getMetaType()) }
                 if (e != null) {
-                    val note = e as NoteElement?
+                    val note = if (e is NoteElement) e else null
                     val extend = note?.L ?: 0
                     clip?.Length = e.B + extend.toDouble()
                 } else if (!seq.Events.any())
