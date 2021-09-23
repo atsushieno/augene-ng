@@ -20,26 +20,38 @@ class AugeneProject {
 			val doc = XDocument.load(reader)
 			val ret = AugeneProject()
 			val root = doc.root!!
-			ret.includes.addAll(root.element("Includes")!!.elements("Include").map {
-				AugeneInclude().apply {
-					source = it.attribute("Source")?.value
-					bank = it.attribute("Bank")?.value
-				} })
-			ret.masterPlugins.addAll(root.element("MasterPlugins")!!.elements("MasterPlugin").map { it.value })
-			ret.audioGraphs.addAll(root.element("AudioGraphs")!!.elements("AudioGraph").map {
-				AugeneAudioGraph().apply {
-					id = it.attribute("Id")?.value
-					source = it.attribute("Source")?.value
-				}
-			})
-			ret.tracks.addAll(root.element("Tracks")!!.elements("AugeneTrack").map {
-				AugeneTrack().apply {
-					id = it.element("Id")?.value
-					audioGraph = it.element("AudioGraph")?.value
-				}
-			})
-			ret.mmlFiles.addAll(root.element("MmlFiles")!!.elements("MmlFile").map { it.value })
-			ret.mmlStrings.addAll(root.element("MmlStrings")!!.elements("MmlString").map { it.value })
+			val includes = root.element("Includes")
+			if (includes != null)
+				ret.includes.addAll(includes.elements("Include").map {
+					AugeneInclude().apply {
+						source = it.attribute("Source")?.value
+						bank = it.attribute("Bank")?.value
+					} })
+			val masterPlugins = root.element("MasterPlugins")
+			if (masterPlugins != null)
+				ret.masterPlugins.addAll(masterPlugins.elements("MasterPlugin").map { it.value })
+			val audioGraphs = root.element("AudioGraphs")
+			if (audioGraphs != null)
+				ret.audioGraphs.addAll(audioGraphs.elements("AudioGraph").map {
+					AugeneAudioGraph().apply {
+						id = it.attribute("Id")?.value
+						source = it.attribute("Source")?.value
+					}
+				})
+			val tracks = root.element("Tracks")
+			if (tracks != null)
+				ret.tracks.addAll(tracks.elements("AugeneTrack").map {
+					AugeneTrack().apply {
+						id = it.element("Id")?.value
+						audioGraph = it.element("AudioGraph")?.value
+					}
+				})
+			val mmlFiles = root.element("MmlFiles")
+			if (mmlFiles != null)
+				ret.mmlFiles.addAll(mmlFiles.elements("MmlFile").map { it.value })
+			val mmlStrings = root.element("MmlStrings")
+			if (mmlStrings != null)
+				ret.mmlStrings.addAll(mmlStrings.elements("MmlString").map { it.value })
 
 			return ret
 		}
