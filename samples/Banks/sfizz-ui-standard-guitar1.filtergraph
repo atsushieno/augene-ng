@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<FILTERGRAPH>
+  <FILTER uid="5" x="0.5" y="0.1">
+    <PLUGIN name="Audio Input" descriptiveName="" format="Internal" category="I/O devices"
+            manufacturer="JUCE" version="1.0" file="" uniqueId="246006c0"
+            isInstrument="0" fileTime="0" infoUpdateTime="0" numInputs="0"
+            numOutputs="2" isShell="0" uid="246006c0"/>
+    <STATE>0.</STATE>
+    <LAYOUT>
+      <INPUTS>
+        <BUS index="0" layout="disabled"/>
+      </INPUTS>
+      <OUTPUTS>
+        <BUS index="0" layout="disabled"/>
+      </OUTPUTS>
+    </LAYOUT>
+  </FILTER>
+  <FILTER uid="7" x="0.5" y="0.9">
+    <PLUGIN name="Audio Output" descriptiveName="" format="Internal" category="I/O devices"
+            manufacturer="JUCE" version="1.0" file="" uniqueId="724248cb"
+            isInstrument="0" fileTime="0" infoUpdateTime="0" numInputs="0"
+            numOutputs="0" isShell="0" uid="724248cb"/>
+    <STATE>0.</STATE>
+    <LAYOUT>
+      <INPUTS>
+        <BUS index="0" layout="L R"/>
+      </INPUTS>
+      <OUTPUTS>
+        <BUS index="0" layout="disabled"/>
+      </OUTPUTS>
+    </LAYOUT>
+  </FILTER>
+  <FILTER uid="8" x="0.3375" y="0.2419354838709677">
+    <PLUGIN name="MIDI Input" descriptiveName="" format="Internal" category="I/O devices"
+            manufacturer="JUCE" version="1.0" file="" uniqueId="a9e4f9eb"
+            isInstrument="0" fileTime="0" infoUpdateTime="0" numInputs="0"
+            numOutputs="0" isShell="0" uid="a9e4f9eb"/>
+    <STATE>0.</STATE>
+    <LAYOUT>
+      <INPUTS>
+        <BUS index="0" layout="disabled"/>
+      </INPUTS>
+      <OUTPUTS>
+        <BUS index="0" layout="disabled"/>
+      </OUTPUTS>
+    </LAYOUT>
+  </FILTER>
+  <FILTER uid="9" x="0.5575" y="0.4838709677419355" uiLastX_Normal="351"
+          uiLastY_Normal="61" uiopen_Normal="1">
+    <PLUGIN name="sfizz" format="VST3" category="Instrument|Synth" manufacturer="Paul Ferrand"
+            version="1.0.0" file="/usr/local/lib/vst3/sfizz.vst3" uniqueId="5da1643a"
+            isInstrument="1" fileTime="177e3a90180" infoUpdateTime="17c1237ea32"
+            numInputs="0" numOutputs="2" isShell="0" uid="5de91fbd"/>
+    <STATE>458.VMjLgDb....O+fWarAhckI2bo8la8HRLt.iHfTlai8FYo41Y8HRUTYTK3HxO9.BOVMEUy.Ea0cVZtMEcgQWY9vSRC8Vav8lak4Fc9HSM43xPt3hKt3hKt3hKlckKt3hK0YVLgMWUwrzYQIiXvzzQZ8FNnsjb3DCVmcWLKk2YVgEdUEyR4giUiQWTwHVcL0VV0fiTUkDNvPkdEwVXpUDahoFNvDELqYzXmkjLKAURxDVaIcEVy0jLKYGQSszTQcEVzEkUXgWTFgzQUckV5UDahYlb5Q0SAs1R4kEaj4hKt3hKt3BTt3hKt3hKt3hKt3BRt3BTt3hKt3hK1MjKt3hKt3hc3.kKt3hKtfjKt3hKP4hKt3hKR4hKt3hXt3BaLkkTq3lKt3hKt3xJx4hKt3hKlsBTA4hKt3hKtPUPtjiMx7zJXEjKt3hKlshXA4hKt3hKtXVPtbTSZoGNpEjKs0TXVshaA4xZIMkQ4HWPtTEbTkzJ1EjKFsjUxkidA4hQKYkb4LSPtLFM3UzJ2DjKDgDTtrhKB4hKt3hKt3xPtPDRP4xJ1gjKt3hKt3hK77RRC8Vav8lak4Fc9vyKVMEUy.Ea0cVZtMEcgQWY9..</STATE>
+    <LAYOUT>
+      <INPUTS/>
+      <OUTPUTS>
+        <BUS index="0" layout="L R"/>
+      </OUTPUTS>
+    </LAYOUT>
+  </FILTER>
+  <FILTER uid="11" x="0.61375" y="0.6895161290322581" uiLastX_Normal="326"
+          uiLastY_Normal="178" uiopen_Normal="0">
+    <PLUGIN name="mda Overdrive" format="VST3" category="Fx|Distortion" manufacturer="mda"
+            version="1.0.0" file="/home/atsushi/.vst3/mda-vst3.vst3" uniqueId="3aa14075"
+            isInstrument="0" fileTime="17b4fb116f8" infoUpdateTime="17c1237ea33"
+            numInputs="2" numOutputs="2" isShell="0" uid="5fadd5fe"/>
+    <STATE>432.VMjLgbZ....O+fWarAhckI2bo8la8HRLt.iHfTlai8FYo41Y8HRUTYTK3HxO9.BOVMEUy.Ea0cVZtMEcgQWY9vSRC8Vav8lak4Fc9HCMv3hUMczXWEjKt3hYt3hKt.kKt3hKt3BS5gEcyQjKt3hKwXzYsAUbA4hKtfDTgoVQwLkKt3hKA4hKt3BQt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKLoGVzMGQt3hKt7jQmICTwEjKt3BQPElZEEyTt3hKtDjKt3hKL4hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKt3hKq.UUMslLogmVLsxSt3hKtvyKIMzasA2atUlaz4COuX0TTMCTrU2Yo41TzEFck4C.</STATE>
+    <LAYOUT>
+      <INPUTS>
+        <BUS index="0" layout="L R"/>
+      </INPUTS>
+      <OUTPUTS>
+        <BUS index="0" layout="L R"/>
+      </OUTPUTS>
+    </LAYOUT>
+  </FILTER>
+  <CONNECTION srcFilter="8" srcChannel="4096" dstFilter="9" dstChannel="4096"/>
+  <CONNECTION srcFilter="9" srcChannel="0" dstFilter="11" dstChannel="0"/>
+  <CONNECTION srcFilter="9" srcChannel="1" dstFilter="11" dstChannel="1"/>
+  <CONNECTION srcFilter="11" srcChannel="0" dstFilter="7" dstChannel="0"/>
+  <CONNECTION srcFilter="11" srcChannel="1" dstFilter="7" dstChannel="1"/>
+</FILTERGRAPH>

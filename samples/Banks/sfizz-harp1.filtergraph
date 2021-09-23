@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<FILTERGRAPH>
+  <FILTER uid="5" x="0.5" y="0.1">
+    <PLUGIN name="Audio Input" descriptiveName="" format="Internal" category="I/O devices"
+            manufacturer="JUCE" version="1.0" file="" uniqueId="246006c0"
+            isInstrument="0" fileTime="0" infoUpdateTime="0" numInputs="0"
+            numOutputs="2" isShell="0" uid="246006c0"/>
+    <STATE>0.</STATE>
+    <LAYOUT>
+      <INPUTS>
+        <BUS index="0" layout="disabled"/>
+      </INPUTS>
+      <OUTPUTS>
+        <BUS index="0" layout="disabled"/>
+      </OUTPUTS>
+    </LAYOUT>
+  </FILTER>
+  <FILTER uid="7" x="0.5" y="0.9">
+    <PLUGIN name="Audio Output" descriptiveName="" format="Internal" category="I/O devices"
+            manufacturer="JUCE" version="1.0" file="" uniqueId="724248cb"
+            isInstrument="0" fileTime="0" infoUpdateTime="0" numInputs="0"
+            numOutputs="0" isShell="0" uid="724248cb"/>
+    <STATE>0.</STATE>
+    <LAYOUT>
+      <INPUTS>
+        <BUS index="0" layout="L R"/>
+      </INPUTS>
+      <OUTPUTS>
+        <BUS index="0" layout="disabled"/>
+      </OUTPUTS>
+    </LAYOUT>
+  </FILTER>
+  <FILTER uid="8" x="0.2496954933008526" y="0.2567567567567567">
+    <PLUGIN name="MIDI Input" descriptiveName="" format="Internal" category="I/O devices"
+            manufacturer="JUCE" version="1.0" file="" uniqueId="a9e4f9eb"
+            isInstrument="0" fileTime="0" infoUpdateTime="0" numInputs="0"
+            numOutputs="0" isShell="0" uid="a9e4f9eb"/>
+    <STATE>0.</STATE>
+    <LAYOUT>
+      <INPUTS>
+        <BUS index="0" layout="disabled"/>
+      </INPUTS>
+      <OUTPUTS>
+        <BUS index="0" layout="disabled"/>
+      </OUTPUTS>
+    </LAYOUT>
+  </FILTER>
+  <FILTER uid="9" x="0.4019488428745432" y="0.5574324324324325" uiLastX_Normal="225"
+          uiLastY_Normal="422" uiopen_Normal="1">
+    <PLUGIN name="sfizz" format="VST3" category="Instrument|Synth" manufacturer="Paul Ferrand"
+            version="1.0.0" file="/usr/local/lib/vst3/sfizz.vst3" uniqueId="5da1643a"
+            isInstrument="1" fileTime="177e3a90180" infoUpdateTime="17c12388a63"
+            numInputs="0" numOutputs="2" isShell="0" uid="5de91fbd"/>
+    <STATE>332.VMjLgLT....O+fWarAhckI2bo8la8HRLt.iHfTlai8FYo41Y8HRUTYTK3HxO9.BOVMEUy.Ea0cVZtMEcgQWY9vSRC8Vav8lak4Fc9DiM03xPt3hKt3hKt3hKlYkKt3hK0YVLgMWUwrzYQIiXvzzQZ8FNnsjb3DCVmcWLKk2YVgEdUEyR4giUiQWTwHVcL0VV0fCZU8VRGMFLEYTXy4RQgc1ZWoEciY0ROkjLX4VUwHldIcEV4cCdToWRWoEciEiX0YlUXgWPWsTdUIiX5UjUZQGM3IFaucjKt3hKt3hKD4hKt3hKt3hKt3hKB4hKD4hKt3hKtbiKt3hKt3hKh8DQt3hKt3hPt3hKtPjKt3hK14hKt3hKG4hYIMEa58jRt3hKt3hcOsjKt3hKtLyS77RRC8Vav8lak4Fc9vyKVMEUy.Ea0cVZtMEcgQWY9..</STATE>
+    <LAYOUT>
+      <INPUTS/>
+      <OUTPUTS>
+        <BUS index="0" layout="L R"/>
+      </OUTPUTS>
+    </LAYOUT>
+  </FILTER>
+  <CONNECTION srcFilter="8" srcChannel="4096" dstFilter="9" dstChannel="4096"/>
+  <CONNECTION srcFilter="9" srcChannel="0" dstFilter="7" dstChannel="0"/>
+  <CONNECTION srcFilter="9" srcChannel="1" dstFilter="7" dstChannel="1"/>
+</FILTERGRAPH>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<FILTERGRAPH>
+  <FILTER uid="5" x="0.5" y="0.1">
+    <PLUGIN name="Audio Input" descriptiveName="" format="Internal" category="I/O devices"
+            manufacturer="JUCE" version="1.0" file="" uniqueId="246006c0"
+            isInstrument="0" fileTime="0" infoUpdateTime="0" numInputs="0"
+            numOutputs="2" isShell="0" uid="246006c0"/>
+    <STATE>0.</STATE>
+    <LAYOUT>
+      <INPUTS>
+        <BUS index="0" layout="disabled"/>
+      </INPUTS>
+      <OUTPUTS>
+        <BUS index="0" layout="disabled"/>
+      </OUTPUTS>
+    </LAYOUT>
+  </FILTER>
+  <FILTER uid="7" x="0.5" y="0.9">
+    <PLUGIN name="Audio Output" descriptiveName="" format="Internal" category="I/O devices"
+            manufacturer="JUCE" version="1.0" file="" uniqueId="724248cb"
+            isInstrument="0" fileTime="0" infoUpdateTime="0" numInputs="0"
+            numOutputs="0" isShell="0" uid="724248cb"/>
+    <STATE>0.</STATE>
+    <LAYOUT>
+      <INPUTS>
+        <BUS index="0" layout="L R"/>
+      </INPUTS>
+      <OUTPUTS>
+        <BUS index="0" layout="disabled"/>
+      </OUTPUTS>
+    </LAYOUT>
+  </FILTER>
+  <FILTER uid="8" x="0.3375" y="0.2419354838709677">
+    <PLUGIN name="MIDI Input" descriptiveName="" format="Internal" category="I/O devices"
+            manufacturer="JUCE" version="1.0" file="" uniqueId="a9e4f9eb"
+            isInstrument="0" fileTime="0" infoUpdateTime="0" numInputs="0"
+            numOutputs="0" isShell="0" uid="a9e4f9eb"/>
+    <STATE>0.</STATE>
+    <LAYOUT>
+      <INPUTS>
+        <BUS index="0" layout="disabled"/>
+      </INPUTS>
+      <OUTPUTS>
+        <BUS index="0" layout="disabled"/>
+      </OUTPUTS>
+    </LAYOUT>
+  </FILTER>
+  <FILTER uid="9" x="0.5575" y="0.4838709677419355" uiLastX_Normal="351"
+          uiLastY_Normal="61" uiopen_Normal="1">
+    <PLUGIN name="sfizz" format="VST3" category="Instrument|Synth" manufacturer="Paul Ferrand"
+            version="1.0.0" file="/usr/local/lib/vst3/sfizz.vst3" uniqueId="5da1643a"
+            isInstrument="1" fileTime="177e3a90180" infoUpdateTime="17c12296345"
+            numInputs="0" numOutputs="2" isShell="0" uid="5de91fbd"/>
+    <STATE>340.VMjLgrT....O+fWarAhckI2bo8la8HRLt.iHfTlai8FYo41Y8HRUTYTK3HxO9.BOVMEUy.Ea0cVZtMEcgQWY9vSRC8Vav8lak4Fc9DyMw3xPt3hKt3hKt3hKtfkKt3hK0YVLgMWUwrzYQIiXvzzQZ8FNnsjb3DCVmcWLKk2YVgEdUEyR4giUiQWTwHVcL0VV0fCZU8VRGMFLEYTXy4RQgc1ZWoEciY0ROkjLX4VUwHldIcEV4cCZPgWQwHVd3HEVxcmUKgVRWgUdMc0RSUkdPMGQwfUZUwVX5QCdhw1aG4hKt3hKt3BQt3hKt3hKt3hKt3hPt3BQt3hKt3hK23hKt3hKt3hXOQjKt3hKtHjKt3hKD4hKt3hct3hKt3xQtXVRSwldOojKt3hKtX2SK4hKt3hKy7DOujzPu0Fbu4VYtQmO77hUSQ0LPwVcmklaSQWXzUlO..</STATE>
+    <LAYOUT>
+      <INPUTS/>
+      <OUTPUTS>
+        <BUS index="0" layout="L R"/>
+      </OUTPUTS>
+    </LAYOUT>
+  </FILTER>
+  <FILTER uid="10" x="0.665" y="0.7258064516129032">
+    <PLUGIN name="Reverb" format="Internal" category="Effect" manufacturer="JUCE"
+            version="1.0.0" file="Reverb" uniqueId="91b3d5f2" isInstrument="0"
+            fileTime="0" infoUpdateTime="0" numInputs="2" numOutputs="2"
+            isShell="0" uid="91b3d5f2"/>
+    <STATE>0.</STATE>
+    <LAYOUT>
+      <INPUTS>
+        <BUS index="0" layout="L R"/>
+      </INPUTS>
+      <OUTPUTS>
+        <BUS index="0" layout="L R"/>
+      </OUTPUTS>
+    </LAYOUT>
+  </FILTER>
+  <CONNECTION srcFilter="8" srcChannel="4096" dstFilter="9" dstChannel="4096"/>
+  <CONNECTION srcFilter="9" srcChannel="0" dstFilter="10" dstChannel="0"/>
+  <CONNECTION srcFilter="9" srcChannel="1" dstFilter="10" dstChannel="1"/>
+  <CONNECTION srcFilter="10" srcChannel="0" dstFilter="7" dstChannel="0"/>
+  <CONNECTION srcFilter="10" srcChannel="1" dstFilter="7" dstChannel="1"/>
+</FILTERGRAPH>

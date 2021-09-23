@@ -1,0 +1,15 @@
+<AugeneProject>
+  <AudioGraphs>
+    <AudioGraph Id="string_section_1" Source="sfizz-string-sec.filtergraph" />
+    <AudioGraph Id="bass_strings" Source="sfizz-bass-strings.filtergraph" />
+    <AudioGraph Id="grand_piano_1" Source="sfizz-grandpiano.filtergraph" />
+    <AudioGraph Id="brass_section_1" Source="sfizz-brass-section.filtergraph" />
+    <AudioGraph Id="brass_section_acc" Source="sfizz-brass-section-acc.filtergraph" />
+    <AudioGraph Id="atc1_synth_bass" Source="sfizz-atc-1-synth-bass-1.filtergraph" />
+    <AudioGraph Id="da_real_synth_drum_kit" Source="sfizz-da-real-synth-drum-kit.filtergraph" />
+    <AudioGraph Id="ixox_flute" Source="sfizz-Ixox-Flute.filtergraph" />
+    <AudioGraph Id="ui_standard_guitar_1" Source="sfizz-ui-standard-guitar1.filtergraph" />
+    <AudioGraph Id="ui_metal_gtx_1" Source="sfizz-ui-metal-gtx-ksop-kpp.filtergraph" />
+    <AudioGraph Id="harp1" Source="sfizz-harp1.filtergraph" />
+  </AudioGraphs>
+</AugeneProject>
