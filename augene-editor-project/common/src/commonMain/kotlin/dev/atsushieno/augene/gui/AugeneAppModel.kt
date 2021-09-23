@@ -87,8 +87,14 @@ class AugeneAppModel : AugeneModel() {
 
 	fun processOpenProject () {
 		dialogs.ShowOpenFileDialog ("Open Augene Project") { files ->
-			if (files.any())
-				loadProjectFile(files[0])
+			if (files.any()) {
+				try {
+					loadProjectFile(files[0])
+				} catch (ex: Exception) {
+					println(ex)
+					warningDialogMessage.value = ex.message ?: ""
+				}
+			}
 		}
 	}
 
