@@ -1,0 +1,77 @@
+#comment
+
+# mugene MML for guitars
+
+- On AudioPluginHost, load sfizz with UI Standard Guitar / UI METAL GTX
+- Control it via mugene MML.
+  - kmmk inline MML is usable too.
+- Define macros
+  - CC to control ARIA parameters.
+  - note on for key switches
+
+#endcomment
+
+// You can #define GUITARTRACKS to limit the scopes of those macros.
+
+// UI METAL GTX key switches
+#macro GUITARTRACKS  CHROMATIC_RUN    { n4,0,0 }
+#macro GUITARTRACKS  SLIDE_EFFECT_DOWN    { n5,0,0 }
+#macro GUITARTRACKS  SLIDE_EFFECT_UP    { n6,0,0 }
+#macro GUITARTRACKS  SLIDE_EFFECT_WOW    { n7,0,0 }
+#macro GUITARTRACKS  PICK_SCRATCH    { n8,0,0 }
+#macro GUITARTRACKS  NATURAL_HARMONICS    { n9,0,0 }
+#macro GUITARTRACKS  PICK_HARMONICS    { n10,0,0 }
+#macro GUITARTRACKS  BRUSH_DOWN    { n11,0,0 } 
+#macro GUITARTRACKS  BRUSH_UP    { n12,0,0 }
+#macro GUITARTRACKS  BRUSH_ALT    { n13,0,0 }
+#macro GUITARTRACKS  FRET_MUTE_DOWN    { n14,0,0 }
+#macro GUITARTRACKS  FRET_MUTE_UP    { n15,0,0 }
+#macro GUITARTRACKS  FRET_MUTE_ALT    { n16,0,0 }
+#macro GUITARTRACKS  SUSTAIN_DOWN    { n17,0,0 }
+#macro GUITARTRACKS  SUSTAIN_UP    { n18,0,0 }
+#macro GUITARTRACKS  SUSTAIN_ALT    { n19,0,0 }
+#macro GUITARTRACKS  PALM_MUTE_DOWN    { n20,0,0 }
+#macro GUITARTRACKS  PALM_MUTE_UP    { n21,0,0 }
+#macro GUITARTRACKS  PALM_MUTE_ALT    { n22,0,0 }
+#macro GUITARTRACKS  SLIDE_DOWN    { n23,0,0 }
+#macro GUITARTRACKS  SLIDE_UP    { n24,0,0 }
+#macro GUITARTRACKS  PULLING    { n25,0,0 }
+#macro GUITARTRACKS  HAMMERING    { n26,0,0 }
+#macro GUITARTRACKS  SLIDE_IN    { n27,0,0 }
+#macro GUITARTRACKS  SLIDE_OUT    { n28,0,0 }
+#macro GUITARTRACKS  PSEUDO_LEGATO    { n29,0,0 }
+// f+2 .. e7 : audible
+#macro GUITARTRACKS  CHALK_HALF    { n103,0,0 }
+#macro GUITARTRACKS  CHALK_FULL    { n104,0,0 }
+#macro GUITARTRACKS  CHALK_FULL_AND_HALF    { n105,0,0 }
+#macro GUITARTRACKS  UNISON_CHALK_AUTO    { n106,0,0 }
+#macro GUITARTRACKS  UNISON_CHALK_MANUAL    { n107,0,0 }
+#macro GUITARTRACKS  PORTAMENTO    { n108,0,0 }
+#macro GUITARTRACKS  SUSTAIN_PBR_OCT    { n109,0,0 }
+#macro GUITARTRACKS  SUSTAIN_PBR_TWO_OCT    { n110,0,0 }
+#macro GUITARTRACKS  TRILL_HALF    { n111,0,0 }
+#macro GUITARTRACKS  TRILL_FULL    { n112,0,0 }
+#macro GUITARTRACKS  TRILL_FULL_AND_HALF    { n113,0,0 }
+#macro GUITARTRACKS  TRILL_TWO    { n114,0,0 }
+
+// UI METAL GTX control changes
+#macro GUITARTRACKS  VIBRATE_DEPTH v:number { CC20,$v }
+
+#macro GUITARTRACKS  VIBRATE_SPEED v:number { CC21,$v }
+#macro GUITARTRACKS  PALM_MUTE_LEN v:number { CC22,$v }
+#macro GUITARTRACKS  SUSTAIN_CTRL v:number { CC23,$v } // takes effects when v is 65-127
+#macro GUITARTRACKS  RELEASE_SHAPE v:number { CC24,$v } // 02-15 basic, 16-31 hard, 32-47 aggressive, 48-63 aggressive 2, 64-79 position change / action releases: 80-127 auto slide out, 960127: auto alternate
+#macro GUITARTRACKS  RELEASE_LEVEL v:number { CC25,$v }
+#macro GUITARTRACKS  SLIDE_LEGATO v:number { CC26,$v } // 1-15: half note, 16-31: full note, 32-47: 1.5, 48-63: 2, 64-79: 2.5, 80-95: 5, 96--127: 3.5
+#macro GUITARTRACKS  SLIDE_ATTACK v:number { CC27,$v } // ditto
+#macro GUITARTRACKS  UNISON_SPEED v:number { CC28,$v } // the author does not recommend its usage
+#macro GUITARTRACKS  RESONANCE v:number { CC29,$v }
+#macro GUITARTRACKS  PICKING_NOISE_LEVEL v:number { CC30,$v }
+#macro GUITARTRACKS  MICRO_PICK_LEVEL v:number { CC31,$v }
+#macro GUITARTRACKS  TENSION v:number { CC46,$v }
+#macro GUITARTRACKS  MAGNET v:number { CC48,$v }
+
+#macro GUITARTRACKS  BEND_START v:number { CC52,$v }
+#macro GUITARTRACKS  BEND_SPEED v:number { CC53,$v }
+#macro GUITARTRACKS  TRILL_SPEED v:number { CC112,$v }
+
