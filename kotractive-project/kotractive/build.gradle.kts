@@ -54,8 +54,6 @@ kotlin {
             useCommonJs()
         }
     }
-    // e: Could not find "/media/atsushi/extssd0/sources/ktmidi/augene-ng/kotractive-project/kotractive/build/generated/ksp/nativeMain/classes" in [/media/atsushi/extssd0/sources/ktmidi/augene-ng/kotractive-project, /home/atsushi/.konan/klib, /home/atsushi/.konan/kotlin-native-prebuilt-linux-1.5.21/klib/common, /home/atsushi/.konan/kotlin-native-prebuilt-linux-1.5.21/klib/platform/linux_x64]
-    /*
     val hostOs = System.getProperty("os.name")
     val isMingwX64 = hostOs.startsWith("Windows")
 
@@ -79,7 +77,7 @@ kotlin {
             }
         }
         else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
-    }*/
+    }
 
     sourceSets {
         val androidMain by getting {
@@ -95,7 +93,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.2.1")
-                implementation("dev.atsushieno:missingdot:0.1.4")
+                implementation("dev.atsushieno:missingdot:0.1.5")
                 if (configurations.get("ksp").dependencies.all { p -> p.name != ":kotractive_ksp" })
                     configurations.get("ksp").dependencies.add(project(":kotractive_ksp"))
             }
@@ -119,23 +117,21 @@ kotlin {
                 implementation(kotlin("test-js"))
             }
         }
-        /*
         val nativeMain by getting {
             dependencies {
             }
         }
         val nativeTest by getting
-        */
     }
 }
 
 android {
-    compileSdkVersion(30)
+    compileSdkVersion(31)
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     sourceSets["main"].assets.srcDir("src/commonMain/resources") // kind of hack...
     defaultConfig {
         minSdkVersion(24)
-        targetSdkVersion(30)
+        targetSdkVersion(31)
     }
     buildTypes {
         val debug by getting {
