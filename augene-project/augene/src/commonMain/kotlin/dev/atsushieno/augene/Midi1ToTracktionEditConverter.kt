@@ -8,7 +8,6 @@ import dev.atsushieno.ktmidi.MidiMessage
 import dev.atsushieno.ktmidi.MidiMetaType
 import dev.atsushieno.ktmidi.MidiTrack
 import dev.atsushieno.ktmidi.mergeTracks
-import dev.atsushieno.missingdot.xml.XmlReader
 import kotlin.math.pow
 
 private val SMF_SYSEX_EVENT = 0xF0
@@ -52,7 +51,6 @@ class MidiToTracktionEditConverter(private var context: MidiImportContext) {
                 }
 
                 globalMarkers = markers.toTypedArray()
-println("GLOBAL MARKERS: ${globalMarkers.size}")
             }
         }
 
@@ -63,7 +61,7 @@ println("GLOBAL MARKERS: ${globalMarkers.size}")
 
                 val graph = context.mappedPlugins[Extension_InstrumentName ?: ""]
                 if (graph != null)
-                    for (p in AugeneModel.toTracktion(AugenePluginSpecifier.fromAudioGraph(graph)))
+                    for (p in AugeneCompiler.toTracktion(JuceAudioGraph.toAudioGraph(graph)))
                         Plugins.add(p.apply { Id = context.generateNewID() })
             }
             context.edit.Tracks.add(ttrack)

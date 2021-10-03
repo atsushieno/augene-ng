@@ -5,7 +5,7 @@ fun main(args: Array<String>) {
         println("usage: augene-console [.augene project filename]")
         return
     }
-    val model = AugeneModel()
+    val model = AugeneCompiler()
     model.loadProjectFile(args[0])
     model.compile()
 }

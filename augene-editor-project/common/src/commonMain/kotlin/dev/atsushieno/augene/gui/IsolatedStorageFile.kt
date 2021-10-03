@@ -5,20 +5,16 @@ import okio.FileSystem
 import okio.Path
 import okio.Path.Companion.toPath
 
+internal expect fun getUserStoreForAssemblyImpl(applicationDirectoryName: String) : IsolatedStorageFile
+
+
 // Partial mimick of .NET System.IO API
 class IsolatedStorageFile @OptIn(ExperimentalFileSystem::class)
-private constructor(private val basePath: Path) {
+internal constructor(private val basePath: Path) {
     companion object {
         // on .NET app name was unnecessary as it is per-assembly thing, but there is no such thing in Java classes.
         @OptIn(ExperimentalFileSystem::class)
-        fun getUserStoreForAssembly(applicationDirectoryName: String) : IsolatedStorageFile {
-            // FIXME: give different subdir name for Windows
-            val home = System.getProperty("user.home")
-            val dir = home.toPath() / ".config".toPath() / applicationDirectoryName.toPath()
-            if (!FileSystem.SYSTEM.exists(dir))
-                FileSystem.SYSTEM.createDirectory(dir)
-            return IsolatedStorageFile(dir)
-        }
+        fun getUserStoreForAssembly(applicationDirectoryName: String) = getUserStoreForAssemblyImpl(applicationDirectoryName)
     }
 
     @OptIn(ExperimentalFileSystem::class)

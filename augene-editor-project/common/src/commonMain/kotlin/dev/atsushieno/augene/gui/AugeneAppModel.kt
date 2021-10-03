@@ -2,8 +2,9 @@ package dev.atsushieno.augene.gui
 
 import androidx.compose.runtime.mutableStateOf
 import com.arkivanov.decompose.value.MutableValue
-import dev.atsushieno.augene.AugeneModel
+import dev.atsushieno.augene.AugeneCompiler
 import dev.atsushieno.augene.AugeneProject
+import dev.atsushieno.augene.AugeneProjectSaver
 import dev.atsushieno.augene.FileSupport
 import dev.atsushieno.augene.JuceAudioGraph
 import dev.atsushieno.missingdot.xml.XmlNodeType
@@ -12,7 +13,7 @@ import dev.atsushieno.missingdot.xml.XmlTextWriter
 import okio.ExperimentalFileSystem
 import okio.Path.Companion.toPath
 
-class AugeneAppModel : AugeneModel() {
+class AugeneAppModel : AugeneCompiler() {
 	companion object {
 		val instance = AugeneAppModel()
 
@@ -105,11 +106,11 @@ class AugeneAppModel : AugeneModel() {
 					projectFileName = files[0]
 				else
 					return@ShowSaveFileDialog
-				AugeneProject.save(project, projectFileName!!)
+				AugeneProjectSaver.save(project, projectFileName!!)
 			}
 		}
 		else
-			AugeneProject.save(project, projectFileName!!)
+			AugeneProjectSaver.save(project, projectFileName!!)
 	}
 
 	@OptIn(ExperimentalFileSystem::class)
@@ -185,7 +186,7 @@ class AugeneAppModel : AugeneModel() {
 		if (configAudioPluginHostPath == null)
 			model.warningDialogMessage.value = "AudioPluginHost path is not configured [File > Configure]."
 		else {
-			ProcessBuilder(configAudioPluginHostPath, getItemFileAbsolutePath (audioGraphFile)).start()
+			launchExternalProcess(configAudioPluginHostPath!!, getItemFileAbsolutePath (audioGraphFile))
 		}
 	}
 
@@ -253,19 +254,11 @@ class AugeneAppModel : AugeneModel() {
 		else {
 			processCompile ()
 			if (outputEditFileName != null)
-				ProcessBuilder (configAugenePlayerPath, outputEditFileName).start()
+				launchExternalProcess(configAugenePlayerPath!!, outputEditFileName!!)
 		}
 	}
 
-	fun openFileOrContainingFolder (fullPath: String) {
-		val os = System.getProperty("os.name")
-		if (os.contains("windows"))
-			ProcessBuilder("explorer", fullPath).start()
-		if (os.contains("mac"))
-			ProcessBuilder("open", fullPath).start()
-		else
-			ProcessBuilder("xdg-open", fullPath).start()
-	}
+	fun openFileOrContainingFolder (fullPath: String) = runFileOrFolderLauncher(fullPath)
 
 	var autoReloadProject = mutableStateOf(false)
 

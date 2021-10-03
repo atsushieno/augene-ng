@@ -3,14 +3,13 @@ package dev.atsushieno.augene
 import dev.atsushieno.kotractive.*
 import dev.atsushieno.ktmidi.MidiCC
 import dev.atsushieno.missingdot.xml.XmlReader
-import dev.atsushieno.missingdot.xml.XmlTextReader
 import dev.atsushieno.mugene.MmlCompiler
 import dev.atsushieno.mugene.MmlInputSource
 import okio.ExperimentalFileSystem
 import okio.Path.Companion.toPath
 import kotlin.random.Random
 
-open class AugeneModel
+open class AugeneCompiler
 {
 	companion object {
 		private const val TracktionProgramChange = 4097
@@ -61,10 +60,10 @@ open class AugeneModel
 		(projectFileName!!.toPath().parent!! / itemFilename.toPath()).toString()
 
 	fun loadProjectFile (xmlFile: String) =
-		setProject(AugeneProject.load(xmlFile), xmlFile)
+		setProject(AugeneProjectLoader.load(xmlFile), xmlFile)
 
 	fun loadProjectJson (text: String, baseFileName: String = ".") =
-		setProject(AugeneProject.loadJson (text), baseFileName)
+		setProject(AugeneProjectLoader.loadJson (text), baseFileName)
 
 	fun setProject(newProject: AugeneProject, baseFileName: String) {
 		project = newProject
@@ -208,7 +207,7 @@ open class AugeneModel
 				track.Plugins.clear ()
 				val text = fileSupport.readString(abspath (ag.source))
 				val graph = JuceAudioGraph.load(XmlReader.create(text)).asIterable()
-				for (p in toTracktion(AugenePluginSpecifier.fromAudioGraph(graph)))
+				for (p in toTracktion(JuceAudioGraph.toAudioGraph(graph)))
 					track.Plugins.add(p)
 				// recover volume and level at the end.
 				for (p in existingPlugins)
@@ -235,7 +234,7 @@ open class AugeneModel
 				}*/
 				val text = fileSupport.readString(abspath (agFile))
 				val graph = JuceAudioGraph.load (XmlReader.create (text)).asIterable()
-				for (p in toTracktion (AugenePluginSpecifier.fromAudioGraph (graph)))
+				for (p in toTracktion (JuceAudioGraph.toAudioGraph(graph)))
 				dstTrack.Plugins.add (p)
 			}
 			// recover volume and level at the end.
@@ -255,7 +254,7 @@ open class AugeneModel
 			*/
 			val text = fileSupport.readString(abspath (agFile))
 			val graph = JuceAudioGraph.load (XmlReader.create (text)).asIterable()
-			for ( p in toTracktion (AugenePluginSpecifier.fromAudioGraph(graph)))
+			for ( p in toTracktion (JuceAudioGraph.toAudioGraph(graph)))
 				edit.MasterPlugins.add (p)
 		}
 
@@ -279,6 +278,54 @@ open class AugeneModel
 		outputEditFileName = outfile
 
 		createTracktionProjectBinary(outfile, projectId, getFileNameWithoutExtension(projectFileName!!))
+	}
+
+	private fun AugeneProject.checkIncludeValidity(
+		includedAncestors: MutableList<String>,
+		resolveAbsPath: (String) -> String,
+		errors: MutableList<String>
+	) {
+		for (inc in this.includes) {
+			if (inc.source == null)
+				continue
+			val absPath = resolveAbsPath(inc.source!!)
+			if (includedAncestors.any { it.equals(absPath, true) })
+				errors.add("Recursive inclusion was found: $absPath")
+			val child = AugeneProjectLoader.load(absPath)
+			checkIncludeValidity(includedAncestors, resolveAbsPath, errors)
+		}
+	}
+
+	@OptIn(ExperimentalFileSystem::class)
+	private fun AugeneProject.expandedAudioGraphsFullPath(
+		resolveAbsPath: (String) -> String,
+		bankMsb: String?,
+		bankLsb: String?
+	): Sequence<AugeneAudioGraph> {
+		val project = this
+		return sequence {
+			checkIncludeValidity(mutableListOf(), resolveAbsPath, mutableListOf())
+			var count = 0
+			for (item in project.audioGraphs)
+				yield(AugeneAudioGraph().apply {
+					this.bankMsb = bankMsb
+					this.bankLsb = bankLsb
+					program = count++.toString()
+					id = item.id
+					source = resolveAbsPath(item.source!!)
+				})
+			for (include in project.includes) {
+				val src: String = include.source ?: continue
+				val absPath = resolveAbsPath(src)
+				val resolveNestedAbsPath =
+					{ s: String -> (FileSupport.canonicalizePath(absPath).toPath().parent!! / s).toString() }
+				val msb = include.bankMsb ?: include.bank
+				val lsb = include.bankLsb
+				for (nested in AugeneProjectLoader.load(resolveAbsPath(src))
+					.expandedAudioGraphsFullPath(resolveNestedAbsPath, msb, lsb))
+					yield(nested)
+			}
+		}
 	}
 
 	private fun getFileNameWithoutExtension(fileName: String) : String {

@@ -16,7 +16,7 @@ dependencies {
 android {
     compileSdkVersion(31)
     defaultConfig {
-        applicationId = "dev.atsushieno.augene"
+        applicationId = "dev.atsushieno.augene.gui"
         minSdkVersion(24)
         targetSdkVersion(31)
         versionCode = 1

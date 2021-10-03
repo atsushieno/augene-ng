@@ -1,26 +1,25 @@
 package dev.atsushieno.augene
 
 import kotlin.test.Test
-import kotlin.test.assertEquals
 
 
-class AugeneModelJvmTest {
+class AugeneCompilerJvmTest {
     @Test
     fun loadXml() {
-        val model = AugeneModel()
+        val model = AugeneCompiler()
         model.loadProjectFile("../../samples/automation/opnplug.augene")
     }
 
     @Test
     fun compile() {
-        val model = AugeneModel()
+        val model = AugeneCompiler()
         model.loadProjectFile("../../samples/automation/opnplug.augene")
         model.compile()
     }
 
     @Test
     fun compileSpectra() {
-        val model = AugeneModel()
+        val model = AugeneCompiler()
         model.projectFileName = "../../samples/TestStub.augene"
         model.project = AugeneProject()
         model.dryRun = true

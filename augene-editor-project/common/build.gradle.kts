@@ -23,11 +23,11 @@ kotlin {
 
                 implementation("com.squareup.okio:okio-multiplatform:3.0.0-alpha.9")
 
-                implementation("dev.atsushieno:ktmidi:0.3.10")
-                implementation("dev.atsushieno:mugene:0.2.17")
+                implementation("dev.atsushieno:ktmidi:0.3.11")
+                implementation("dev.atsushieno:mugene:0.2.18")
                 implementation("dev.atsushieno:kotractive:0.1")
                 implementation("dev.atsushieno:augene:0.1")
-                implementation("dev.atsushieno:missingdot:0.1.4")
+                implementation("dev.atsushieno:missingdot:0.1.5")
                 implementation("dev.atsushieno:compose-mpp:0.1.1")
 
                 implementation("com.arkivanov.decompose:decompose:0.3.1")
