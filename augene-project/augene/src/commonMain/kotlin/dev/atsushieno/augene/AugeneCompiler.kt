@@ -173,7 +173,7 @@ open class AugeneCompiler
 
 		// prepare tracktionedit
 		val edit = EditElement ()
-		val converter = MidiToTracktionEditConverter (MidiImportContext (music, edit, audioGraphs, juceAudioGraphs))
+		val converter = MidiToTracktionEditConverter (Midi1ToTracktionImportContext (music, edit, audioGraphs, juceAudioGraphs))
 		converter.importMusic ()
 		val dstTracks = edit.Tracks.filterIsInstance<TrackElement>()
 
@@ -291,7 +291,7 @@ open class AugeneCompiler
 			val absPath = resolveAbsPath(inc.source!!)
 			if (includedAncestors.any { it.equals(absPath, true) })
 				errors.add("Recursive inclusion was found: $absPath")
-			val child = AugeneProjectLoader.load(absPath)
+			AugeneProjectLoader.load(absPath)
 			checkIncludeValidity(includedAncestors, resolveAbsPath, errors)
 		}
 	}

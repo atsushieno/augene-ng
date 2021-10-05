@@ -13,11 +13,11 @@ enum class MarkerImportStrategy {
     PerTrack,
 }
 
-class MidiImportContext(val midi: MidiMusic, val edit: EditElement, val audioGraphs: List<AugeneAudioGraph>, val mappedPlugins: Map<String, Iterable<JuceAudioGraph>>) {
+class Midi1ToTracktionImportContext(val midi: MidiMusic, val edit: EditElement, val audioGraphs: List<AugeneAudioGraph>, val mappedPlugins: Map<String, Iterable<JuceAudioGraph>>) {
 
     companion object {
         fun create(midiFileData: ByteArray, editFileContent: String) =
-            MidiImportContext(loadSmf(midiFileData), loadEdit(editFileContent), listOf(), mapOf())
+            Midi1ToTracktionImportContext(loadSmf(midiFileData), loadEdit(editFileContent), listOf(), mapOf())
 
         private fun loadEdit(editFileContent: String): EditElement {
             XmlTextReader(editFileContent).also {
@@ -38,5 +38,12 @@ class MidiImportContext(val midi: MidiMusic, val edit: EditElement, val audioGra
 
     var markerImportStrategy = MarkerImportStrategy.Default
 
-}
+    var reporter: (message: String, source: String?, line: Int, column: Int) -> Unit = { message, source, line, column ->
+            println(message)
+            if (source != null)
+                println("  at $source ($line, $column)")
+        }
 
+    fun report(message: String, source: String? = null, line: Int = 0, column: Int = 0) =
+        reporter(message, source, line, column)
+}

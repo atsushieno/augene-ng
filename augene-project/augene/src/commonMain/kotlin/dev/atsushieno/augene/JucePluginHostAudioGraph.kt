@@ -38,7 +38,7 @@ class JuceAudioGraph {
             sequence {
                 val doc = XDocument.load (reader)
                 val input = doc.root!!.elements ("FILTER").firstOrNull { e ->
-                    e.elements ("PLUGIN").any { p -> p.attribute ("name")?.value.equals("Midi Input", true) ?: false && // it is MIDI Input since Waveform11 (maybe)
+                    e.elements ("PLUGIN").any { p -> p.attribute ("name")?.value.equals("Midi Input", true) && // it is MIDI Input since Waveform11 (maybe)
                             p.attribute ("format")?.value == "Internal" }
                 }
                 val output = doc.root!!.elements ("FILTER").firstOrNull { e ->
@@ -47,7 +47,7 @@ class JuceAudioGraph {
                 }
                 if (input == null || output == null)
                     return@sequence
-                var conn: XElement? = null
+                var conn: XElement?
                 var uid = input.attribute ("uid")?.value
                 while (true) {
                     conn = doc.root!!.elements ("CONNECTION").firstOrNull { e ->

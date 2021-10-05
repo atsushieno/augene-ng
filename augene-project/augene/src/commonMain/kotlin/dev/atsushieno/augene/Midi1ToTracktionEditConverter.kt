@@ -10,18 +10,20 @@ import dev.atsushieno.ktmidi.MidiTrack
 import dev.atsushieno.ktmidi.mergeTracks
 import kotlin.math.pow
 
+// FIXME: move them into ktmidi
 private val SMF_SYSEX_EVENT = 0xF0
 private val SMF_META_EVENT = 0xFF
+
 internal fun Byte.toUnsigned() : Int = if (this < 0) this + 0x100 else this.toInt()
 
 
-class MidiToTracktionEditConverter(private var context: MidiImportContext) {
+class MidiToTracktionEditConverter(private var context: Midi1ToTracktionImportContext) {
     // state
     private var consumed = false
     private var globalMarkers = arrayOf(MidiMessage(Int.MAX_VALUE, MidiEvent(0)))
 
     fun process(midiFileContent: ByteArray, tracktionEditFileContent: String) : String {
-        context = MidiImportContext.create(midiFileContent, tracktionEditFileContent)
+        context = Midi1ToTracktionImportContext.create(midiFileContent, tracktionEditFileContent)
         importMusic()
         val sb = StringBuilder()
         EditModelWriter().write(sb, context.edit)
@@ -40,8 +42,7 @@ class MidiToTracktionEditConverter(private var context: MidiImportContext) {
             context.edit.TempoSequence = TempoSequenceElement()
 
         when (context.markerImportStrategy) {
-            MarkerImportStrategy.Global -> {
-                //case MarkerImportStrategy.Default:
+            MarkerImportStrategy.Global, MarkerImportStrategy.Default -> {
                 val markers = mutableListOf<MidiMessage>()
                 var t = 0
                 for (m in context.midi.mergeTracks().tracks[0].messages) {
@@ -176,7 +177,7 @@ class MidiToTracktionEditConverter(private var context: MidiImportContext) {
                     if (noteToOff != null) {
                         val l = currentTotalTime - noteDeltaTimes[msg.event.channel * 128 + msg.event.msb]
                         if (l == 0)
-                            println("!!! Zero-length note: at ${toTracktionBarSpec(currentTotalTime)}, value: ${msg.event.value}")
+                            context.report("Zero-length note: at ${toTracktionBarSpec(currentTotalTime)}, value: ${msg.event.value}")
                         else {
                             noteToOff.L = toTracktionBarSpec(l)
                             noteToOff.C = msg.event.lsb.toInt()
@@ -192,7 +193,7 @@ class MidiToTracktionEditConverter(private var context: MidiImportContext) {
                         V = msg.event.lsb.toInt()
                     }
                     if (notes[msg.event.channel * 128 + msg.event.msb] != null)
-                        println("!!! Overlapped note: at ${toTracktionBarSpec(currentTotalTime)}, value: ${msg.event.value.toString(16)}") // FIXME: format specifier "X08"
+                        context.report("Overlapped note: at ${toTracktionBarSpec(currentTotalTime)}, value: ${msg.event.value.toString(16)}") // FIXME: format specifier "X08"
                     notes[msg.event.channel * 128 + msg.event.msb] = noteOn
                     noteDeltaTimes[msg.event.channel * 128 + msg.event.msb] = currentTotalTime
                     seq.Events.add(noteOn)
@@ -264,10 +265,10 @@ class MidiToTracktionEditConverter(private var context: MidiImportContext) {
                                         })
                                     }
                                     else
-                                        println("!!! AUTOMATION TARGET PLUGIN NOT FOUND in the track: $currentAutomationTarget")
+                                        context.report("AUTOMATION TARGET PLUGIN NOT FOUND in the track: $currentAutomationTarget")
                                 }
                                 else
-                                    println("!!! INSUFFICIENT AUTOMATION SEND SYSEX BUFFER")
+                                    context.report("INSUFFICIENT AUTOMATION SEND SYSEX BUFFER")
                             } else {
                                 // set automation target parameter by name
                                 val nameLen = sysex[10].toUnsigned()
@@ -285,11 +286,9 @@ class MidiToTracktionEditConverter(private var context: MidiImportContext) {
                                         ttrack.Plugins.add(target)
                                     }
                                     currentAutomationTargetAsNumber = target.Id!!.toInt()
-                                    println("AUTOMATION TARGET PLUGIN: $currentAutomationTarget ($currentAutomationTargetAsNumber)")
                                 }
                                 else
-                                    // FIXME: replace these println hacks with some viable logging stuff.
-                                    println("!!! INSUFFICIENT AUTOMATION TARGET PLUGIN SYSEX BUFFER")
+                                    context.report("INSUFFICIENT AUTOMATION TARGET PLUGIN SYSEX BUFFER")
                             }
                         }
                     }
@@ -341,7 +340,7 @@ class MidiToTracktionEditConverter(private var context: MidiImportContext) {
     }
 
     private fun toBpm(data: ByteArray, offset: Int, length: Int): Double {
-        val t = (data[offset] shl 16) + (data[offset + 1] shl 8) + data[offset + 2]
+        val t = if (length < 2) 500000 else (data[offset] shl 16) + (data[offset + 1] shl 8) + data[offset + 2]
         return 60000000.0 / t
     }
 
