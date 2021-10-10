@@ -1,6 +1,7 @@
 package dev.atsushieno.augene
 
 import dev.atsushieno.kotractive.*
+import dev.atsushieno.ktmidi.Midi2Music
 import dev.atsushieno.ktmidi.MidiMusic
 import dev.atsushieno.ktmidi.read
 import dev.atsushieno.missingdot.xml.XmlTextReader
@@ -13,11 +14,11 @@ enum class MarkerImportStrategy {
     PerTrack,
 }
 
-class Midi1ToTracktionImportContext(val midi: MidiMusic, val edit: EditElement, val audioGraphs: List<AugeneAudioGraph>, val mappedPlugins: Map<String, Iterable<JuceAudioGraph>>) {
+class Midi2ToTracktionImportContext(val midi: Midi2Music, val edit: EditElement, val audioGraphs: List<AugeneAudioGraph>, val mappedPlugins: Map<String, Iterable<JuceAudioGraph>>) {
 
     companion object {
         fun create(midiFileData: ByteArray, editFileContent: String) =
-            Midi1ToTracktionImportContext(loadSmf(midiFileData), loadEdit(editFileContent), listOf(), mapOf())
+            Midi2ToTracktionImportContext(loadSmf(midiFileData), loadEdit(editFileContent), listOf(), mapOf())
 
         private fun loadEdit(editFileContent: String): EditElement {
             XmlTextReader(editFileContent).also {
@@ -26,8 +27,8 @@ class Midi1ToTracktionImportContext(val midi: MidiMusic, val edit: EditElement, 
             }
         }
 
-        private fun loadSmf(midiFileData: ByteArray): MidiMusic {
-            return MidiMusic().apply { this.read(midiFileData.toList()) }
+        private fun loadSmf(midiFileData: ByteArray): Midi2Music {
+            return Midi2Music().apply { this.read(midiFileData.toList()) }
         }
     }
 

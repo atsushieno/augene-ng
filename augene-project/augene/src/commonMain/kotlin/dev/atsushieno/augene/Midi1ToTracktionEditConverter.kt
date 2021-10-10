@@ -1,13 +1,7 @@
 package dev.atsushieno.augene
 
 import dev.atsushieno.kotractive.*
-import dev.atsushieno.ktmidi.GeneralMidi
-import dev.atsushieno.ktmidi.MidiChannelStatus
-import dev.atsushieno.ktmidi.MidiEvent
-import dev.atsushieno.ktmidi.MidiMessage
-import dev.atsushieno.ktmidi.MidiMetaType
-import dev.atsushieno.ktmidi.MidiTrack
-import dev.atsushieno.ktmidi.mergeTracks
+import dev.atsushieno.ktmidi.*
 import kotlin.math.pow
 
 // FIXME: move them into ktmidi
@@ -16,14 +10,19 @@ private val SMF_META_EVENT = 0xFF
 
 internal fun Byte.toUnsigned() : Int = if (this < 0) this + 0x100 else this.toInt()
 
+internal val Ump.metaEventType : Int
+    get() = this.int2 and 0x7F
 
-class MidiToTracktionEditConverter(private var context: Midi1ToTracktionImportContext) {
+data class TimedMetaEvent(val position: Int, val event: List<Byte>)
+
+class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportContext) {
     // state
     private var consumed = false
-    private var globalMarkers = arrayOf(MidiMessage(Int.MAX_VALUE, MidiEvent(0)))
+    // The initial entry is a dummy marker that indicates the end of events.
+    private var globalMarkers = arrayOf(TimedMetaEvent(Int.MAX_VALUE, listOf()))
 
     fun process(midiFileContent: ByteArray, tracktionEditFileContent: String) : String {
-        context = Midi1ToTracktionImportContext.create(midiFileContent, tracktionEditFileContent)
+        context = Midi2ToTracktionImportContext.create(midiFileContent, tracktionEditFileContent)
         importMusic()
         val sb = StringBuilder()
         EditModelWriter().write(sb, context.edit)
@@ -43,12 +42,19 @@ class MidiToTracktionEditConverter(private var context: Midi1ToTracktionImportCo
 
         when (context.markerImportStrategy) {
             MarkerImportStrategy.Global, MarkerImportStrategy.Default -> {
-                val markers = mutableListOf<MidiMessage>()
+                val markers = mutableListOf<TimedMetaEvent>()
                 var t = 0
-                for (m in context.midi.mergeTracks().tracks[0].messages) {
-                    t += m.deltaTime
-                    if (m.event.eventType.toInt() == SMF_META_EVENT && m.event.metaType.toInt() == MidiMetaType.MARKER)
-                        markers.add(MidiMessage(t, MidiEvent(SMF_META_EVENT, 0, 0, m.event.extraData, m.event.extraDataOffset, m.event.extraDataLength)))
+                val messages = context.midi.mergeTracks().tracks[0].messages
+                var inMetaEvents = false
+                for (m in messages) {
+                    if (inMetaEvents && m.messageType != MidiMessageType.SYSEX8_MDS)
+                        inMetaEvents = false
+                    if (m.isJRTimestamp)
+                        t += m.jrTimestamp
+                    else if (Midi2Music.isMetaEventMessageStarter(m) && m.metaEventType == MidiMetaType.MARKER) {
+                        markers.add(TimedMetaEvent(t, UmpRetriever.getSysex7Data(messages.drop(messages.indexOf(m)).iterator())))
+                    }
+                    // else -> skip
                 }
 
                 globalMarkers = markers.toTypedArray()
@@ -92,18 +98,17 @@ class MidiToTracktionEditConverter(private var context: Midi1ToTracktionImportCo
     private fun toTracktionBarSpec(deltaTime: Int) =
         deltaTime.toDouble() / context.midi.deltaTimeSpec
 
-    private fun importTrack(mtrack: MidiTrack, ttrack: TrackElement) {
+    private fun importTrack(mtrack: Midi2Track, ttrack: TrackElement) {
         globalMarkers.iterator().also {
             importTrack(mtrack, ttrack, it)
         }
     }
 
-    private fun importTrack(mtrack: MidiTrack, ttrack: TrackElement, globalMarkersEnumerator: Iterator<MidiMessage>) {
+    private fun importTrack(mtrack: Midi2Track, ttrack: TrackElement, globalMarkersEnumerator: Iterator<TimedMetaEvent>) {
         var currentClipStart = 0.0
-        // they are explicitly assigned due to C# limitation of initialization check...
-        var nextGlobalMarker = MidiMessage(0, MidiEvent(0))
+        var nextGlobalMarker = TimedMetaEvent(0, listOf())
         var clip: MidiClipElement? = null
-        var seq = SequenceElement() // dummy, but it's easier to hush CS8602...
+        var seq = SequenceElement() // dummy
         var currentTotalTime = 0
 
         val abstractMidiEventElementType = ModelCatalog.allTypes.first { it.simpleName == "AbstractMidiEventElement" }
@@ -124,16 +129,13 @@ class MidiToTracktionEditConverter(private var context: Midi1ToTracktionImportCo
             nextGlobalMarker = if (globalMarkersEnumerator.hasNext())
                 globalMarkersEnumerator.next()
             else
-                MidiMessage(Int.MAX_VALUE, MidiEvent(0))
+                TimedMetaEvent(Int.MAX_VALUE, listOf()) // dummy marker that indicates end
         }
 
         val nextClip = {
             terminateClip()
-            currentClipStart = toTracktionBarSpec(nextGlobalMarker.deltaTime)
-            val name = if (nextGlobalMarker.event.extraData == null) null else nextGlobalMarker.event.extraData!!.drop(
-                nextGlobalMarker.event.extraDataOffset
-            ).take(nextGlobalMarker.event.extraDataLength)
-                .toByteArray().decodeToString()
+            currentClipStart = toTracktionBarSpec(nextGlobalMarker.position)
+            val name = nextGlobalMarker.event.toByteArray().decodeToString()
             clip = MidiClipElement().apply {
                 Type = "midi"
                 Speed = 1.0
@@ -158,83 +160,91 @@ class MidiToTracktionEditConverter(private var context: Midi1ToTracktionImportCo
         var currentAutomationTargetAsNumber: Int? = null
 
         for (msg in mtrack.messages) {
-            currentTotalTime += msg.deltaTime
+            if (msg.isJRTimestamp) {
+                currentTotalTime += msg.jrTimestamp
+                continue;
+            }
             while (true) {
-                if (nextGlobalMarker.deltaTime <= currentTotalTime)
+                if (nextGlobalMarker.position <= currentTotalTime)
                     nextClip()
                 else
                     break
             }
 
             val tTime = toTracktionBarSpec(currentTotalTime) - currentClipStart
-            var eventType = msg.event.eventType.toUnsigned()
-            if (eventType == MidiChannelStatus.NOTE_ON && msg.event.lsb.toInt() == 0)
+            var eventType = msg.eventType
+            if (eventType == MidiChannelStatus.NOTE_ON && msg.midi1Lsb == 0)
                 eventType = MidiChannelStatus.NOTE_OFF
 
             when (eventType) {
                 MidiChannelStatus.NOTE_OFF -> {
-                    val noteToOff = notes[msg.event.channel * 128 + msg.event.msb]
+                    val noteToOff = notes[msg.channelInGroup * 128 + msg.midi1Msb]
                     if (noteToOff != null) {
-                        val l = currentTotalTime - noteDeltaTimes[msg.event.channel * 128 + msg.event.msb]
+                        val l = currentTotalTime - noteDeltaTimes[msg.channelInGroup * 128 + msg.midi1Msb]
                         if (l == 0)
-                            context.report("Zero-length note: at ${toTracktionBarSpec(currentTotalTime)}, value: ${msg.event.value}")
+                            context.report("Zero-length note: at ${toTracktionBarSpec(currentTotalTime)}, value: $msg")
                         else {
                             noteToOff.L = toTracktionBarSpec(l)
-                            noteToOff.C = msg.event.lsb.toInt()
+                            noteToOff.C = msg.midi1Lsb
                         }
                     }
-                    notes[msg.event.channel * 128 + msg.event.msb] = null
-                    noteDeltaTimes[msg.event.channel * 128 + msg.event.msb] = 0
+                    notes[msg.channelInGroup * 128 + msg.midi1Msb] = null
+                    noteDeltaTimes[msg.channelInGroup * 128 + msg.midi1Msb] = 0
                 }
                 MidiChannelStatus.NOTE_ON -> {
                     val noteOn = NoteElement().apply {
                         B = tTime
-                        P = msg.event.msb.toInt()
-                        V = msg.event.lsb.toInt()
+                        P = msg.midi1Msb
+                        V = msg.midi1Lsb
                     }
-                    if (notes[msg.event.channel * 128 + msg.event.msb] != null)
-                        context.report("Overlapped note: at ${toTracktionBarSpec(currentTotalTime)}, value: ${msg.event.value.toString(16)}") // FIXME: format specifier "X08"
-                    notes[msg.event.channel * 128 + msg.event.msb] = noteOn
-                    noteDeltaTimes[msg.event.channel * 128 + msg.event.msb] = currentTotalTime
+                    if (notes[msg.channelInGroup * 128 + msg.midi1Msb] != null)
+                        context.report("Overlapped note: at ${toTracktionBarSpec(currentTotalTime)}, value: $msg")
+                    notes[msg.channelInGroup * 128 + msg.midi1Msb] = noteOn
+                    noteDeltaTimes[msg.channelInGroup * 128 + msg.midi1Msb] = currentTotalTime
                     seq.Events.add(noteOn)
                 }
                 MidiChannelStatus.CAF ->
                     seq.Events.add(ControlElement().apply {
                         B = tTime
                         Type = ControlType.CAf
-                        Val = msg.event.lsb * 128
+                        Val = msg.midi1Lsb * 128
                     })
                 MidiChannelStatus.CC ->
                     seq.Events.add(ControlElement().apply {
                         B = tTime
-                        Type = msg.event.msb.toInt()
-                        Val = msg.event.lsb * 128
+                        Type = msg.midi1Msb
+                        Val = msg.midi1Lsb * 128
                     })
                 MidiChannelStatus.PROGRAM ->
                     seq.Events.add(ControlElement().apply {
                         B = tTime
                         Type = ControlType.ProgramChange
-                        Val = msg.event.msb * 128
+                        Val = msg.midi1Msb * 128
                     }) // lol
                 MidiChannelStatus.PAF ->
                     seq.Events.add(ControlElement().apply {
                         B = tTime
                         Type = ControlType.PAf
-                        Val = msg.event.lsb * 128
-                        Metadata = msg.event.msb.toInt()
+                        Val = msg.midi1Lsb * 128
+                        Metadata = msg.midi1Msb
                     })
                 MidiChannelStatus.PITCH_BEND ->
                     seq.Events.add(ControlElement().apply {
                         B = tTime
                         Type = ControlType.PitchBend
-                        Val = msg.event.msb * 128 + msg.event.lsb
+                        Val = msg.midi1Msb * 128 + msg.midi1Lsb
                     })
                 else -> { // sysex or meta
-                    if (msg.event.eventType.toUnsigned() == SMF_SYSEX_EVENT) {
-                        val sysex = msg.event.extraData
-                        // Check if it is augene-specific sysex
-                        if (sysex != null && sysex[0] == 0x7D.toByte() && sysex.size > 10 &&
-                            sysex.drop(1).take(9).toByteArray().decodeToString() == "augene-ng") {
+                    val sysex =
+                        if (msg.messageType == MidiMessageType.SYSEX7)
+                            UmpRetriever.getSysex7Data(mtrack.messages.drop(mtrack.messages.indexOf(msg)).iterator())
+                        else if (msg.messageType == MidiMessageType.SYSEX8_MDS && (msg.eventType == Midi2BinaryChunkStatus.SYSEX_START || msg.eventType == Midi2BinaryChunkStatus.SYSEX_IN_ONE_UMP))
+                            UmpRetriever.getSysex8Data(mtrack.messages.drop(mtrack.messages.indexOf(msg)).iterator())
+                        else null
+                    // Check if it is augene-specific sysex
+                    if (sysex != null) {
+                        if (sysex[0] == 0x7D.toByte() && sysex.size > 10 &&
+                                sysex.drop(1).take(9).toByteArray().decodeToString() == "augene-ng") {
                             if (sysex[10] == 0.toByte()) {
                                 if (sysex.size > 14) {
                                     // send automation parameter
@@ -291,21 +301,21 @@ class MidiToTracktionEditConverter(private var context: Midi1ToTracktionImportCo
                                     context.report("INSUFFICIENT AUTOMATION TARGET PLUGIN SYSEX BUFFER")
                             }
                         }
-                    }
-                    if (msg.event.eventType.toUnsigned() == SMF_META_EVENT) {
-                        when (msg.event.metaType.toUnsigned()) {
+                        else when (msg.metaEventType) {
                             MidiMetaType.TRACK_NAME ->
-                                ttrack.Id = msg.event.extraData?.decodeToString()
+                                // FIXME: verify this drop is correct...
+                                ttrack.Id = sysex.drop(8).toByteArray().decodeToString()
                             MidiMetaType.INSTRUMENT_NAME -> // This does not exist in TracktionEdit; ntracktive extends this.
-                                ttrack.Extension_InstrumentName = msg.event.extraData?.decodeToString()
+                                // FIXME: verify this drop is correct...
+                                ttrack.Extension_InstrumentName = sysex.drop(8).toByteArray().decodeToString()
                             MidiMetaType.MARKER ->
                                 when (context.markerImportStrategy) {
                                     MarkerImportStrategy.PerTrack -> TODO("implement")
                                     else -> {}
                                 }
                             MidiMetaType.TEMPO -> {
-                                currentBpm =
-                                    toBpm(msg.event.extraData!!, msg.event.extraDataOffset, msg.event.extraDataLength)
+                                // FIXME: verify this drop is correct...
+                                currentBpm = toBpm(sysex.drop(8).toByteArray(), 0, sysex.size - 8)
                                 context.edit.TempoSequence!!.Tempos.add(TempoElement().apply {
                                     StartBeat = toTracktionBarSpec(currentTotalTime)
                                     Curve = 1.0
@@ -313,10 +323,9 @@ class MidiToTracktionEditConverter(private var context: Midi1ToTracktionImportCo
                                 })
                             }
                             MidiMetaType.TIME_SIGNATURE -> {
-                                val tsEv = msg.event
-                                timeSigNumerator = tsEv.extraData!![tsEv.extraDataOffset].toInt()
-                                timeSigDenominator =
-                                    tsEv.extraData!![tsEv.extraDataOffset + 1].toDouble().pow(2).toInt()
+                                // FIXME: verify this drop is correct...
+                                timeSigNumerator = sysex[8].toInt()
+                                timeSigDenominator = sysex[9].toDouble().pow(2).toInt()
                                 context.edit.TempoSequence!!.TimeSignatures.add(
                                     TimeSigElement().apply {
                                         StartBeat = toTracktionBarSpec(currentTotalTime)
@@ -344,26 +353,27 @@ class MidiToTracktionEditConverter(private var context: Midi1ToTracktionImportCo
         return 60000000.0 / t
     }
 
-    private fun populateTrackName(track: MidiTrack): String? {
-        val tnEv = track.messages.map { m -> m.event }
-            .firstOrNull { e -> e.eventType.toUnsigned() == SMF_META_EVENT && e.metaType.toUnsigned() == MidiMetaType.TRACK_NAME }
-        var trackName =
-            if (tnEv?.extraData != null) tnEv.extraData!!.drop(tnEv.extraDataOffset).take(tnEv.extraDataLength)
-                .toByteArray().decodeToString() else null
-        val progChgs =
-            track.messages.map { m -> m.event }.filter { e -> e.eventType.toInt() == MidiChannelStatus.PROGRAM }
-                .toTypedArray()
-        val firstProgramChangeValue = if (progChgs.isNotEmpty()) progChgs[0].msb else -1
-        if (0 <= firstProgramChangeValue && firstProgramChangeValue < GeneralMidi.INSTRUMENT_NAMES.size)
-            trackName = GeneralMidi.INSTRUMENT_NAMES[firstProgramChangeValue.toUnsigned()]
+    private fun populateTrackName(track: Midi2Track): String? {
+        val tnEv = track.messages.firstOrNull { m -> Midi2Music.isMetaEventMessageStarter(m) && m.metaEventType == MidiMetaType.TRACK_NAME }
+        var trackName = if (tnEv == null) null else UmpRetriever.getSysex8Data(track.messages.drop(track.messages.indexOf(tnEv)).iterator())
+                .toByteArray().decodeToString()
+        if (trackName == null) {
+            var firstProgramChangeValue = -1
+            val programChanges = track.messages.filter { e -> e.eventType == MidiChannelStatus.PROGRAM }.toTypedArray()
+            if (programChanges.isNotEmpty()) {
+                val m = programChanges[0]
+                firstProgramChangeValue = if (m.messageType == MidiMessageType.MIDI1) m.midi1Program else m.midi2ProgramProgram
+            }
+            if (0 <= firstProgramChangeValue && firstProgramChangeValue < GeneralMidi.INSTRUMENT_NAMES.size)
+                trackName = GeneralMidi.INSTRUMENT_NAMES[firstProgramChangeValue]
+        }
         return trackName
     }
 
-    private fun populateInstrumentName(track: MidiTrack): String? {
-        val inEv = track.messages.map { m -> m.event }
-            .firstOrNull { e -> e.eventType.toUnsigned() == SMF_META_EVENT && e.metaType.toUnsigned() == MidiMetaType.INSTRUMENT_NAME }
-        return if (inEv?.extraData != null) inEv.extraData!!.drop(inEv.extraDataOffset).take(inEv.extraDataLength)
-                .toByteArray().decodeToString() else null
+    private fun populateInstrumentName(track: Midi2Track): String? {
+        val inEv = track.messages.firstOrNull {m -> Midi2Music.isMetaEventMessageStarter(m) && m.metaEventType == MidiMetaType.INSTRUMENT_NAME }
+        return if (inEv == null) null else UmpRetriever.getSysex8Data(track.messages.drop(track.messages.indexOf(inEv)).iterator())
+            .toByteArray().decodeToString()
     }
 }
 

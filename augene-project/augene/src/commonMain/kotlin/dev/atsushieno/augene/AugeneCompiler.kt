@@ -162,7 +162,7 @@ open class AugeneCompiler
 		val mmlFilesAbs = project.mmlFiles.map { f -> abspath (f) }
 		val mmls = mmlFilesAbs.map { f -> MmlInputSource (f, fileSupport.readString(f)) } +
 			project.mmlStrings.map { s -> MmlInputSource ("(no file)", s) }
-		val music = compiler.compile (false, mmls.toTypedArray())
+		val music = compiler.compile2 (true, false, mmls.toTypedArray())
 
 		// load filtergraphs here so that they can be referenced at importing.
 		val audioGraphs = project.expandedAudioGraphsFullPath (abspath, null, null).asIterable ().toMutableList()
@@ -173,7 +173,7 @@ open class AugeneCompiler
 
 		// prepare tracktionedit
 		val edit = EditElement ()
-		val converter = MidiToTracktionEditConverter (Midi1ToTracktionImportContext (music, edit, audioGraphs, juceAudioGraphs))
+		val converter = MidiToTracktionEditConverter (Midi2ToTracktionImportContext (music, edit, audioGraphs, juceAudioGraphs))
 		converter.importMusic ()
 		val dstTracks = edit.Tracks.filterIsInstance<TrackElement>()
 
