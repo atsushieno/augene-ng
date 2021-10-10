@@ -11,7 +11,7 @@ private val SMF_META_EVENT = 0xFF
 internal fun Byte.toUnsigned() : Int = if (this < 0) this + 0x100 else this.toInt()
 
 internal val Ump.metaEventType : Int
-    get() = this.int2 and 0x7F
+    get() = if (this.messageType != MidiMessageType.SYSEX8_MDS) 0 else (this.int3 shr 8) and 0x7F
 
 data class TimedMetaEvent(val position: Int, val event: List<Byte>)
 
@@ -451,6 +451,7 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
     private fun populateInstrumentName(track: Midi2Track): String? {
         val inEv = track.messages.firstOrNull {m -> Midi2Music.isMetaEventMessageStarter(m) && m.metaEventType == MidiMetaType.INSTRUMENT_NAME }
         return if (inEv == null) null else UmpRetriever.getSysex8Data(track.messages.drop(track.messages.indexOf(inEv)).iterator())
+            .drop(8) // skip: manufacturer ID, device ID, sub ID1, sub ID2, FFh, FFh, FFh, and message type
             .toByteArray().decodeToString()
     }
 }
