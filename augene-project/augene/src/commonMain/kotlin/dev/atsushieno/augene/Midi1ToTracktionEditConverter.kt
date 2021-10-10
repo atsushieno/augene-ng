@@ -173,68 +173,146 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
 
             val tTime = toTracktionBarSpec(currentTotalTime) - currentClipStart
             var eventType = msg.eventType
-            if (eventType == MidiChannelStatus.NOTE_ON && msg.midi1Lsb == 0)
+            if (msg.messageType == MidiMessageType.MIDI1 && eventType == MidiChannelStatus.NOTE_ON && msg.midi1Lsb == 0)
                 eventType = MidiChannelStatus.NOTE_OFF
 
-            when (eventType) {
-                MidiChannelStatus.NOTE_OFF -> {
-                    val noteToOff = notes[msg.channelInGroup * 128 + msg.midi1Msb]
-                    if (noteToOff != null) {
-                        val l = currentTotalTime - noteDeltaTimes[msg.channelInGroup * 128 + msg.midi1Msb]
-                        if (l == 0)
-                            context.report("Zero-length note: at ${toTracktionBarSpec(currentTotalTime)}, value: $msg")
-                        else {
-                            noteToOff.L = toTracktionBarSpec(l)
-                            noteToOff.C = msg.midi1Lsb
+            when (msg.messageType) {
+                MidiMessageType.MIDI1 ->
+                    when (eventType) {
+                        MidiChannelStatus.NOTE_OFF -> {
+                            val noteToOff = notes[msg.channelInGroup * 128 + msg.midi1Msb]
+                            if (noteToOff != null) {
+                                val l = currentTotalTime - noteDeltaTimes[msg.channelInGroup * 128 + msg.midi1Msb]
+                                if (l == 0)
+                                    context.report("Zero-length note: at ${toTracktionBarSpec(currentTotalTime)}, value: $msg")
+                                else {
+                                    noteToOff.L = toTracktionBarSpec(l)
+                                    noteToOff.C = msg.midi1Lsb
+                                }
+                            }
+                            notes[msg.channelInGroup * 128 + msg.midi1Msb] = null
+                            noteDeltaTimes[msg.channelInGroup * 128 + msg.midi1Msb] = 0
                         }
+                        MidiChannelStatus.NOTE_ON -> {
+                            val noteOn = NoteElement().apply {
+                                B = tTime
+                                P = msg.midi1Msb
+                                V = msg.midi1Lsb
+                            }
+                            if (notes[msg.channelInGroup * 128 + msg.midi1Msb] != null)
+                                context.report("Overlapped note: at ${toTracktionBarSpec(currentTotalTime)}, value: $msg")
+                            notes[msg.channelInGroup * 128 + msg.midi1Msb] = noteOn
+                            noteDeltaTimes[msg.channelInGroup * 128 + msg.midi1Msb] = currentTotalTime
+                            seq.Events.add(noteOn)
+                        }
+                        MidiChannelStatus.CAF ->
+                            seq.Events.add(ControlElement().apply {
+                                B = tTime
+                                Type = ControlType.CAf
+                                Val = msg.midi1Lsb * 128
+                            })
+                        MidiChannelStatus.CC ->
+                            seq.Events.add(ControlElement().apply {
+                                B = tTime
+                                Type = msg.midi1Msb
+                                Val = msg.midi1Lsb * 128
+                            })
+                        MidiChannelStatus.PROGRAM ->
+                            seq.Events.add(ControlElement().apply {
+                                B = tTime
+                                Type = ControlType.ProgramChange
+                                Val = msg.midi1Msb * 128 // lol
+                            })
+                        MidiChannelStatus.PAF ->
+                            seq.Events.add(ControlElement().apply {
+                                B = tTime
+                                Type = ControlType.PAf
+                                Val = msg.midi1Lsb * 128
+                                Metadata = msg.midi1Msb
+                            })
+                        MidiChannelStatus.PITCH_BEND ->
+                            seq.Events.add(ControlElement().apply {
+                                B = tTime
+                                Type = ControlType.PitchBend
+                                Val = msg.midi1Msb * 128 + msg.midi1Lsb
+                            })
                     }
-                    notes[msg.channelInGroup * 128 + msg.midi1Msb] = null
-                    noteDeltaTimes[msg.channelInGroup * 128 + msg.midi1Msb] = 0
-                }
-                MidiChannelStatus.NOTE_ON -> {
-                    val noteOn = NoteElement().apply {
-                        B = tTime
-                        P = msg.midi1Msb
-                        V = msg.midi1Lsb
+                MidiMessageType.MIDI2 ->
+                    // FIXME: consider "group" with "channelInGroup"
+                    // FIXME: support new MIDI2-specific events (per-note CC, per-note management etc.)
+                    when (eventType) {
+                        MidiChannelStatus.NOTE_OFF -> {
+                            val noteToOff = notes[msg.channelInGroup * 128 + msg.midi2Note]
+                            if (noteToOff != null) {
+                                val l = currentTotalTime - noteDeltaTimes[msg.channelInGroup * 128 + msg.midi2Note]
+                                if (l == 0)
+                                    context.report("Zero-length note: at ${toTracktionBarSpec(currentTotalTime)}, value: $msg")
+                                else {
+                                    noteToOff.L = toTracktionBarSpec(l)
+                                    noteToOff.C = msg.midi2Velocity16 / 0x100 // it seems the value range is between 0..127
+                                }
+                            }
+                            notes[msg.channelInGroup * 128 + msg.midi2Note] = null
+                            noteDeltaTimes[msg.channelInGroup * 128 + msg.midi2Note] = 0
+                        }
+                        MidiChannelStatus.NOTE_ON -> {
+                            val noteOn = NoteElement().apply {
+                                B = tTime
+                                P = msg.midi2Note
+                                V = msg.midi2Velocity16 / 0x100 // it seems the value range is between 0..127
+                            }
+                            if (notes[msg.channelInGroup * 128 + msg.midi2Note] != null)
+                                context.report("Overlapped note: at ${toTracktionBarSpec(currentTotalTime)}, value: $msg")
+                            notes[msg.channelInGroup * 128 + msg.midi2Note] = noteOn
+                            noteDeltaTimes[msg.channelInGroup * 128 + msg.midi2Note] = currentTotalTime
+                            seq.Events.add(noteOn)
+                        }
+                        MidiChannelStatus.CAF ->
+                            seq.Events.add(ControlElement().apply {
+                                B = tTime
+                                Type = ControlType.CAf
+                                Val = msg.midi2CAf.toInt() / 0x20000 // downconverting value range from 32bit to 15bit
+                            })
+                        MidiChannelStatus.CC ->
+                            seq.Events.add(ControlElement().apply {
+                                B = tTime
+                                Type = msg.midi2CCIndex
+                                Val = msg.midi2CCData.toInt() / 0x20000 // downconverting value range from 32bit to 15bit
+                            })
+                        MidiChannelStatus.PROGRAM -> {
+                            if (msg.midi2ProgramBankMsb != 0)
+                                seq.Events.add(ControlElement().apply {
+                                    B = tTime
+                                    Type = MidiCC.BANK_SELECT
+                                    Val = msg.midi2ProgramBankMsb
+                                })
+                            if (msg.midi2ProgramBankMsb != 0)
+                                seq.Events.add(ControlElement().apply {
+                                    B = tTime
+                                    Type = MidiCC.BANK_SELECT
+                                    Val = msg.midi2ProgramBankMsb
+                                })
+                            seq.Events.add(ControlElement().apply {
+                                B = tTime
+                                Type = ControlType.ProgramChange
+                                Val = msg.midi2ProgramProgram * 128 // lol
+                            })
+                        }
+                        MidiChannelStatus.PAF ->
+                            seq.Events.add(ControlElement().apply {
+                                B = tTime
+                                Type = ControlType.PAf
+                                Val = msg.midi2PAfData.toInt() / 0x20000 // downconverting value range from 32bit to 15bit
+                                Metadata = msg.midi2Note
+                            })
+                        MidiChannelStatus.PITCH_BEND ->
+                            seq.Events.add(ControlElement().apply {
+                                B = tTime
+                                Type = ControlType.PitchBend
+                                Val = msg.midi2PitchBendData.toInt() / 0x400 // downconverting value range from 32bit to 15bit
+                            })
                     }
-                    if (notes[msg.channelInGroup * 128 + msg.midi1Msb] != null)
-                        context.report("Overlapped note: at ${toTracktionBarSpec(currentTotalTime)}, value: $msg")
-                    notes[msg.channelInGroup * 128 + msg.midi1Msb] = noteOn
-                    noteDeltaTimes[msg.channelInGroup * 128 + msg.midi1Msb] = currentTotalTime
-                    seq.Events.add(noteOn)
-                }
-                MidiChannelStatus.CAF ->
-                    seq.Events.add(ControlElement().apply {
-                        B = tTime
-                        Type = ControlType.CAf
-                        Val = msg.midi1Lsb * 128
-                    })
-                MidiChannelStatus.CC ->
-                    seq.Events.add(ControlElement().apply {
-                        B = tTime
-                        Type = msg.midi1Msb
-                        Val = msg.midi1Lsb * 128
-                    })
-                MidiChannelStatus.PROGRAM ->
-                    seq.Events.add(ControlElement().apply {
-                        B = tTime
-                        Type = ControlType.ProgramChange
-                        Val = msg.midi1Msb * 128
-                    }) // lol
-                MidiChannelStatus.PAF ->
-                    seq.Events.add(ControlElement().apply {
-                        B = tTime
-                        Type = ControlType.PAf
-                        Val = msg.midi1Lsb * 128
-                        Metadata = msg.midi1Msb
-                    })
-                MidiChannelStatus.PITCH_BEND ->
-                    seq.Events.add(ControlElement().apply {
-                        B = tTime
-                        Type = ControlType.PitchBend
-                        Val = msg.midi1Msb * 128 + msg.midi1Lsb
-                    })
-                else -> { // sysex or meta
+                MidiMessageType.SYSEX7, MidiMessageType.SYSEX8_MDS -> { // sysex or meta
                     val sysex =
                         if (msg.messageType == MidiMessageType.SYSEX7)
                             UmpRetriever.getSysex7Data(mtrack.messages.drop(mtrack.messages.indexOf(msg)).iterator())
