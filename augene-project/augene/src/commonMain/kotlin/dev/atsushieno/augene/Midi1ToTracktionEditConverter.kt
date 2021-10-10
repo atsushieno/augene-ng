@@ -162,7 +162,7 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
         for (msg in mtrack.messages) {
             if (msg.isJRTimestamp) {
                 currentTotalTime += msg.jrTimestamp
-                continue;
+                continue
             }
             while (true) {
                 if (nextGlobalMarker.position <= currentTotalTime)

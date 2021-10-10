@@ -149,8 +149,13 @@ open class AugeneCompiler
 	}
 	var onMasterPluginsDeleted : () -> Unit = {}
 
+	val edit = EditElement()
+
 	@OptIn(ExperimentalFileSystem::class)
 	fun compile () {
+		if (edit.Tracks.isNotEmpty())
+			throw IllegalStateException ("The compiler is being reused")
+
 		if (projectFileName == null)
 			throw IllegalStateException ("To compile the project, ProjectFileName must be specified in prior")
 
@@ -172,7 +177,6 @@ open class AugeneCompiler
 		}.toMap()
 
 		// prepare tracktionedit
-		val edit = EditElement ()
 		val converter = MidiToTracktionEditConverter (Midi2ToTracktionImportContext (music, edit, audioGraphs, juceAudioGraphs))
 		converter.importMusic ()
 		val dstTracks = edit.Tracks.filterIsInstance<TrackElement>()
@@ -291,8 +295,7 @@ open class AugeneCompiler
 			val absPath = resolveAbsPath(inc.source!!)
 			if (includedAncestors.any { it.equals(absPath, true) })
 				errors.add("Recursive inclusion was found: $absPath")
-			AugeneProjectLoader.load(absPath)
-			checkIncludeValidity(includedAncestors, resolveAbsPath, errors)
+			AugeneProjectLoader.load(absPath).checkIncludeValidity(includedAncestors, resolveAbsPath, errors)
 		}
 	}
 

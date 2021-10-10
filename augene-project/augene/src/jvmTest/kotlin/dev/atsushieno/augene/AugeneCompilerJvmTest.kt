@@ -1,6 +1,9 @@
 package dev.atsushieno.augene
 
+import dev.atsushieno.kotractive.MidiTrackerElement
+import dev.atsushieno.kotractive.TrackElement
 import kotlin.test.Test
+import kotlin.test.assertTrue
 
 
 class AugeneCompilerJvmTest {
@@ -15,6 +18,7 @@ class AugeneCompilerJvmTest {
         val model = AugeneCompiler()
         model.loadProjectFile("../../samples/automation/opnplug.augene")
         model.compile()
+        assertTrue(model.edit.Tracks.filterIsInstance<TrackElement>().all { it.Plugins.any { it.Type == "vst" } }, "no vst in the track")
     }
 
     @Test
