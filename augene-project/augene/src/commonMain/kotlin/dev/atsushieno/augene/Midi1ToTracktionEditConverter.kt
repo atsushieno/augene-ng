@@ -151,8 +151,8 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
         nextClip()
 
         ttrack.Modifiers = ModifiersElement()
-        val noteDeltaTimes = Array(16 * 128) { 0 }  // new int [16, 128];
-        val notes = Array<NoteElement?>(16 * 128) { null } // new NoteElement? [16,128];
+        val noteDeltaTimes = Array(16 * 16 * 128) { 0 }
+        val notes = Array<NoteElement?>(16 * 16 * 128) { null }
         var timeSigNumerator = 4
         var timeSigDenominator = 4
         var currentBpm = 120.0
@@ -180,9 +180,9 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
                 MidiMessageType.MIDI1 ->
                     when (eventType) {
                         MidiChannelStatus.NOTE_OFF -> {
-                            val noteToOff = notes[msg.channelInGroup * 128 + msg.midi1Msb]
+                            val noteToOff = notes[msg.group * 2048 + msg.channelInGroup * 128 + msg.midi1Msb]
                             if (noteToOff != null) {
-                                val l = currentTotalTime - noteDeltaTimes[msg.channelInGroup * 128 + msg.midi1Msb]
+                                val l = currentTotalTime - noteDeltaTimes[msg.group * 2048 + msg.channelInGroup * 128 + msg.midi1Msb]
                                 if (l == 0)
                                     context.report("Zero-length note: at ${toTracktionBarSpec(currentTotalTime)}, value: $msg")
                                 else {
@@ -190,8 +190,8 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
                                     noteToOff.C = msg.midi1Lsb
                                 }
                             }
-                            notes[msg.channelInGroup * 128 + msg.midi1Msb] = null
-                            noteDeltaTimes[msg.channelInGroup * 128 + msg.midi1Msb] = 0
+                            notes[msg.group * 2048 + msg.channelInGroup * 128 + msg.midi1Msb] = null
+                            noteDeltaTimes[msg.group * 2048 + msg.channelInGroup * 128 + msg.midi1Msb] = 0
                         }
                         MidiChannelStatus.NOTE_ON -> {
                             val noteOn = NoteElement().apply {
@@ -199,10 +199,10 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
                                 P = msg.midi1Msb
                                 V = msg.midi1Lsb
                             }
-                            if (notes[msg.channelInGroup * 128 + msg.midi1Msb] != null)
+                            if (notes[msg.group * 2048 + msg.channelInGroup * 128 + msg.midi1Msb] != null)
                                 context.report("Overlapped note: at ${toTracktionBarSpec(currentTotalTime)}, value: $msg")
-                            notes[msg.channelInGroup * 128 + msg.midi1Msb] = noteOn
-                            noteDeltaTimes[msg.channelInGroup * 128 + msg.midi1Msb] = currentTotalTime
+                            notes[msg.group * 2048 + msg.channelInGroup * 128 + msg.midi1Msb] = noteOn
+                            noteDeltaTimes[msg.group * 2048 + msg.channelInGroup * 128 + msg.midi1Msb] = currentTotalTime
                             seq.Events.add(noteOn)
                         }
                         MidiChannelStatus.CAF ->
@@ -242,9 +242,9 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
                     // FIXME: support new MIDI2-specific events (per-note CC, per-note management etc.)
                     when (eventType) {
                         MidiChannelStatus.NOTE_OFF -> {
-                            val noteToOff = notes[msg.channelInGroup * 128 + msg.midi2Note]
+                            val noteToOff = notes[msg.group * 2048 + msg.channelInGroup * 128 + msg.midi2Note]
                             if (noteToOff != null) {
-                                val l = currentTotalTime - noteDeltaTimes[msg.channelInGroup * 128 + msg.midi2Note]
+                                val l = currentTotalTime - noteDeltaTimes[msg.group * 2048 + msg.channelInGroup * 128 + msg.midi2Note]
                                 if (l == 0)
                                     context.report("Zero-length note: at ${toTracktionBarSpec(currentTotalTime)}, value: $msg")
                                 else {
@@ -252,8 +252,8 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
                                     noteToOff.C = msg.midi2Velocity16 / 0x100 // it seems the value range is between 0..127
                                 }
                             }
-                            notes[msg.channelInGroup * 128 + msg.midi2Note] = null
-                            noteDeltaTimes[msg.channelInGroup * 128 + msg.midi2Note] = 0
+                            notes[msg.group * 2048 + msg.channelInGroup * 128 + msg.midi2Note] = null
+                            noteDeltaTimes[msg.group * 2048 + msg.channelInGroup * 128 + msg.midi2Note] = 0
                         }
                         MidiChannelStatus.NOTE_ON -> {
                             val noteOn = NoteElement().apply {
@@ -261,10 +261,10 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
                                 P = msg.midi2Note
                                 V = msg.midi2Velocity16 / 0x100 // it seems the value range is between 0..127
                             }
-                            if (notes[msg.channelInGroup * 128 + msg.midi2Note] != null)
+                            if (notes[msg.group * 2048 + msg.channelInGroup * 128 + msg.midi2Note] != null)
                                 context.report("Overlapped note: at ${toTracktionBarSpec(currentTotalTime)}, value: $msg")
-                            notes[msg.channelInGroup * 128 + msg.midi2Note] = noteOn
-                            noteDeltaTimes[msg.channelInGroup * 128 + msg.midi2Note] = currentTotalTime
+                            notes[msg.group * 2048 + msg.channelInGroup * 128 + msg.midi2Note] = noteOn
+                            noteDeltaTimes[msg.group * 2048 + msg.channelInGroup * 128 + msg.midi2Note] = currentTotalTime
                             seq.Events.add(noteOn)
                         }
                         MidiChannelStatus.CAF ->
