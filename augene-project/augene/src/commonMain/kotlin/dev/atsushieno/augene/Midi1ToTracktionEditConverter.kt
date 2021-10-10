@@ -52,7 +52,7 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
                     if (m.isJRTimestamp)
                         t += m.jrTimestamp
                     else if (Midi2Music.isMetaEventMessageStarter(m) && m.metaEventType == MidiMetaType.MARKER) {
-                        markers.add(TimedMetaEvent(t, UmpRetriever.getSysex7Data(messages.drop(messages.indexOf(m)).iterator())))
+                        markers.add(TimedMetaEvent(t, UmpRetriever.getSysex8Data(messages.drop(messages.indexOf(m)).iterator())))
                     }
                     // else -> skip
                 }
@@ -135,7 +135,7 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
         val nextClip = {
             terminateClip()
             currentClipStart = toTracktionBarSpec(nextGlobalMarker.position)
-            val name = nextGlobalMarker.event.toByteArray().decodeToString()
+            val name = nextGlobalMarker.event.drop(8).toByteArray().decodeToString()
             clip = MidiClipElement().apply {
                 Type = "midi"
                 Speed = 1.0
@@ -271,13 +271,13 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
                             seq.Events.add(ControlElement().apply {
                                 B = tTime
                                 Type = ControlType.CAf
-                                Val = msg.midi2CAf.toInt() / 0x20000 // downconverting value range from 32bit to 15bit
+                                Val = (msg.midi2CAf / 0x40000u).toInt() // downconverting value range from 32bit to 14bit
                             })
                         MidiChannelStatus.CC ->
                             seq.Events.add(ControlElement().apply {
                                 B = tTime
                                 Type = msg.midi2CCIndex
-                                Val = msg.midi2CCData.toInt() / 0x20000 // downconverting value range from 32bit to 15bit
+                                Val = (msg.midi2CCData / 0x40000u).toInt() // downconverting value range from 32bit to 15bit
                             })
                         MidiChannelStatus.PROGRAM -> {
                             if (msg.midi2ProgramBankMsb != 0)
@@ -302,14 +302,14 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
                             seq.Events.add(ControlElement().apply {
                                 B = tTime
                                 Type = ControlType.PAf
-                                Val = msg.midi2PAfData.toInt() / 0x20000 // downconverting value range from 32bit to 15bit
+                                Val = (msg.midi2PAfData / 0x40000u).toInt() // downconverting value range from 32bit to 15bit
                                 Metadata = msg.midi2Note
                             })
                         MidiChannelStatus.PITCH_BEND ->
                             seq.Events.add(ControlElement().apply {
                                 B = tTime
                                 Type = ControlType.PitchBend
-                                Val = msg.midi2PitchBendData.toInt() / 0x400 // downconverting value range from 32bit to 15bit
+                                Val = (msg.midi2PitchBendData / 0x400u).toInt() // downconverting value range from 32bit to 15bit
                             })
                     }
                 MidiMessageType.SYSEX7, MidiMessageType.SYSEX8_MDS -> { // sysex or meta
