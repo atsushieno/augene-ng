@@ -699,8 +699,18 @@ class NoteElement : AbstractMidiEventElement()
 	var InitialTimbre : Double? = null
 	var InitialPressure : Double? = null
 	var InitialPitchbend : Double? = null
+	var Expressions: MutableList<PerNoteExpressionElement> = mutableListOf<PerNoteExpressionElement>()
 }
 
+abstract class PerNoteExpressionElement
+{
+	var B : Double = 0.0
+	var V : Double = 0.0
+}
+
+class PitchBendElement : PerNoteExpressionElement()
+{
+}
 
 class SysexElement : AbstractMidiEventElement()
 {

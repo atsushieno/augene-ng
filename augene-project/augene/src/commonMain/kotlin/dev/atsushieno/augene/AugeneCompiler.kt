@@ -2,6 +2,7 @@ package dev.atsushieno.augene
 
 import dev.atsushieno.kotractive.*
 import dev.atsushieno.ktmidi.MidiCC
+import dev.atsushieno.ktmidi.write
 import dev.atsushieno.missingdot.xml.XmlReader
 import dev.atsushieno.mugene.MmlCompiler
 import dev.atsushieno.mugene.MmlInputSource
@@ -168,6 +169,12 @@ open class AugeneCompiler
 		val mmls = mmlFilesAbs.map { f -> MmlInputSource (f, fileSupport.readString(f)) } +
 			project.mmlStrings.map { s -> MmlInputSource ("(no file)", s) }
 		val music = compiler.compile2 (true, false, mmls.toTypedArray())
+		if (fileSupport.exists(projectDirectory!!)) {
+			val umpxFile = outputEditFileName ?: changeExtension(abspath(projectFileName!!), ".umpx")
+			val umpxBytes = mutableListOf<Byte>()
+			music.write(umpxBytes)
+			fileSupport.writeBytes(umpxFile, umpxBytes.toByteArray())
+		}
 
 		// load filtergraphs here so that they can be referenced at importing.
 		val audioGraphs = project.expandedAudioGraphsFullPath (abspath, null, null).asIterable ().toMutableList()
@@ -262,11 +269,6 @@ open class AugeneCompiler
 				edit.MasterPlugins.add (p)
 		}
 
-		fun changeExtension(path: String, ext: String) : String {
-			val lastIndex = path.lastIndexOf('.')
-			return if (lastIndex > 0) path.substring(0, lastIndex) + ext else path
-		}
-
 		// Project ID, 00nnnnnnh. It is identical with the one in .tracktionedit EDIT element's attribute.
 		val projectId = Random.nextInt() and 0xFFFFFF
 		edit.ProjectID = edit.ProjectID ?: "${projectId}/${Random.nextInt()}" // not sure if it is correct format
@@ -282,6 +284,11 @@ open class AugeneCompiler
 		outputEditFileName = outfile
 
 		createTracktionProjectBinary(outfile, projectId, getFileNameWithoutExtension(projectFileName!!))
+	}
+
+	private fun changeExtension(path: String, ext: String) : String {
+		val lastIndex = path.lastIndexOf('.')
+		return if (lastIndex > 0) path.substring(0, lastIndex) + ext else path
 	}
 
 	private fun AugeneProject.checkIncludeValidity(

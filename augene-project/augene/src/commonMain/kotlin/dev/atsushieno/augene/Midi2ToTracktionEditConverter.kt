@@ -4,10 +4,6 @@ import dev.atsushieno.kotractive.*
 import dev.atsushieno.ktmidi.*
 import kotlin.math.pow
 
-// FIXME: move them into ktmidi
-private val SMF_SYSEX_EVENT = 0xF0
-private val SMF_META_EVENT = 0xFF
-
 internal fun Byte.toUnsigned() : Int = if (this < 0) this + 0x100 else this.toInt()
 
 internal val Ump.metaEventType : Int
@@ -151,6 +147,7 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
         nextClip()
 
         ttrack.Modifiers = ModifiersElement()
+        val machine = Midi2Machine()
         val noteDeltaTimes = Array(16 * 16 * 128) { 0 }
         val notes = Array<NoteElement?>(16 * 16 * 128) { null }
         var timeSigNumerator = 4
@@ -160,6 +157,8 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
         var currentAutomationTargetAsNumber: Int? = null
 
         for (msg in mtrack.messages) {
+            machine.processEvent(msg)
+
             if (msg.isJRTimestamp) {
                 currentTotalTime += msg.jrTimestamp
                 continue
@@ -180,9 +179,9 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
                 MidiMessageType.MIDI1 ->
                     when (eventType) {
                         MidiChannelStatus.NOTE_OFF -> {
-                            val noteToOff = notes[msg.group * 2048 + msg.channelInGroup * 128 + msg.midi1Msb]
+                            val noteToOff = notes[msg.groupAndChannel * 128 + msg.midi1Msb]
                             if (noteToOff != null) {
-                                val l = currentTotalTime - noteDeltaTimes[msg.group * 2048 + msg.channelInGroup * 128 + msg.midi1Msb]
+                                val l = currentTotalTime - noteDeltaTimes[msg.groupAndChannel * 128 + msg.midi1Msb]
                                 if (l == 0)
                                     context.report("Zero-length note: at ${toTracktionBarSpec(currentTotalTime)}, value: $msg")
                                 else {
@@ -190,8 +189,8 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
                                     noteToOff.C = msg.midi1Lsb
                                 }
                             }
-                            notes[msg.group * 2048 + msg.channelInGroup * 128 + msg.midi1Msb] = null
-                            noteDeltaTimes[msg.group * 2048 + msg.channelInGroup * 128 + msg.midi1Msb] = 0
+                            notes[msg.groupAndChannel * 128 + msg.midi1Msb] = null
+                            noteDeltaTimes[msg.groupAndChannel * 128 + msg.midi1Msb] = 0
                         }
                         MidiChannelStatus.NOTE_ON -> {
                             val noteOn = NoteElement().apply {
@@ -199,11 +198,19 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
                                 P = msg.midi1Msb
                                 V = msg.midi1Lsb
                             }
-                            if (notes[msg.group * 2048 + msg.channelInGroup * 128 + msg.midi1Msb] != null)
+                            if (notes[msg.groupAndChannel * 128 + msg.midi1Msb] != null)
                                 context.report("Overlapped note: at ${toTracktionBarSpec(currentTotalTime)}, value: $msg")
-                            notes[msg.group * 2048 + msg.channelInGroup * 128 + msg.midi1Msb] = noteOn
-                            noteDeltaTimes[msg.group * 2048 + msg.channelInGroup * 128 + msg.midi1Msb] = currentTotalTime
+                            notes[msg.groupAndChannel * 128 + msg.midi1Msb] = noteOn
+                            noteDeltaTimes[msg.groupAndChannel * 128 + msg.midi1Msb] = currentTotalTime
                             seq.Events.add(noteOn)
+
+                            // Per-Note Expressions. Only PitchBend so far.
+                            val pnp = machine.channel(msg.groupAndChannel).perNotePitchbend[msg.midi1Msb]
+                            if (pnp != 0x80000000u)
+                                noteOn.Expressions.add(PitchBendElement().apply {
+                                    B = 0.0
+                                    V = pnp.toDouble() / 0x40000 / 8192 // FIXME: take pitch bend sensitivity into account too.
+                                })
                         }
                         MidiChannelStatus.CAF ->
                             seq.Events.add(ControlElement().apply {
@@ -242,9 +249,9 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
                     // FIXME: support new MIDI2-specific events (per-note CC, per-note management etc.)
                     when (eventType) {
                         MidiChannelStatus.NOTE_OFF -> {
-                            val noteToOff = notes[msg.group * 2048 + msg.channelInGroup * 128 + msg.midi2Note]
+                            val noteToOff = notes[msg.groupAndChannel * 128 + msg.midi2Note]
                             if (noteToOff != null) {
-                                val l = currentTotalTime - noteDeltaTimes[msg.group * 2048 + msg.channelInGroup * 128 + msg.midi2Note]
+                                val l = currentTotalTime - noteDeltaTimes[msg.groupAndChannel * 128 + msg.midi2Note]
                                 if (l == 0)
                                     context.report("Zero-length note: at ${toTracktionBarSpec(currentTotalTime)}, value: $msg")
                                 else {
@@ -252,8 +259,8 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
                                     noteToOff.C = msg.midi2Velocity16 / 0x100 // it seems the value range is between 0..127
                                 }
                             }
-                            notes[msg.group * 2048 + msg.channelInGroup * 128 + msg.midi2Note] = null
-                            noteDeltaTimes[msg.group * 2048 + msg.channelInGroup * 128 + msg.midi2Note] = 0
+                            notes[msg.groupAndChannel * 128 + msg.midi2Note] = null
+                            noteDeltaTimes[msg.groupAndChannel * 128 + msg.midi2Note] = 0
                         }
                         MidiChannelStatus.NOTE_ON -> {
                             val noteOn = NoteElement().apply {
@@ -261,11 +268,19 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
                                 P = msg.midi2Note
                                 V = msg.midi2Velocity16 / 0x100 // it seems the value range is between 0..127
                             }
-                            if (notes[msg.group * 2048 + msg.channelInGroup * 128 + msg.midi2Note] != null)
+                            if (notes[msg.groupAndChannel * 128 + msg.midi2Note] != null)
                                 context.report("Overlapped note: at ${toTracktionBarSpec(currentTotalTime)}, value: $msg")
-                            notes[msg.group * 2048 + msg.channelInGroup * 128 + msg.midi2Note] = noteOn
-                            noteDeltaTimes[msg.group * 2048 + msg.channelInGroup * 128 + msg.midi2Note] = currentTotalTime
+                            notes[msg.groupAndChannel * 128 + msg.midi2Note] = noteOn
+                            noteDeltaTimes[msg.groupAndChannel * 128 + msg.midi2Note] = currentTotalTime
                             seq.Events.add(noteOn)
+
+                            // Per-Note Expressions. Only PitchBend so far.
+                            val pnp = machine.channel(msg.groupAndChannel).perNotePitchbend[msg.midi2Note]
+                            if (pnp != 0x80000000u)
+                                noteOn.Expressions.add(PitchBendElement().apply {
+                                    B = 0.0
+                                    V = pnp.toDouble() / 0x40000 / 8192 // FIXME: take pitch bend sensitivity into account too.
+                                })
                         }
                         MidiChannelStatus.CAF ->
                             seq.Events.add(ControlElement().apply {
@@ -311,6 +326,14 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
                                 Type = ControlType.PitchBend
                                 Val = (msg.midi2PitchBendData / 0x400u).toInt() // downconverting value range from 32bit to 15bit
                             })
+                        MidiChannelStatus.PER_NOTE_PITCH_BEND -> {
+                            // generate PITCHBEND element only if there is current note-on element.
+                            val noteOn = notes[msg.groupAndChannel * 128 + msg.midi2Note]
+                            noteOn?.Expressions?.add(PitchBendElement().apply {
+                                B = tTime - noteOn.B
+                                V = msg.midi2PitchBendData.toDouble() / 0x40000 / 8192 // FIXME: take pitch bend sensitivity into account too.
+                            })
+                        }
                     }
                 MidiMessageType.SYSEX7, MidiMessageType.SYSEX8_MDS -> { // sysex or meta
                     val sysex =
