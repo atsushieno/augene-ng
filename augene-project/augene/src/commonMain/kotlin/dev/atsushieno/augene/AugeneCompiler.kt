@@ -150,12 +150,11 @@ open class AugeneCompiler
 	}
 	var onMasterPluginsDeleted : () -> Unit = {}
 
-	val edit = EditElement()
+	lateinit var edit: EditElement
 
 	@OptIn(ExperimentalFileSystem::class)
 	fun compile () {
-		if (edit.Tracks.isNotEmpty())
-			throw IllegalStateException ("The compiler is being reused")
+		edit = EditElement()
 
 		if (projectFileName == null)
 			throw IllegalStateException ("To compile the project, ProjectFileName must be specified in prior")
