@@ -163,12 +163,16 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
                 currentTotalTime += msg.jrTimestamp
                 continue
             }
+            // FIXME: maybe enable this with some compilation options?
+            //  When clips are split, program changes and maybe other controls are not preserved to the next clip...
+            /*
             while (true) {
                 if (nextGlobalMarker.position <= currentTotalTime)
                     nextClip()
                 else
                     break
             }
+            */
 
             val tTime = toTracktionBarSpec(currentTotalTime) - currentClipStart
             var eventType = msg.eventType
@@ -229,6 +233,7 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
                                 B = tTime
                                 Type = ControlType.ProgramChange
                                 Val = msg.midi1Msb * 128 // lol
+                                Metadata = 0
                             })
                         MidiChannelStatus.PAF ->
                             seq.Events.add(ControlElement().apply {
