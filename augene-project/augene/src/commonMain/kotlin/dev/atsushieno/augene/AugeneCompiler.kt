@@ -43,9 +43,10 @@ open class AugeneCompiler
 	val projectDirectory : String?
 		get() = if (projectFileName == null) null else projectFileName!!.toPath().parent.toString()
 
-	open fun reportError (errorId: String, msg: String) {
-		// FIXME: appropriate error reporting
-		println ("$errorId: $msg")
+	var reporter : (String, String) -> Unit = { errorId, message -> println("$errorId: $message") }
+
+	open fun reportError (errorId: String, message: String) {
+		reporter(errorId, message)
 	}
 
 	@OptIn(ExperimentalFileSystem::class)
