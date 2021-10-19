@@ -455,7 +455,7 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
     }
 
     private fun toBpm(data: ByteArray, offset: Int, length: Int): Double {
-        val t = if (length < 2) 500000 else (data[offset] shl 16) + (data[offset + 1] shl 8) + data[offset + 2]
+        val t = if (length < 2) 500000 else (data[offset].toUnsigned() shl 16) + (data[offset + 1].toUnsigned() shl 8) + data[offset + 2].toUnsigned()
         return 60000000.0 / t
     }
 
