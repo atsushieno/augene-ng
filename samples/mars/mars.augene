@@ -1,0 +1,10 @@
+<AugeneProject>
+  <Includes>
+    <Include Bank="1" Source="../Banks/SF2Banks.augene" />
+  </Includes>
+  <MasterPlugins />
+  <MmlFiles>
+    <MmlFile>mars.mugene</MmlFile>
+  </MmlFiles>
+  <MmlStrings />
+</AugeneProject>
