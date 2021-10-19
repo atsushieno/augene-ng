@@ -1,5 +1,7 @@
 <AugeneProject>
   <AudioGraphs>
     <AudioGraph Id="sf2_realistic" Source="juicysf-realistic.filtergraph" />
+    <AudioGraph Id="sf2_realistic_drum_orchestral" Source="juicysf-realistic-drum-orchestral.filtergraph" />
+    <AudioGraph Id="sf2_realistic_drum_ethnic" Source="juicysf-realistic-drum-ethnic.filtergraph" />
   </AudioGraphs>
 </AugeneProject>

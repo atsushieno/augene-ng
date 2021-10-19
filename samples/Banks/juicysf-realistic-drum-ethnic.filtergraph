@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<FILTERGRAPH>
+  <FILTER uid="5" x="0.5" y="0.1">
+    <PLUGIN name="Audio Input" descriptiveName="" format="Internal" category="I/O devices"
+            manufacturer="JUCE" version="1.0" file="" uniqueId="246006c0"
+            isInstrument="0" fileTime="0" infoUpdateTime="0" numInputs="0"
+            numOutputs="2" isShell="0" uid="246006c0"/>
+    <STATE>0.</STATE>
+    <LAYOUT>
+      <INPUTS>
+        <BUS index="0" layout="disabled"/>
+      </INPUTS>
+      <OUTPUTS>
+        <BUS index="0" layout="disabled"/>
+      </OUTPUTS>
+    </LAYOUT>
+  </FILTER>
+  <FILTER uid="7" x="0.5" y="0.9">
+    <PLUGIN name="Audio Output" descriptiveName="" format="Internal" category="I/O devices"
+            manufacturer="JUCE" version="1.0" file="" uniqueId="724248cb"
+            isInstrument="0" fileTime="0" infoUpdateTime="0" numInputs="0"
+            numOutputs="0" isShell="0" uid="724248cb"/>
+    <STATE>0.</STATE>
+    <LAYOUT>
+      <INPUTS>
+        <BUS index="0" layout="L R"/>
+      </INPUTS>
+      <OUTPUTS>
+        <BUS index="0" layout="disabled"/>
+      </OUTPUTS>
+    </LAYOUT>
+  </FILTER>
+  <FILTER uid="8" x="0.25875" y="0.08064516129032258">
+    <PLUGIN name="MIDI Input" descriptiveName="" format="Internal" category="I/O devices"
+            manufacturer="JUCE" version="1.0" file="" uniqueId="a9e4f9eb"
+            isInstrument="0" fileTime="0" infoUpdateTime="0" numInputs="0"
+            numOutputs="0" isShell="0" uid="a9e4f9eb"/>
+    <STATE>0.</STATE>
+    <LAYOUT>
+      <INPUTS>
+        <BUS index="0" layout="disabled"/>
+      </INPUTS>
+      <OUTPUTS>
+        <BUS index="0" layout="disabled"/>
+      </OUTPUTS>
+    </LAYOUT>
+  </FILTER>
+  <FILTER uid="9" x="0.3375" y="0.3508064516129032" uiLastX_Normal="609"
+          uiLastY_Normal="399" uiopen_Normal="0">
+    <PLUGIN name="Juicy SF" format="VST3" category="Instrument|Synth" manufacturer="birchlabs"
+            version="1.0.0" file="/home/atsushi/.vst3/juicysfplugin.vst3"
+            uniqueId="a3fb6ddd" isInstrument="1" fileTime="17538851840" infoUpdateTime="17c9900ed35"
+            numInputs="0" numOutputs="2" isShell="0" uid="6798c9d0"/>
+    <STATE>698.VMjLgDq....O+fWarAhckI2bo8la8HRLt.iHfTlai8FYo41Y8HRUTYTK3HxO9.BOVMEUy.Ea0cVZtMEcgQWY9vSRC8Vav8lak4Fc9PyL43hUMoFSmgzUt3hKt7zJlcUXxEDZisVRxH1a3vVX3fjTLQmKogjYTwVXogiQY8FMwjENHIUUTkEUKMCR38TNtHzSMsVQTwTUvDURznGUEEUQUkDM5E0TzLzS1UDahcFLwHlYHYEVzMmUOgFQosjcHIDR1kzUYkWUFMFNHIDSzwzPNAiYowTLhkVSw.0TNYmZ4wTLLkFRlQjQioWQwfUbvjFR1MiPLglKBk0ZMYEVz.SZHY2LBwDZtfmXvzzQic1ZrEFNHIDSz4RZHYFRWkkbUYEV4UkUOglKosjcHIDRrslQgoWUrI1PUczXOkEaYgCRBwDctjFRlgkUZIWTWkEdIUUV4gCagcFMwf0ZvjFR1MiPLg1Mn8zMTckVSE0UXoWUFgjLqYTV5clUOgFUCwjcyHDSn4hPZs1ZwjkaQc0SnwzPLY2LBwDZ2f1S2vjLgACMFkkQ3vVX5EjPhcVTGoENHg2RtgiUgsFNRgkdMc0X4clUZU2LBEVcMYEVxgCdh4VQrI1Z3fmX0UUagoVSxrTdYwFS0gTUYc1cVoUdQckVogCLTUWUsElZYESXzEkLWYUR4cESqwFV3UULWYUQ4cUYEkVSnslQiUVSUMFZIkWTukjdWg0XTM0TzfmXrkTZHU2LC8Tc5QkUPcGUUczZpM0TUQTUTslZScTSq8jKt3hKt3hKt3hKt3hRUACTEEzZh8VVWgkdUYTTmE0UX4BQP4hPqcjXm0jLh4BQP4xPt.0Qt3hKt3hKt3hKtQUUCUEQTg2ZrM1YQcUVDUjQicVP77RRC8Vav8lak4Fc9vyKVMEUy.Ea0cVZtMEcgQWY9..</STATE>
+    <LAYOUT>
+      <INPUTS/>
+      <OUTPUTS>
+        <BUS index="0" layout="L R"/>
+      </OUTPUTS>
+    </LAYOUT>
+  </FILTER>
+  <CONNECTION srcFilter="8" srcChannel="4096" dstFilter="9" dstChannel="4096"/>
+  <CONNECTION srcFilter="9" srcChannel="0" dstFilter="7" dstChannel="0"/>
+  <CONNECTION srcFilter="9" srcChannel="1" dstFilter="7" dstChannel="1"/>
+</FILTERGRAPH>
