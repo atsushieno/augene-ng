@@ -425,13 +425,13 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
                                 context.edit.TempoSequence!!.Tempos.add(TempoElement().apply {
                                     StartBeat = toTracktionBarSpec(currentTotalTime)
                                     Curve = 1.0
-                                    Bpm = currentBpm
+                                    Bpm = currentBpm / (timeSigDenominator.toDouble() / 4)
                                 })
                             }
                             MidiMetaType.TIME_SIGNATURE -> {
                                 // FIXME: verify this drop is correct...
                                 timeSigNumerator = sysex[8].toInt()
-                                timeSigDenominator = sysex[9].toDouble().pow(2).toInt()
+                                timeSigDenominator = 2.0.pow(sysex[9].toDouble()).toInt()
                                 context.edit.TempoSequence!!.TimeSignatures.add(
                                     TimeSigElement().apply {
                                         StartBeat = toTracktionBarSpec(currentTotalTime)
@@ -442,7 +442,7 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
                                 context.edit.TempoSequence!!.Tempos.add(TempoElement().apply {
                                     StartBeat = toTracktionBarSpec(currentTotalTime)
                                     Curve = 1.0
-                                    Bpm = currentBpm / (timeSigDenominator / 4)
+                                    Bpm = currentBpm / (timeSigDenominator.toDouble() / 4)
                                 })
                             }
                         }
