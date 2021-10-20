@@ -10,7 +10,7 @@
 // For MIDI players, comment this out and enable CH.
 #macro 1-19,24-31 CH channel:number {} // NOP
 
-#conditional track 0,8,9,27
+#conditional track 0,8,9,27-31
 
 
 // ---- Tempo Sequence ---------------------------------------------------------
@@ -50,7 +50,9 @@ M	MARKER "XII"
 	t135
 	ASSERT_STEP 23664, "0.XII"
 	t100
-	[r2.]8
+	[r2.]6
+	t40
+	r2.  r2.
 N	MARKER "End"
 	ASSERT_STEP 24816, "0.End"
 	DEBUG "AT: " + $__timeline_position
@@ -233,6 +235,15 @@ _ 25	o5 CH25
 // ---- Organ ------------------------------------------------------------------
 _ 26	o5 CH26
 	INSTRUMENTNAME "sf2_realistic" @16 o4 V100
+H	ASSERT_STEP 3840, "26.VII"
+I	ASSERT_STEP 6720, "26.VII-middle"
+J	ASSERT_STEP 12480, "26.VIII"
+K	ASSERT_STEP 15360, "26.IX"
+L	ASSERT_STEP 18480, "26.X"
+M	ASSERT_STEP 20400, "26.X-middle"
+N	ASSERT_STEP 22800, "26.XI"
+O	ASSERT_STEP 23664, "26.XII"
+P	ASSERT_STEP 24816, "26.End"
 
 
 // ---- 1st. Violin ------------------------------------------------------------
@@ -277,18 +288,156 @@ N	ASSERT_STEP 24816, "27.End"
 // ---- 2nd. Violin ------------------------------------------------------------
 _ 28	o5 CH28
 	INSTRUMENTNAME "sf2_realistic" @40 o4 V100
+G	l8
+	[g+1.g+1]4 >
+	[ e4.c+<b+4.>c+d4.d+ :1 e4.e+f+4.e+ :2 e4.g+a4.g+ :3 g+4.f+f4.f+ ]3
+	  a4.g+g4.g+a4.b>d4.c+<b+4.>c+<
+H	ASSERT_STEP 3840, "28.VII"
+	[ f4.d+d4.d+e4.f+ :1 g4.g+a4.g+ :2 g+4.a+>c4.<b :3 a4.a-g4.a ]3
+	>c4.<ba+4.b>c4.d+e4.e-d4.e<  e4.e-d4.e-e4.d+f+4.ed4.e
+	  >e4.dc+4.dg4.f>c4.<b>e4.d<
+I	ASSERT_STEP 6720, "28.VII-middle"
+	[ [g12]3g4g4g8g8g4 ]3
+	<<g2.^2^  2.>d2  d-2.^2^  2.^2^  4r1<
+	g2.^2^  2.>d2  d-2.<a-2  g2.g2
+	g2.>e-2  d2.<g0>g2<  a-0>a-2.^2^  2.^2^  4r1  [r1r4]2
+	r1r4  e-2.<a-2  b-2.>d-2  c2.a-2  f2.>d-2<<
+J	ASSERT_STEP 12480, "28.VIII"
+	[ [g12]3g4g4g8g8g4 ]12
+K	ASSERT_STEP 15360, "28.IX"
+	[ [g12]3g4g4g8g8g4 ]5 >>
+	d-2e-2d-4^  4c8r8r2.
+	f4.ed+4.ef4^  8ga4.b>c4.<b
+	e4.d+e4.c+d4  f+4.e+f+4.d+e4  b-4.ab-4.g+a4^  8f+g4.ea2
+L	ASSERT_STEP 18480, "28.X"
+	f+rrde4.fg4^  8ab-4.af4.e  d+4.ef4.ga4^  8b>c4.<ba-4.g
+	[ g-4.fg-ga-4.g ]2  brr4f+4.ga-4^  8b->c4.de-4.d
+M	ASSERT_STEP 20400, "28.X-middle"
+	<g4r4r1r1  r1.r2<d0b2>  d-0g1.^2d-0f2  <d-1.^2d-2  r1r4r1r4
+N	ASSERT_STEP 22800, "28.XI"
+	l16
+	rb>c+d+ <bf+ga be+fg  r>d+ef+ g<b>c+d+ <bf+ga
+	  r>f+ga bd+ef+ g<b>c+d+  <f+gad+ ef+<b>c+ e<aga
+	gab>c+ d+f+b>d+ <gab>c+  d+ed+c+ <b>gf+e d+>c<ba
+O	ASSERT_STEP 23664, "28.XII"
+	l8
+	grr2  [ r4<d-d-d-4 ]2  [d-12]3d-4r4  r4d-4d-4  r2d-4  d-4d-4r4
+	<g2.
+P	ASSERT_STEP 24816, "28.End"
 
 
 // ---- Violas -----------------------------------------------------------------
 _ 29	o5 CH29
 	INSTRUMENTNAME "sf2_realistic" @41 o4 V100
+G	[r1r4]8
+	[ g+0>g+1.<g+0>g+1< ]4
+H	ASSERT_STEP 3840, "29.VII"
+	l8
+	[ g4.f+f4.f+g4.a :1 a+4.b>c4.<b :2 b4.>c+d+4.d< :3 >c4.<ba+4.b ]3
+	>e-4.dc+4.de-4.eg4.g-f4.g  a4.a-g4.a-a4.g+a4.gf+4.g
+	  e4.dc+4.dg4.f>c4.<b>e4.d<
+I	ASSERT_STEP 6720, "29.VII-middle"
+	[ [<g0>g12]3[<g0>g4]2[<g0>g8]2<g0>g4 ]3
+	<g2.^2^  2.d2  d-2.^2^  2.^2^  4r1
+	g2.^2^  2.d2  d-2.e-2  d2.f2
+	d-2.a-2  f2.f0>g2<  e2.^2^  2.^2^  4r1  [r1r4]3
+	e-2.e-2  d-2.b-2  a-2.>e-2  d-2.a-2<
+J	ASSERT_STEP 12480, "29.VIII"
+	[ [g12]3[g4]2[g8]2g4 ]12
+K	ASSERT_STEP 15360, "29.IX"
+	[ [g12]3[g4]2[g8]2g4 ]5
+	a-4.gf+4.ga4^  8b->c4.de-4.d  <a-4.gf+4.ga4^  8b->c4.de-4.d
+	g4.f+g4.eQ4f+4Q8  a4.g+a4.f+Q4g4Q8  >d-4.cd-4.<b>c4^  8<ab-4.ga-4.g
+L	ASSERT_STEP 18480, "29.X"
+	f+4.ga-4.b->c4^  8de-4.d<b-4.a  f+4.ga-4.b->d4^  8ef4.ed4.c
+	[ <b4.a+b>cd-4.c ]2  <b4.a+b4.>cd-4^  8e-f4.ga-4.g
+M	ASSERT_STEP 20400, "29.X-middle"
+	d-4r1r1r4  r1.r2<f+2  a-1.^2a-2<  a-1.^2a-2  r1r4r1r4
+N	ASSERT_STEP 22800, "29.XI"
+	l16
+	r>agf+ d+c<ba gf+ed+  r>>c<ba gagf+ d+c<ba
+	  r>>ed+c+< b>c<ba gf+ed+  c<bab >c<bag f+ed+c
+	  rgf+e d+>ed+c+< b>gf+e  d+f+b>d+< gab>c+ d+ef+a
+O	ASSERT_STEP 23664, "29.XII"
+	a8r8r2  [ r4[c0a-8]2c0a-4 ]2  [c0a-12]3c0a-4r4
+	  r4[c0a-4]2  r2c0a-4  c0a-4c0a-4r4
+	c0g2.
+P	ASSERT_STEP 24816, "29.End"
 
 
 // ---- Violoncellos -----------------------------------------------------------
 _ 30	o5 CH30
 	INSTRUMENTNAME "sf2_realistic" @42 o3 V100
+G	l8
+	[ a4.g+g4.g+a4.b :1 b+4.>c+d4.c+< :2 c+4.d+e+4.d+< :3 >c+4.c+<b+4.>c+ ]3
+	  >e+4.ed+4.ee+4.f+a4.g+g4.g+
+	[ d4.c+<b+4.>c+d4.d+ :1 e4.e+f+4.e+ :2 e4.ga4.g+ :3 d4.c+c4.c+ ]3
+	f4.e+e4.e+f4.gb4.a+g+4.a+
+H	ASSERT_STEP 3840, "30.VII"
+	[ c4.<bb-4.b>c4.d :1 d4.ef4.d :2 e4.f+g+4.g :3 f4.ed+4.e ]3
+	a-4.gf+4.ga4.g>c4.bf+4.g  a4.gf+4.ga4.g>d4.c<b4.>c<
+	  e4.dc+4.dg4.f>c4.<b>e4.d<
+I	ASSERT_STEP 6720, "30.VII-middle"
+	[ [<g0>g12]3[<g0>g]4[<g0>g8]2<g0>g4 ]3 <
+	g2.^2^  2.>d2  d-2.^2^  2.^2^  4r1<
+	g2.^2^  2.>d2  d-2.<a-2  g2.>d2<  d-2.a-2  g2.>d2
+	d-2.^2^  2.^2^  4r1  [r1r4]3
+	<<e-2.>c2<  b-2.>f2  e-2.>c2<  b-2.>f2<<
+J	ASSERT_STEP 12480, "30.VIII"
+	[ [g12]3g4g4g8g8g4 ]12
+K	ASSERT_STEP 15360, "30.IX"
+	[ [g12]3g4g4g8g8g4 ]5
+	>d-4.c<b4.>cd-4^  8e-f4.ga-4.g  d-4.c<b-4.>cd-4^  8e-f4.ga-4.g>
+	c4.<b>c4.<aQ4b4Q8  d4.c+d4.<b>Q4c4Q8  g-4.fg-4.ef4^  8de-4.cc4.<b
+L	ASSERT_STEP 18480, "30.X"
+	a+4.b>c4.de4^  8f+g4.f+d4.c+  b+4.>c+d4.fg+4^  8a+b4.a+g4.f
+	[ g-4.fg-ga4.g ]2
+	e-4.de-4.ef4^  8ga4.ba-4.g
+M	ASSERT_STEP 20400, "30.X-middle"
+	a-4r1r1r4  r1.r2g2  c1.^2f2  <c0>c1.^2<f2  r1r4r1r4
+N	ASSERT_STEP 22800, "30.XI"
+	l16
+	r>d+ef+ g<ab>c+ d<f+ga  rd+ef+ gd+ef+ g<ab>c<
+	  rab>c+ d+f+ga gf+ed+  c<bab> c<baf f+ed+c
+	  <gab>c+ d+rr8 gab>c+  d+ed+c+ <b>gf+e dc<ba
+O	ASSERT_STEP 23664, "30.XII"
+	g8r8r2  [ r4[<c0>c8]2<c0>c4 ]2  [<c0>c12]3<c0>c4r4  r4[<c0>c4]2
+	  r2<c0>c4  [<c0>c4]2r4
+	<c0g2.
+P	ASSERT_STEP 24816, "30.End"
 
 
 // ---- Doublebasses -----------------------------------------------------------
 _ 31	o5 CH31
-	INSTRUMENTNAME "sf2_realistic" @43 o3 V100
+	INSTRUMENTNAME "sf2_realistic" @43 o2 V100
+G	l8 // copy of cello
+	[ a4.g+g4.g+a4.b :1 b+4.>c+d4.c+< :2 c+4.d+e+4.d+< :3 >c+4.c+<b+4.>c+ ]3
+	  >e+4.ed+4.ee+4.f+a4.g+g4.g+
+	[ d4.c+<b+4.>c+d4.d+ :1 e4.e+f+4.e+ :2 e4.ga4.g+ :3 d4.c+c4.c+ ]3
+	f4.e+e4.e+f4.gb4.a+g+4.a+
+H	ASSERT_STEP 3840, "31.VII" // almost copy of cello
+	[ c4.<bb-4.b>c4.d :1 d4.ef4.d :2 e4.f+g+4.g :3 f4.ed+4.e ]3
+	a-4.gf+4.ga4.g>c4.bf+4.g  a4.gf+4.ga4.g>d4.c<b4.>c<
+	  r1r4r1r4
+I	ASSERT_STEP 6720, "31.VII-middle"
+	<<
+	[ [g12]3g4g4g8g8g4 ]3
+	g2.^2^  2.>d2  d-2.^2^  2.^2^  4r1<
+	g2.^2^  2.>d2  d-2.a-2  g2.>d2  d-2.r2  r1r4<<
+	[ [g12]3g4g4g8g8g4 ]6
+	>e-2.>c2<  b-2.>f2  e-2.r2  r1r4<<
+J	ASSERT_STEP 12480, "31.VIII"
+	[ [g12]3g4g4g8g8g4 ]12
+K	ASSERT_STEP 15360, "31.IX"
+	[ [g12]3g4g4g8g8g4 ]12
+	[g12]3g4g4c2
+L	ASSERT_STEP 18480, "31.X"
+	d2.^2^  2.d2  e2.^2^  2.f2  g2.f2  g2.f2  g2.^2^  2.g2
+M	ASSERT_STEP 20400, "31.X-middle"
+	c1.^1^  1.f2>g2  c1.^2f2  <c1.^2f2  r1.r2f2
+N	ASSERT_STEP 22800, "31.XI"
+	g2.^  2.^  2.^  2.^  2.^  2. >
+O	ASSERT_STEP 23664, "31.XII"
+	[c12]3c4r4  r4c8c8c4  r4c8c8c4  [c12]3c4r4  r4c4c4  r4r4c4  c4c4r4
+	<c2.
+P	ASSERT_STEP 24816, "31.End"
