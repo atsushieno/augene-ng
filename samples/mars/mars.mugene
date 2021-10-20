@@ -12,7 +12,7 @@
 
 
 // ---- Tempo Sequence ---------------------------------------------------------
-_ 100	BEAT5,4
+_ 0	BEAT5,4
 A	MARKER "Intro"
 	t135
 	[r1r4]16
@@ -149,7 +149,7 @@ E	ASSERT_STEP 16080, "3.IV"
 	l12
 	[r1r4]7
 	[c+0e4]5  [d+0f+4]2c+0e4[d+0f+4]2
-	e0g+8.e0g+16 e0g+<b0>f+e0g g+0be0g+<b0>e <b+0>d+2
+	e0g+8.e0g+16 e0g+<b0>ge0g+ g+0be0g+<b0>e <b+0>d+2
 	  l16 c+0e2.^2^  4 <cde-f gab>c de-fg r4<
 	l12 a0>e-2<a0>e-8.a0>e-16<a0>e-2  d8.d16dc+dfefb-4^12fd
 	<a0>e-2<a0>e-8.<a0>e-16<a0>e-2  d8.d16dc+dfefb-ab->dc+d
@@ -360,7 +360,7 @@ G	ASSERT_STEP 23280, "8.VI"
 
 // ---- Double Bassoons --------------------------------------------------------
 _ 9	o5 CH9
-	INSTRUMENTNAME "sf2_realistic" @70 o3 V100
+	INSTRUMENTNAME "sf2_realistic" @70 o2 V100
 A	l8
 	[r1r4]2  g2.^2^  2.>d2  d-2.^2^  2.r2<  r1r4  g2.^2^  2.>d2  d-2.a-2
 	  g2.>d2  d-2.e-2  d2.r2
