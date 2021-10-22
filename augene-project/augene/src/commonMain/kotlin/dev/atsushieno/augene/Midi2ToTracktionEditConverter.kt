@@ -183,6 +183,8 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
                 MidiMessageType.MIDI1 ->
                     when (eventType) {
                         MidiChannelStatus.NOTE_OFF -> {
+                            if (msg.midi1Msb < 0 || msg.midi1Msb > 127)
+                                throw IllegalArgumentException("Note must be non-negative byte range: " + msg.midi1Msb)
                             val noteToOff = notes[msg.groupAndChannel * 128 + msg.midi1Msb]
                             if (noteToOff != null) {
                                 val l = currentTotalTime - noteDeltaTimes[msg.groupAndChannel * 128 + msg.midi1Msb]
@@ -197,6 +199,8 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
                             noteDeltaTimes[msg.groupAndChannel * 128 + msg.midi1Msb] = 0
                         }
                         MidiChannelStatus.NOTE_ON -> {
+                            if (msg.midi1Msb < 0 || msg.midi1Msb > 127)
+                                throw IllegalArgumentException("Note must be non-negative byte range: " + msg.midi1Msb)
                             val noteOn = NoteElement().apply {
                                 B = tTime
                                 P = msg.midi1Msb
@@ -254,6 +258,8 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
                     // FIXME: support new MIDI2-specific events (per-note CC, per-note management etc.)
                     when (eventType) {
                         MidiChannelStatus.NOTE_OFF -> {
+                            if (msg.midi2Note < 0 || msg.midi2Note > 127)
+                                throw IllegalArgumentException("Note must be non-negative byte range: " + msg.midi2Note)
                             val noteToOff = notes[msg.groupAndChannel * 128 + msg.midi2Note]
                             if (noteToOff != null) {
                                 val l = currentTotalTime - noteDeltaTimes[msg.groupAndChannel * 128 + msg.midi2Note]
@@ -268,6 +274,8 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
                             noteDeltaTimes[msg.groupAndChannel * 128 + msg.midi2Note] = 0
                         }
                         MidiChannelStatus.NOTE_ON -> {
+                            if (msg.midi2Note < 0 || msg.midi2Note > 127)
+                                throw IllegalArgumentException("Note must be non-negative byte range: " + msg.midi2Note)
                             val noteOn = NoteElement().apply {
                                 B = tTime
                                 P = msg.midi2Note
