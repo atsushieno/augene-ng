@@ -57,6 +57,27 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
             }
         }
 
+        val markerTrack = MarkerTrackElement()
+        context.edit.Tracks.add(markerTrack)
+        var markerID = 1
+        var lastMarker : MarkerClipElement? = null
+        globalMarkers.forEach {
+            // FIXME: length seems wrong.
+            lastMarker?.Length = toTracktionBarSpec(it.position) - (lastMarker?.Start ?: 0.0)
+            val marker = MarkerClipElement().apply {
+                // FIXME: verify if this drop(8) is correct
+                Name = it.event.drop(8).toByteArray().decodeToString()
+                Start = if (lastMarker != null) lastMarker!!.Start + lastMarker!!.Length else 0.0
+                Offset = 0.0
+                Speed = 1.0
+                MarkerID = markerID.toString()
+            }
+            markerTrack.Clips.add(marker)
+            lastMarker = marker
+            markerID++
+        }
+        lastMarker?.Length = toTracktionBarSpec(context.midi.getTotalTicks()) - (lastMarker?.Start ?: 0.0)
+
         for (midiTrack in context.midi.tracks) {
             val ttrack = TrackElement().apply {
                 Name = populateTrackName(midiTrack)

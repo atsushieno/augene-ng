@@ -429,6 +429,7 @@ class NodeElement
 class MarkerTrackElement : AbstractTrackElement()
 {
 	var TrackType : Int = 0
+	val Clips : MutableList<MarkerClipElement> = mutableListOf()
 }
 
 
@@ -580,6 +581,10 @@ abstract class MidiClipElementBase : ClipElementBase()
 	var SendBankChange : Boolean = false
 }
 
+class MarkerClipElement : ClipElementBase()
+{
+	var MarkerID : String? = null
+}
 
 abstract class ClipElementBase
 {
