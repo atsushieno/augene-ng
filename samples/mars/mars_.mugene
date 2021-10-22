@@ -10,7 +10,7 @@
 // For MIDI players, comment this out and enable CH.
 #macro 1-19,24-31 CH channel:number {} // NOP
 
-#conditional track 0,8,9,12-23,26-31
+#conditional track 0,6-23,26-31
 
 
 // ---- Tempo Sequence ---------------------------------------------------------
@@ -116,12 +116,98 @@ _ 5	o5 CH5
 // ---- Clarinets --------------------------------------------------------------
 // FIXME: maybe octave is weird, and raising it exposes other weird bits...
 _ 6	o5 CH6 K-2
+	INSTRUMENTNAME "sf2_realistic" @71 o4 V90
+	l8
+G	[r1r4 r1r4]8
+H	ASSERT_STEP 3840, "0.VII"
+	[ f+0a0>d4.< f0a-0>d-< e0g0>c4.< f0a0>d< f+0a0>d4.< g+0b0>e<
+	  :1 a0>c0f4.< a+0>c+0f+< b0>d0g4.< a0>c0f<
+	  :2 a+0>c+0f+4. c0e-0a- d0f0>c-4.< c+0e0a<
+	  :3 b0>d0g4.< b-0>d-0g-< a0>c0f4.< b0>d0g<
+	]3
+	> d0f0b-4. c+0e0a <b+0>d+0g+4. c0e0a d+0f0b+4. d+0f+0b
+	  f+0a0>d4.< f0a-0>d-< e0g0>c4.< f0a-0>d-<<
+	f+0b0>d4.< f0b-0>d-< e0a0>c4.< f0b-0>d-< f+0b0>d4.< f0b-0>d-<
+	  g+0b0>e4.< f+0a0>d< e+0g+0>c+4.< f0a0>d
+	f+4.ed+4.ea4.g< d0>d0>d4.<< c+0>c+0>c+<< f+0>f+0>f+4.<< e0>e0>e<<
+I	ASSERT_STEP 6720, "0.VII-middle"
+	<
+	[ [a0>a0>a12<<]3[a0>a0>a4<<]2[a0>a0>a8<<]2a0>a0>a4<< ]3
+	a2.^2^  2.>e2  e-2.^2^  2.^2^  4r1
+	a2.^2^  2.>e2  e-2.<f0>b-2  <e0a2. e0a0>e2<
+	a0>e-2.< b-0>f0b-2<  a0>e0a2. e0a0>e2<
+	<b-0>e-0e-2.^2^  2.^2^  4r1  [r1r4]3 <<
+	f2.>d2  c2.c0e-0g2  <b-0>d0f2.  f0b-0>d2<  e-0g0>c2.  e-2
+J	ASSERT_STEP 12480, "0.VIII"
+	c+4r1  r2.e-2  c+4r1 <<
+	[r1r4]6
+	b-0>d0f4.< a0>c+0e< a-0>c0e-4.< a0>c+0e< b0>d0f4. c0e0g
+	   d0f+0a4. e0g+0b f+0a0>c4.< e0g0b  r1r4
+K	ASSERT_STEP 15360, "0.IX"
+	b-0>d0f4.< a0>c+0e< g+0>c0d+4.< a0>c+0e< b-0>d0f4. c0e0g
+	   d0f+0a4. e0g+0b f0a0>c4.< e0g0b
+	e0a0>c+4.< d+0g+0>c< e0a0>c+4.< c+0f+0b- Q4d+0g+0>c4Q8<
+	e0a0>c+4.< d+0g+0>c< e0a0>c+4.< c+0f+0b- f0g0>c4.< e0a0>c+<
+	   d-0f0g+4. c0e0a <g+0>c0d+4.< a0>c+0e
+	e-2f2e-2d8r8r2.<
+	e-0g0b-4. d0f+0a c+0f0a-4. d0f+0a e0g-0b4. f0a0>c<
+	   g0b0>d4.< a0>c+0e< b-0>d0f4.< a0>c0e<
+	a0>a4.<g+0>g+< a0>a4.<e+0>e+<Q4g0>g4<Q8
+	b0>b4.<a+0>a+<b0>b4.<g+0>g+<Q4a0>a4Q8
+	e-0>e-4.< d0>d< e-0>e-4.< c+0>c+< d0>d4.< <b0>b
+	   c0>c4.< <a0>a< b-0>b-4.<a0>a<
+L	ASSERT_STEP 18480, "0.X"
+	 g4.ab4.>cd4.ef4.ec4.<b  a+4.b>c4.de4.f+g4.f+e-4.d
+	  [ d-4.cd-de-4.d ]2  d-4.cd-4.de-4.rr2r2  [REWIND-1-4]8
+	 g4.ab4.>cd4.ef4.ec4.<b  a+4.b>c4.de4.f+g4.f+e-4.d
+	  [ d-4.cd-de-4.d ]2  d-4.cd-4.de-4.rr2r2  [REWIND-1-4]8
+	 [r1r4]6  r1r4  r<f0a0>c< g0b0>d4.< a0>c+0e< b-0>f4.<a0>e REWIND-4.c4r
+M	ASSERT_STEP 20400, "0.X-middle"
+	<b-0>e-1.^1^  1.^2<f0a-0>d-2<  a-0>e-1.^2<g0>e2<
+	[r1r4]2  r1.r2<e-0b-0>e-2<
+N	ASSERT_STEP 22800, "0.XI"
+	l16
+	d-0a-0>d-2.^2.  r2.
+	  dc+<b>c+ dc+<ba g+r8.  r4 <f0>f<a-0>a-d-0>d-<f0>f r4<
+	  fa->d-f r8de- fg-a-b
+O	ASSERT_STEP 23664, "0.XII"
+	a8r8r2  [r2.]7
+P	ASSERT_STEP 24816, "0.End"
 
 
 
 // ---- Bass Clarinets ---------------------------------------------------------
 _ 7	o5 CH7 K-2
 	INSTRUMENTNAME "sf2_realistic" @71 o3 V100
+G	[r1r4 r1r4]8
+H	ASSERT_STEP 3840, "0.VII"
+	l8
+	d4.d-c4.d-d4.ef4.f+g4.f+  d4.d-c4.d-d4.ef+4.a-b-4.a-
+	d-4.d-c4.d-d4.eg4.g-f4.g  b-4.ag+4.ab-4.b>d4.d-c4.d<
+	d4.d-c4.d-d4.d-e4.dc+4.d  f+4.ed+4.ea4.g>d4.cf4.e<
+I	ASSERT_STEP 6720, "0.VII-middle"
+	[ [a12]3a4a4a8a8a4 ]3
+	<a2.^2^  2.>e2  e-2.^2  e-2.^2^  4r1
+	<a2.^2^  2.>e2  e-2.<b-2  a2.>e2  e-2.b-2  a2.a2  g2.^2^  2.^2^  4r1
+	[r1r4]3  <f2.>d2  c2.g2  f2.>d2  c2.a2<
+J	ASSERT_STEP 12480, "0.VIII"
+	g4r1  r2.g2  f4r1  [r1r4]6  f4.ed+4.ef4.ga4.b>c4.<b  r1r4
+K	ASSERT_STEP 15360, "0.IX"
+	f4.ed+4.ef4.ga4.b>c4.<b<  a4.g+a4.f+Q4g4Q8
+	a4.g+a4.f+f4.ed-4.cc4.d-  e-4.dc+4.de-4.fg4.ab-4.a  e-4.dc+4.de4.fg4.ab-4.a
+	d4.c+d4.<b>Q4c+4Q8  e4.d+e4.c+Q4d4Q8
+	a-4.ga-4.f+g4.r8r2<d2
+L	ASSERT_STEP 18480, "0.X"
+	<e2.^2^  2.e2  f+2.^2^  2.g2
+	a2.g2  a2.g2  a2.^2^  2.a2
+M	ASSERT_STEP 20400, "0.X-middle"
+	>d4r4r1r1  r1.r2<a2>  d1.^2<g2>  d1.^2g2  r1.r2<g2
+N	ASSERT_STEP 22800, "0.XI"
+	l16
+	a2.^  2.^  2.^  2.  r4>fa->d-fr4  r4r8d-e-fg-a-b
+O	ASSERT_STEP 23664, "0.XII"
+	a8r8r2  [r2.]7
+P	ASSERT_STEP 24816, "0.End"
 
 
 
@@ -150,8 +236,31 @@ I	ASSERT_STEP 6720, "8.VII-middle"
 	d-0g0>d-2.<a-2  g2.g0>d2<
 	f0a-0>d-2.^2^  2.^2^  4<r1  [r1r4]3
 	e-2.c0e-0a-2  <b-0>d-0f2.f0b-0>d-2<  e-0a-0>c2.<e-0a-0>c2<
-	  d-0f0b-2.f0a-0>d-2
+	  d-0f0b-2.f0a-0>d-2<
 J	ASSERT_STEP 12480, "8.VIII"
+	b0>e0g4r1<  r2.d0f-0b-2^  4r1  [r1r4]9
+K	ASSERT_STEP 15360, "0.IX"
+	l8
+	[r1r4]2
+	g0b0>d4.< f+0a+0>c+< g0b0>d4.< e0g+0b Q4f+0a+0>c+4<Q8
+	g0b0>d4.< f+0a+0>c+< g0b0>d4.< e0g+0b f+0a+4. d0g0b
+	   <b0>e0f+4.< b-0>d0g< f+0a+0>c+4.< g0b0>d
+	d-0f0a-4. c0e0g <b0>d+0f+4. c0e0g d-0f0a-4. e-0g0b-
+	   f0a0>c4.< g0b0>d< a-0>c0e-4.< g0b0>d<
+	d-0f0a-4. c0e0g <b0>d+0f+4. c0e0g d-0f0a4. e-0g0b-
+	   f0a0>c4.< g0b0>d< a-0>c0e-4.< g0b0>d<
+	[r1r4]3  r2.<c2
+L	ASSERT_STEP 18480, "0.X"
+	d2.^2^  2.d2  e2.^2^  2.f2  g2.f2  g2.f2  g2.^2^  2.g2
+M	ASSERT_STEP 20400, "0.X-middle"
+	c1.^1^  1.f2g2  c1.^2f2  c0>c1.^2<f0>f2  [r1r4]2 <
+N	ASSERT_STEP 22800, "0.XI"
+	l16
+	[r2.]4  <gab>c+ drr8 gab>c+  d+ed+c+ <b>gf+e dc<ba
+O	ASSERT_STEP 23664, "0.XII"
+	g8r8r2  [r2.]6
+	<c2.
+P	ASSERT_STEP 24816, "0.End"
 
 
 // ---- Double Bassoons --------------------------------------------------------
@@ -172,18 +281,138 @@ I	ASSERT_STEP 6720, "9.VII-middle"
 	d-2.^2^  2.^2^  4r1  <g2.^2^  2.>d2  d2.a-2  g2.>d2  d-2.r2
 	[r1r4]7  <e-2.>c2<  b2.>f2  e-2.r2  r1r4
 J	ASSERT_STEP 12480, "9.VIII"
-
+	[r1r4]12
+K	ASSERT_STEP 15360, "9.IX"
+	[r1r4]12  r2.<<c2
+L	ASSERT_STEP 18480, "9.X"
+	b2.^2^  2.b2  c2.^2^  2.d2  e2.d2  e2.d2  e2.^2^  2.e2
+M	ASSERT_STEP 20400, "9.X-middle"
+	<a1.^1^  1.>d2>e2<  a1.^2>d2<  a1.^2>d2  r1.r2d2
+N	ASSERT_STEP 22800, "9.XI"
+	e2.^  2.^  2.^  2.^  2.^  2.
+O	ASSERT_STEP 23664, "9.XII"
+	a8r8r2  [r2.]7
+P	ASSERT_STEP 24816, "9.End"
 
 
 // ---- Horns High -------------------------------------------------------------
 _ 10	o5 CH10 K-7
 	INSTRUMENTNAME "sf2_realistic" @60 o4 V85
+G	[r1r4 r1r4]4
+	e-0>e-1.^1^  1.^1^  1.^1^  1.^1<
+H	ASSERT_STEP 3840, "10.VII"
+	l8
+	[r1r4 r1r4]2
+	<b0>d0>g4. <b-0>d-0>g- <a0>c0f4. <b-0>d-0g- <b0>d0g4. <c+0>e0a
+	   e0g0>c4.< d+0f+0b d0f0b-4. d+0f+0b
+	g0b-0>e-4.< f+0a0>d< e+0g+0>c+4.< f+0a0>d< g0b0>e4.<g+0b0>e<
+	   b0>d0g4.< b-0>d-0g-< a0>c0f4.< b0>d0g<
+	g0b0>e4.< g-0b-0>e-< f0a0>d4.< g-0b-0>e-< g0b0e4.< g-0b-0>e-<
+	   a0>c+0e4.< g0b0>d< f+0a+0>c+4.< g0b0>d<
+	b4.ag+4.a>d4.cg4.f+r2
+I	ASSERT_STEP 6720, "10.VII-middle"
+	[ [<d0>d12]3[<d0>d4]2[<d0>d8]2<d0>d4 ]3 <
+	d2.^2^  2.<a0>a2  <a-0>a-2.^2^  2.^2^  4r1
+	d2.^2^  2.<a0>a2  <a-0>a-2.<e-0b-0>e-2<  d0a0>d2.<a0>d0a2<
+	// FIXME: sounds weird around here, but may not be horn (trumpet?)
+	a-0>d0a-2.e-0b-0>e-2<  d0a0>d2.<d0a0>d2<
+	  c-0a-0>e-2.^2^  2.^2^  4r1  [r1r4]2
+	r1r4  <<b-2.b-0>e-0g2  <a-0>c0f2.f0a-0>c2<
+	  e-0g0b-2.b-0>e-0g2  <a-0>c0f2.c0e-0a-2<
+J	ASSERT_STEP 12480, "10.VIII"
+	a0>d0f+4r1  r2.c0e-0b-2<  b-0>d0f+2.^4.<r8  r1r4
+	[r1r4]5
+	e-0g0b-4. d0f+0a c+0f0g+4. d0f+0ae 0g+0b4. f0a0>c<
+	  g0b0>d4.< a0>c+0e< b-0>d0f4.< a0>c0e<  r1r4
+K	ASSERT_STEP 15360, "10.IX"
+	e-0g0b-4. d0f+0a c+0f0g+4. d0f+0a e0g+0b4. f0a0>c<
+	  g0b0>d4.< a0>c+0e< b-0>d0f4.< a0>c0e<
+	a-0>d0f+4.< g+0>c+0f< a0>d0f+4.< f+0b0>e-< Q4g0>c0f4<Q8
+	a0>d0f+4.< g+0>c+0f< a0>d0f+4.< f+0b0>d+< f0b0>c+4.< f+0a0>d<
+	  f0b-0>c+4.< f0a0>d< c+0f+0g4. d0f+0a
+	[r1r4]2
+	a-0>c0e-4.< g0b0>d< f+0a+0>c+4.< g0b0>d< a-0>c0e4.< b-0>d-0e
+	   c0e0g4.< a0>d+0f+< b0>e-0g4.< a0>d0f<
+	g0b0>d4.< f+0a+0>c+< g0b0>d4.< e0g+0b Q4f0a0>c4<Q8
+	a0>c+0e4.< g+0>c0d+< a0>c+0e4.< f+0a+0>c+< Q4g0b0>d4<Q8
+	a-0>d-0f4.< g0>c0e< a-0>d-0f4.< b0>e0f+ c0e0g4. <a0>c+0e<
+	  b-0>d0f4.< g0b0>d< e-0g0b-4. d0f+0a
+L	ASSERT_STEP 18480, "10.X"
+	c+0e+0g+4. d0f+0a e-0g0b-4. f0a0>c< g0b0>d4.< a0>c+0e<
+	   b-0>d0f4.< a0>c0e< f0a0>c4.< e0g+0b
+	e-0g0b-4. e0g+0b f0a0>c4.< g0b0>d< a0>c+0e4.< b0>d+0f+
+	   c0e0g4.< b0>d+0f+< a-0>c0e-4.< g0b0>d<
+	// FIXME: the compiler crashes if we have `g-0b-0>d-.` (additional dot) which should not happen...
+	[ g-0b-0>d-4.< f0a0>c< g-0b-0>d-< g0b0>d< a-0>c0e-4.< g0b0>d< ]2
+	g-0b-0>d-4.< f0a0>c< g-0b-0>d-4.< g0b0>d< a-0>c0e-4.< b0>d0f
+	   c0e0g4.< a0>d< b-0>e0f4. <a0>d<
+M	ASSERT_STEP 20400, "10.X-middle"
+	g+0>e-0g+4r4r1r1  [r1r4]4  <e-0a-0>d1.^2<e-0a-0>c2  r1r4r1r4
+N	ASSERT_STEP 22800, "10.XI"
+	r2.  r2<a+0>c+0f+4^  2.^  2.^  2.^  2.
+O	ASSERT_STEP 23664, "10.XII"
+	[r2.]8
+P	ASSERT_STEP 24816, "10.End"
 
 
 
 // ---- Horns Low --------------------------------------------------------------
 _ 11	o5 CH11 K-7
 	INSTRUMENTNAME "sf2_realistic" @60 o3 V85
+G	[r1r4 r1r4]4 // copy of track 10
+	e-0>e-1.^1^  1.^1^  1.^1^  1.^1<
+H	ASSERT_STEP 3840, "11.VII" // copy of track 10
+	l8
+	[r1r4 r1r4]2
+	<b0>d0>g4. <b-0>d-0>g- <a0>c0f4. <b-0>d-0g- <b0>d0g4. <c+0>e0a
+	   e0g0>c4.< d+0f+0b d0f0b-4. d+0f+0b
+	g0b-0>e-4.< f+0a0>d< e+0g+0>c+4.< f+0a0>d< g0b0>e4.<g+0b0>e<
+	   b0>d0g4.< b-0>d-0g-< a0>c0f4.< b0>d0g<
+	g0b0>e4.< g-0b-0>e-< f0a0>d4.< g-0b-0>e-< g0b0e4.< g-0b-0>e-<
+	   a0>c+0e4.< g0b0>d< f+0a+0>c+4.< g0b0>d<
+	b4.ag+4.a>d4.cg4.f+r2
+I	ASSERT_STEP 6720, "11.VII-middle" // almost copy of track 10...
+	[ [<d0>d12]3[<d0>d4]2[<d0>d8]2<d0>d4 ]3 <
+	d2.^2^  2.<a0>a2  <a-0>a-2.^2^  2.^2^  4r1
+	d2.^2^  2.<a0>a2  <a-0>a-2.<e-0b-0>e-2<  d0a0>d2.<a0>d0a2<
+	a-0>d0a-2.e-0b-0>e-2<  d0a0>d2.<d0a0>d2<
+	  e-0a-0>c2.^2^  2.^2^  4r1  [r1r4]2 // ... except here
+	r1r4  <<b-2.b-0>e-0g2  <a-0>c0f2.f0a-0>c2<
+	  e-0g0b-2.b-0>e-0g2  <a-0>c0f2.c0e-0a-2<
+J	ASSERT_STEP 12480, "11.VIII" // copy of track 10
+	a0>d0f+4r1  r2.c0e-0b-2<  b-0>d0f+2.^4.<r8  r1r4
+	[r1r4]5
+	e-0g0b-4. d0f+0a c+0f0g+4. d0f+0ae 0g+0b4. f0a0>c<
+	  g0b0>d4.< a0>c+0e< b-0>d0f4.< a0>c0e<  r1r4
+K	ASSERT_STEP 15360, "11.IX" // copy of track 10
+	e-0g0b-4. d0f+0a c+0f0g+4. d0f+0a e0g+0b4. f0a0>c<
+	  g0b0>d4.< a0>c+0e< b-0>d0f4.< a0>c0e<
+	a-0>d0f+4.< g+0>c+0f< a0>d0f+4.< f+0b0>e-< Q4g0>c0f4<Q8
+	a0>d0f+4.< g+0>c+0f< a0>d0f+4.< f+0b0>d+< f0b0>c+4.< f+0a0>d<
+	  f0b-0>c+4.< f0a0>d< c+0f+0g4. d0f+0a
+	[r1r4]2
+	a-0>c0e-4.< g0b0>d< f+0a+0>c+4.< g0b0>d< a-0>c0e4.< b-0>d-0e
+	   c0e0g4.< a0>d+0f+< b0>e-0g4.< a0>d0f<
+	g0b0>d4.< f+0a+0>c+< g0b0>d4.< e0g+0b Q4f0a0>c4<Q8
+	a0>c+0e4.< g+0>c0d+< a0>c+0e4.< f+0a+0>c+< Q4g0b0>d4<Q8
+	a-0>d-0f4.< g0>c0e< a-0>d-0f4.< b0>e0f+ c0e0g4. <a0>c+0e<
+	  b-0>d0f4.< g0b0>d< e-0g0b-4. d0f+0a
+L	ASSERT_STEP 18480, "11.X" // copy of track 10
+	c+0e+0g+4. d0f+0a e-0g0b-4. f0a0>c< g0b0>d4.< a0>c+0e<
+	   b-0>d0f4.< a0>c0e< f0a0>c4.< e0g+0b
+	e-0g0b-4. e0g+0b f0a0>c4.< g0b0>d< a0>c+0e4.< b0>d+0f+
+	   c0e0g4.< b0>d+0f+< a-0>c0e-4.< g0b0>d<
+	// FIXME: the compiler crashes if we have `g-0b-0>d-.` (additional dot) which should not happen...
+	[ g-0b-0>d-4.< f0a0>c< g-0b-0>d-< g0b0>d< a-0>c0e-4.< g0b0>d< ]2
+	g-0b-0>d-4.< f0a0>c< g-0b-0>d-4.< g0b0>d< a-0>c0e-4.< b0>d0f
+	   c0e0g4.< a0>d< b-0>e0f4. <a0>d<
+M	ASSERT_STEP 20400, "11.X-middle" // copy of track 10
+	g+0>e-0g+4r4r1r1  [r1r4]4  <e-0a-0>d1.^2<e-0a-0>c2  r1r4r1r4
+N	ASSERT_STEP 22800, "11.XI"
+	r2.  r2<<a+0>c+0f+4^  2.^  2.^  2.^  2.
+O	ASSERT_STEP 23664, "11.XII"
+	[r2.]8
+P	ASSERT_STEP 24816, "11.End"
 
 
 // ---- Trumpets High ----------------------------------------------------------
@@ -208,7 +437,7 @@ K	ASSERT_STEP 15360, "12.IX"
 	l8
 	[r1r4]2  >d4.c+d4.<b>Q4c4Q8  d4.c+d4.<bb-4.bf+4.gr2
 	[r1r4]2  >d-2e-2d-2c4.de-4.d
-	[r1r4]2  d-4.cd4.<b>c4.<ab-rr4a-0>a-2
+	[r1r4]2  d-4.cd-4.<b>c4.<ab-rr4a-0>a-2
 L	ASSERT_STEP 18480, "12.X"
 	<f+0>f+8r8r1  r2.<b-0>b-2  a-0>a-8r8r1
 	r2.d-2  <b8r8r2>d-2<  b8r8r2>d-2<  b8r8r1  r2.b2
@@ -217,7 +446,9 @@ M	ASSERT_STEP 20400, "12.X-middle"
 N	ASSERT_STEP 22800, "12.XI"
 	<d+0b8r8r2  [r2.]5
 O	ASSERT_STEP 23664, "12.XII"
-	> [d-0g12]3d-0g4r4  [ r4[d-0g8]2d-0g4 ]2
+	// FIXME: verify this removal of octave shift is valid...
+	// >
+	[d-0g12]3d-0g4r4  [ r4[d-0g8]2d-0g4 ]2
 	[d-0g12]3d-0g4r4    r4[d-0g4]2  r4r4d-0g4  [d-0g4]2r4
 	<<g2.
 P	ASSERT_STEP 24816, "12.End"
