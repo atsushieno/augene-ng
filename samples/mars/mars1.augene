@@ -4,7 +4,7 @@
   </Includes>
   <MasterPlugins />
   <MmlFiles>
-    <MmlFile>mars_.mugene</MmlFile>
+    <MmlFile>mars1.mugene</MmlFile>
   </MmlFiles>
   <MmlStrings />
 </AugeneProject>

@@ -1,10 +1,9 @@
 <AugeneProject>
   <Includes>
-    <Include Bank="1" Source="../Banks/SF2Banks.augene" />
+    <Include Bank="1" Source="mars1.augene" />
+    <Include Bank="1" Source="mars2.augene" />
   </Includes>
-  <MasterPlugins />
-  <MmlFiles>
-    <MmlFile>mars.mugene</MmlFile>
-  </MmlFiles>
-  <MmlStrings />
+  <MmlStrings>
+    <MmlString><![CDATA[#define STEP_DELTA 23280]]></MmlString>
+  </MmlStrings>
 </AugeneProject>
