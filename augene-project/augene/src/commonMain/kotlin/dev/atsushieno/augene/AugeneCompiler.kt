@@ -153,6 +153,28 @@ open class AugeneCompiler
 
 	lateinit var edit: EditElement
 
+	private fun getMmlFilesRecursively(absPath: (String)->String, project: AugeneProject) =
+		sequence {
+			val includedPaths = mutableListOf<String>()
+			val errors = mutableListOf<String>()
+			val results = mutableListOf<String>()
+			project.forEachIncludedProjectRecursive({ p ->
+				results.addAll(p.mmlFiles.map { f -> absPath(f) })
+			}, includedPaths, absPath, errors)
+			yieldAll(results)
+		}
+
+	private fun getMmlStringsRecursively(absPath: (String)->String, project: AugeneProject) =
+		sequence {
+			val includedPaths = mutableListOf<String>()
+			val errors = mutableListOf<String>()
+			val results = mutableListOf<String>()
+			project.forEachIncludedProjectRecursive({ p ->
+				results.addAll(p.mmlStrings)
+			}, includedPaths, absPath, errors)
+			yieldAll(results)
+		}
+
 	@OptIn(ExperimentalFileSystem::class)
 	fun compile () {
 		edit = EditElement()
@@ -161,25 +183,26 @@ open class AugeneCompiler
 			throw IllegalStateException ("To compile the project, ProjectFileName must be specified in prior")
 
 		val fileSupport = FileSupport(projectFileName!!)
-		val abspath = { s:String? -> fileSupport.resolvePathRelativeToProject(s!!) }
+		val absPath = { s:String? -> fileSupport.resolvePathRelativeToProject(s!!) }
 
 		// compile into MidiMusic.
 		val compiler = MmlCompiler.create()
-		val mmlFilesAbs = project.mmlFiles.map { f -> abspath (f) }
-		val mmls = mmlFilesAbs.map { f -> MmlInputSource (f, fileSupport.readString(f)) } +
-			project.mmlStrings.map { s -> MmlInputSource ("(no file)", s) }
-		val music = compiler.compile2 (true, false, mmls.toTypedArray())
+		val mmlFilesAbs = getMmlFilesRecursively(absPath, project)
+		val mmls = (mmlFilesAbs.map { f -> MmlInputSource (f, fileSupport.readString(f)) } +
+					getMmlStringsRecursively(absPath, project).map { s -> MmlInputSource ("(no file)", s) })
+				.toList().toTypedArray()
+		val music = compiler.compile2 (true, false, mmls)
 		if (fileSupport.exists(projectDirectory!!)) {
-			val umpxFile = outputEditFileName ?: changeExtension(abspath(projectFileName!!), ".umpx")
+			val umpxFile = outputEditFileName ?: changeExtension(absPath(projectFileName!!), ".umpx")
 			val umpxBytes = mutableListOf<Byte>()
 			music.write(umpxBytes)
 			fileSupport.writeBytes(umpxFile, umpxBytes.toByteArray())
 		}
 
 		// load filtergraphs here so that they can be referenced at importing.
-		val audioGraphs = project.expandedAudioGraphsFullPath (abspath, null, null).asIterable ().toMutableList()
+		val audioGraphs = project.expandedAudioGraphsFullPath (absPath, null, null).asIterable ().toMutableList()
 		val juceAudioGraphs = audioGraphs.filter { it.source != null && it.id != null }.map {
-			val text = fileSupport.readString(abspath(it.source))
+			val text = fileSupport.readString(absPath(it.source))
 			it.id!! to JuceAudioGraph.load(XmlReader.create(text)).toList()
 		}.toMap()
 
@@ -216,7 +239,7 @@ open class AugeneCompiler
 			if (ag != null) {
 				val existingPlugins = track.Plugins.toTypedArray()
 				track.Plugins.clear ()
-				val text = fileSupport.readString(abspath (ag.source))
+				val text = fileSupport.readString(absPath (ag.source))
 				val graph = JuceAudioGraph.load(XmlReader.create(text)).asIterable()
 				for (p in toTracktion(JuceAudioGraph.toAudioGraph(graph)))
 					track.Plugins.add(p)
@@ -243,7 +266,7 @@ open class AugeneCompiler
 					reportError ("AugeneAudioGraphNotFound", "AudioGraph does not exist: " + abspath (agFile))
 					continue
 				}*/
-				val text = fileSupport.readString(abspath (agFile))
+				val text = fileSupport.readString(absPath (agFile))
 				val graph = JuceAudioGraph.load (XmlReader.create (text)).asIterable()
 				for (p in toTracktion (JuceAudioGraph.toAudioGraph(graph)))
 				dstTrack.Plugins.add (p)
@@ -263,7 +286,7 @@ open class AugeneCompiler
 				continue
 			}
 			*/
-			val text = fileSupport.readString(abspath (agFile))
+			val text = fileSupport.readString(absPath (agFile))
 			val graph = JuceAudioGraph.load (XmlReader.create (text)).asIterable()
 			for ( p in toTracktion (JuceAudioGraph.toAudioGraph(graph)))
 				edit.MasterPlugins.add (p)
@@ -273,7 +296,7 @@ open class AugeneCompiler
 		val projectId = Random.nextInt() and 0xFFFFFF
 		edit.ProjectID = edit.ProjectID ?: "${projectId}/${Random.nextInt()}" // not sure if it is correct format
 
-		val outfile = outputEditFileName ?: changeExtension(abspath (projectFileName!!), ".tracktionedit")
+		val outfile = outputEditFileName ?: changeExtension(absPath (projectFileName!!), ".tracktionedit")
 		val sb = StringBuilder()
 		EditModelWriter().write(sb, edit)
 
@@ -291,6 +314,22 @@ open class AugeneCompiler
 		return if (lastIndex > 0) path.substring(0, lastIndex) + ext else path
 	}
 
+	private fun AugeneProject.forEachIncludedProjectRecursive(proc: (AugeneProject) -> Unit,
+															  includedAncestors: MutableList<String>,
+															  resolveAbsPath: (String) -> String,
+															  errors: MutableList<String>
+	) {
+		proc(this)
+		for (inc in this.includes) {
+			if (inc.source == null)
+				continue
+			val absPath = resolveAbsPath(inc.source!!)
+			if (includedAncestors.any { it.equals(absPath, true) })
+				errors.add("Recursive inclusion was found: $absPath")
+			AugeneProjectLoader.load(absPath).forEachIncludedProjectRecursive(proc, includedAncestors, resolveAbsPath, errors)
+		}
+	}
+
 	private fun AugeneProject.checkIncludeValidity(
 		includedAncestors: MutableList<String>,
 		resolveAbsPath: (String) -> String,
@@ -306,6 +345,7 @@ open class AugeneCompiler
 		}
 	}
 
+	// FIXME: rewrite with forEachIncludedProjectRecursive().
 	@OptIn(ExperimentalFileSystem::class)
 	private fun AugeneProject.expandedAudioGraphsFullPath(
 		resolveAbsPath: (String) -> String,

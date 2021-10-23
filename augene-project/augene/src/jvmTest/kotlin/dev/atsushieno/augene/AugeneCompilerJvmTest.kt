@@ -23,6 +23,15 @@ class AugeneCompilerJvmTest {
         assertTrue(model.edit.Tracks.filterIsInstance<TrackElement>().all { it.Plugins.any { it.Type == "vst" } }, "no vst in the track")
     }
 
+    // FIXME: enable this once we got compiler always working
+    //@Test
+    fun compile2() {
+        val model = AugeneCompiler()
+        model.loadProjectFile("../../samples/mars/mars.augene")
+        model.compile()
+        assertTrue(model.edit.Tracks.filterIsInstance<TrackElement>().all { it.Plugins.any { it.Type == "vst" } }, "no vst in the track")
+    }
+
     @Test
     fun compileSpectra() {
         val model = AugeneCompiler()
