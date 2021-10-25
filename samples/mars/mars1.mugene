@@ -9,9 +9,7 @@
 #macro CAFt SPECTRA_TRIANGLE_ARG_DEF { SPECTRA_TRIANGLE "CAF=", "CAF+", "CAF-", SPECTRA_TRIANGLE_ARG_USE }
 
 
-// FIXME: remove this `q1` once we fixed this issue
-//  https://github.com/atsushieno/mugene-ng/issues/15
-1-30  PITCH_BEND_SENSITIVITY24 q1
+1-30  PITCH_BEND_SENSITIVITY24
 
 // For augene-ng, disable CH to switch MIDI channel.
 // For MIDI players, comment this out and enable CH.
@@ -22,8 +20,6 @@
 
 _ 0	BEAT5,4 t120
 _ 0-31	r %STEP_DELTA_A
-
-#conditional track 0,10-17
 
 // ---- Tempo Sequence ---------------------------------------------------------
 _ 0	BEAT5,4

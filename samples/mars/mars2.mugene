@@ -2,9 +2,7 @@
 #define DRUMTRACKS 0.00001
 #macro REWIND len:length { r $len }
 
-// FIXME: remove this `q1` once we fixed this issue
-//  https://github.com/atsushieno/mugene-ng/issues/15
-1-30  PITCH_BEND_SENSITIVITY24 q1
+1-30  PITCH_BEND_SENSITIVITY24
 
 // For augene-ng, disable CH to switch MIDI channel.
 // For MIDI players, comment this out and enable CH.
