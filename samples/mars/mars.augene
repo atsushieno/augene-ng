@@ -4,6 +4,7 @@
     <Include Source="mars2.augene" />
   </Includes>
   <MmlStrings>
-    <MmlString><![CDATA[#define STEP_DELTA 23280]]></MmlString>
+    <MmlString><![CDATA[#define STEP_DELTA_A 0]]></MmlString>
+    <MmlString><![CDATA[#define STEP_DELTA_B 23280]]></MmlString>
   </MmlStrings>
 </AugeneProject>
