@@ -600,7 +600,8 @@ _ 13	o5 CH13
 	INSTRUMENTNAME "sf2_realistic" @56 o4 V100
 G	[r1r4 r1r4]8
 H	ASSERT_STEP_B 3840, "13.VII"
-	[ [b12]3b4r2r2b4b8b8b8b4 ]5  f4.dc+4.dg4.f>c4.<b>e4.d
+	l8
+	[ [b12]3b4r2r2b4b4b8b8b4 ]5  f4.dc+4.dg4.f>c4.<b>e4.d
 I	ASSERT_STEP_B 6720, "13.VII-middle"
 	[ [<g0>g12]3[<g0>g4]2[<g0>g8]2<g0>g4 ]3  [r1r4]8  r2.<d2
 	d-2.a-2  g2.d0>d2

@@ -168,7 +168,10 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
         nextClip()
 
         ttrack.Modifiers = ModifiersElement()
-        val machine = Midi2Machine()
+        val machine = Midi2Machine().apply {
+            diagnosticsHandler = { msg, ump -> this@MidiToTracktionEditConverter.context.report(
+                msg + (if (ump != null) " : $ump" else null)) }
+        }
         val noteDeltaTimes = Array(16 * 16 * 128) { 0 }
         val notes = Array<NoteElement?>(16 * 16 * 128) { null }
         var timeSigNumerator = 4
@@ -296,7 +299,7 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
                         }
                         MidiChannelStatus.NOTE_ON -> {
                             if (msg.midi2Note < 0 || msg.midi2Note > 127)
-                                throw IllegalArgumentException("Note must be non-negative byte range: " + msg.midi2Note)
+                                throw IllegalArgumentException("Note must be in non-negative byte range: " + msg.midi2Note)
                             val noteOn = NoteElement().apply {
                                 B = tTime
                                 P = msg.midi2Note

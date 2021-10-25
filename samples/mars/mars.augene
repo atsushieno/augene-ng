@@ -1,7 +1,7 @@
 <AugeneProject>
   <Includes>
-    <Include Bank="1" Source="mars1.augene" />
-    <Include Bank="1" Source="mars2.augene" />
+    <Include Source="mars1.augene" />
+    <Include Source="mars2.augene" />
   </Includes>
   <MmlStrings>
     <MmlString><![CDATA[#define STEP_DELTA 23280]]></MmlString>
