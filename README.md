@@ -20,7 +20,7 @@ NOTE: before using augene, you most likely have to build things (explained in th
 
 launch `augene-editor` application. It is a cross-platform Kotlin/JVM Compose for Desktop GUI application.
 
-**TODO: rewrite here**
+![augene editor: configuration tab](docs/images/augene-config.png)
 
 By default those lists are actually empty. It's a screenshot of the app that has loaded sample data that makes use of Collective (bundled with Tracktion [Waveform](https://www.tracktion.com/products/waveform)).
 
