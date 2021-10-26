@@ -7,9 +7,10 @@
 
 #macro CAF_ SPECTRA_ONESHOT_ARG_DEF { SPECTRA_ONESHOT "CAF=", "CAF+", SPECTRA_ONESHOT_ARG_USE }
 #macro CAFt SPECTRA_TRIANGLE_ARG_DEF { SPECTRA_TRIANGLE "CAF=", "CAF+", "CAF-", SPECTRA_TRIANGLE_ARG_USE }
+#macro L_ON { LEGATO64 }
+#macro L_OFF { LEGATO0 }
 
-
-1-30  PITCH_BEND_SENSITIVITY24
+1-30  PITCH_BEND_SENSITIVITY24 E127 q0 v110
 
 // For augene-ng, disable CH to switch MIDI channel.
 // For MIDI players, comment this out and enable CH.
@@ -20,6 +21,10 @@
 
 _ 0	BEAT5,4 t120
 _ 0-31	r %STEP_DELTA_A
+
+
+//#conditional track 0,10-17
+
 
 // ---- Tempo Sequence ---------------------------------------------------------
 _ 0	BEAT5,4
@@ -59,7 +64,7 @@ G	MARKER "VI"
 
 // ---- Piccolos ---------------------------------------------------------------
 _ 1	CH1
-	INSTRUMENTNAME "sf2_realistic" @72 o6 V100
+	TRACKNAME "Piccolos" INSTRUMENTNAME "sf2_realistic" @72 o6 V80
 A	[r1r4]16
 B	ASSERT_STEP_A 3840, "1.I"
 	[r1r4]20
@@ -69,7 +74,7 @@ C	ASSERT_STEP_A 9360, "1.II"
 	f0a-2.^2^  2.^2^  2.^2
 	[r1r4]9  >d-2e-2d-4^  4cr2..<
 	// FIXME: there are slurs
-	g4.f+g4.eq12f4q1  a4.g+a4.f+q12g4q1>  d-4.cd-4.<b>c4^  8<ab-4.ga-4.g
+	g4.f+g4.eQ4f4Q8  a4.g+a4.f+Q4g4Q8>  d-4.cd-4.<b>c4^  8<ab-4.ga-4.g
 D	ASSERT_STEP_A 13680, "1.III"
 	f+4. g a-4. b- a0>c4.< b0>d c0e-4.< b0>d< g0b-4.f+0a
 	e+0g+4. f+0a g0b-4. a0>c< b0>d4. c+0e d0f4. c0e< b-0>d-4.< a0>c<
@@ -93,7 +98,7 @@ G	ASSERT_STEP_A 23280, "1.VI"
 
 // ---- Flutes -----------------------------------------------------------------
 _ 2	CH2
-	INSTRUMENTNAME "sf2_realistic" @73 o6 V100
+	TRACKNAME "Flutes" INSTRUMENTNAME "sf2_realistic" @73 o6 V80
 A	[r1r4]16
 B	ASSERT_STEP_A 3840, "2.I"
 	l16
@@ -109,7 +114,7 @@ C	ASSERT_STEP_A 9360, "2.II"
 	f0a-2.^2^  2.^2^  2.^2  [r1r4]7
 	// FIXME: there are slurs
 	[d-2e-2d-4^  4cr2..]2
-	[c0e4.<b0>d+]2q12<b0>d4q1	d0f+4.c+0fd0f+4.<b0>d+q12c0e4q1
+	[c0e4.<b0>d+]2Q4<b0>d4Q8	d0f+4.c+0fd0f+4.<b0>d+Q4c0e4Q8
 	g-0b-4.f0ag-0b-4.e0g+f0a4^  8d0f+e-0g4.c0e8d0f4.c0e8
 D	ASSERT_STEP_A 13680, "2.III"
 	<b0>d+4. c0e d-0f4. e-0g f4. g a-4.g e-4.d
@@ -135,7 +140,7 @@ G	ASSERT_STEP_A 23280, "2.VI"
 
 // ---- Oboes ------------------------------------------------------------------
 _ 3	CH3
-	INSTRUMENTNAME "sf2_realistic" @68 o4 V100
+	TRACKNAME "Oboes" INSTRUMENTNAME "sf2_realistic" @68 o4 V80
 A	[r1r4]10  r2.d2  d-2.a-2  g2.>d2<  a-0>d-2.^2^  2.^2^  4r1
 B	ASSERT_STEP_A 3840, "3.I"
 	[r1r4]11  r2.f0a-2  f+0b2.^2^  2.f0a-2
@@ -149,7 +154,7 @@ C	ASSERT_STEP_A 9360, "3.II"
 	[r1r4]7  d-2e-2d-4^  4c8r2..<
 	// FIXME: there are slurs
 	f0a-4.e0fd+0f+4.e0gf0a4^  8g0b-a0>c4.<b0>dc0e-4.<b0>d
-	c0e4.<b0>d+c0e4.<a0>cq12<b0>d4q1  d0f+4.c+0ed0f+4.<b0>d+q12c0e4q1
+	c0e4.<b0>d+c0e4.<a0>cQ4<b0>d4Q8  d0f+4.c+0ed0f+4.<b0>d+Q4c0e4Q8
 	g-0b-4.f0ag-0b-4.e0g+f0a4^  8d0f+8e-0g4.c0e8d-0f4.c0e8
 D	ASSERT_STEP_A 13680, "3.III"
 	<b0>d+4. c0e d-0f4. e-0g f4. g a-4. g e-4.d
@@ -176,7 +181,7 @@ G	ASSERT_STEP_A 23280, "3.VI"
 
 // ---- English Horn -----------------------------------------------------------
 _ 4	CH4
-	INSTRUMENTNAME "sf2_realistic" @69 o4 V100
+	TRACKNAME "English Horn" INSTRUMENTNAME "sf2_realistic" @69 o4 V80
 A	[r1r4]9  r2.e-2  d2.d2  d2.b-2  a2.>d2
 	c2.^2^  2.^2^  4r1
 B	ASSERT_STEP_A3840, "4.I"
@@ -189,7 +194,7 @@ C	ASSERT_STEP_A 9360, "4.II"
 	<a-2.^2^  2.^2^  2.^2
 	// FIXME: there are slurs
 	[r1r4]7  e-4.dc+4.ee-4^  8fg4.ab-4.a  a-4.gc+4.ga4^  8b>c4.de-4.d
-	d4.c+d4.<b>q12c4q1  e4.c+e4.cq12d4q1  a-4.ga-4.f+g4^  8ef4.de-4.d
+	d4.c+d4.<b>Q4c4Q8  e4.c+e4.cQ4d4Q8  a-4.ga-4.f+g4^  8ef4.de-4.d
 D	ASSERT_STEP_A 13680, "4.III"
 	c+4. d e-4. f g4. a b-4. a f4. e
 	d+4. e f4. g a4. b> c4.< b a-4. g
@@ -211,7 +216,7 @@ G	ASSERT_STEP_A 23280, "4.VI"
 
 // ---- Bass Oboe --------------------------------------------------------------
 _ 5	CH5
-	INSTRUMENTNAME "sf2_realistic" @68 o4 V100
+	TRACKNAME "Bass Oboe" INSTRUMENTNAME "sf2_realistic" @68 o4 V80
 A	[r1r4]4
 	d-2.^2^  2.r2  [r1r4]3  r2.e-2  d2.d2
 	d-2.a-2  g2.>d2  d-2.^2^  2.^2^  4r1
@@ -222,7 +227,7 @@ C	ASSERT_STEP_A 9360, "4.II"
 	l8
 	f2.^2^  2.^2^  2.^2<
 	[r1r4]7  a-4.gf+4.ga4.b->c4.de-4.d<  a-4.gf+4.ga-4.b->c4.de-4.d
-	c4.<b>c4.<aq12b4q1>  d4.c+d4.<bq12>c4q1  g-4.fg-4.ef4.de-4.cd-4.c
+	c4.<b>c4.<aQ4b4Q8>  d4.c+d4.<bQ4>c4Q8  g-4.fg-4.ef4.de-4.cd-4.c
 D	ASSERT_STEP_A 13680, "5.III"
 	<b4.>cd-4.e-f4.ga-4.ge-4.d  c+4.de-4.fg4.ab-4.ag-4.f
 	[ e4.d+efg-4.f ]2  e4.d+e4.fg-4.a-f4.ga4.g
@@ -242,7 +247,7 @@ G	ASSERT_STEP_A 23280, "5.VI"
 // ---- Clarinets --------------------------------------------------------------
 // FIXME: maybe octave is weird, and raising it exposes other weird bits...
 _ 6	CH6 K-2
-	INSTRUMENTNAME "sf2_realistic" @71 o4 V90
+	TRACKNAME "Clarinets" INSTRUMENTNAME "sf2_realistic" @71 o4 V70
 A	[r1r4]12  <a0>e0a2.e0a0>e2<  e-0b-0>e-2.^2^  2.^2^  4r1
 B	ASSERT_STEP_A 3840, "6.I"
 	l16
@@ -258,8 +263,8 @@ C	ASSERT_STEP_A 9360, "6.II"
 	e-2f2e-2d8r2..
 	<e-0g0b-4. d0f+0a8 c+0f0a-4. d0f+0a8 e-0g0b-4. f0a0>c8<
 	  g0b0>d4.< a0>c+0e8< b-0>d0e4.< a0>c+0e8<
-	a-0>a4.< g+0>g+8< a0>a4.< f+0>f8< q12g0>g4<q1
-	  b0>b4.< a+0>a+8< b0>b4.< g+0>g8< q12a0>a4q1
+	a-0>a4.< g+0>g+8< a0>a4.< f+0>f8< Q4g0>g4<Q8
+	  b0>b4.< a+0>a+8< b0>b4.< g+0>g8< Q4a0>a4Q8
 	e-0>e-4.< d0>d8< e-0>e-4.< c+0>c+8< d0>d4.<
 	   <b0>b8 c0>c4.< <a0>a8< b-0>b-4.< a0>a8<
 D	ASSERT_STEP_A 13680, "6.III"
@@ -297,7 +302,7 @@ G	ASSERT_STEP_A 23280, "6.VI"
 
 // ---- Bass Clarinets ---------------------------------------------------------
 _ 7	CH7 K-2
-	INSTRUMENTNAME "sf2_realistic" @71 o3 V100
+	TRACKNAME "Bass Clarinets" INSTRUMENTNAME "sf2_realistic" @71 o3 V80
 A	[r1r4]9  r2.b-2a2.>e2  e-2.f2  e2.a2  g2.^2^  2.^2^  4r1<
 B	ASSERT_STEP_A 3840, "7.I"
 	l16
@@ -308,7 +313,7 @@ C	ASSERT_STEP_A 9360, "7.II"
 	>>d-2.^2^  2.^2^  2.^2
 	[r1r4]7
 	e4.dc+4.de4.fg4.ab-4.a  e-4.dc+4.de-4.gg4.ab-4.a
-	>d4.cd4.<b>q12c4q1  e4.d+e4.cq12d4q1
+	>d4.cd4.<b>Q4c4Q8  e4.d+e4.cQ4d4Q8
 	a-4.ga-4.f+g4.rr2<<g2
 D	ASSERT_STEP_A 13680, "7.III"
 	// FIXME: there are slurs
@@ -329,7 +334,7 @@ G	ASSERT_STEP_A 23280, "7.VI"
 
 // ---- Bassoons ---------------------------------------------------------------
 _ 8 CH8
-	INSTRUMENTNAME "sf2_realistic" @70 o2 V100
+	TRACKNAME "Bassoons" INSTRUMENTNAME "sf2_realistic" @70 o2 V80
 A	l8
 	[r1r4]2
 	V_55,85,0,%2400,2
@@ -373,7 +378,7 @@ G	ASSERT_STEP_A 23280, "8.VI"
 
 // ---- Double Bassoons --------------------------------------------------------
 _ 9	CH9
-	INSTRUMENTNAME "sf2_realistic" @70 o2 V100
+	TRACKNAME "Double Bassoons" INSTRUMENTNAME "sf2_realistic" @70 o2 V80
 A	l8
 	[r1r4]2
 	V_55,85,0,%2400,2
@@ -410,9 +415,9 @@ G	ASSERT_STEP_A 23280, "9.VI"
 
 // ---- Horns High -------------------------------------------------------------
 _ 10	CH10 K-7
-	INSTRUMENTNAME "sf2_realistic" @60 o4 V85
+	TRACKNAME "Horns (High)" INSTRUMENTNAME "sf2_realistic" @60 o4 V80
 A	[r1r4]13
-	e-0a-0>e-2.^2^  2.^2^  4<r1
+	V-10 e-0a-0>e-2.^2^  2.^2^  4<r1 V+10
 B	ASSERT_STEP_A 3840, "10.I"
 	l16
 	[r1r4]8
@@ -426,62 +431,59 @@ C	ASSERT_STEP_A 9360, "10.II"
 	l8
 	<a-0>c0e-2.^2^  2.^2^  2.^2<
 	[r1r4]2
-	a-4.gf+4.ga-4.b->c4.<ab4.a  g4.f+g4.eq12f4q1  g4.f+g4.ed+4.db4.b-f+4.g  [REWIND-1-4]5 >
-	c4.<ba+4.b>c4.de4.de-4.d  c4.<a+b4.g+q12a4q1  b4.a+b4.ag4.a>e4.d<a+4.b  [REWIND-1-4]5 >
-	e-4.dc+4.de4.fg4.fg4.f  g4.f+g4.eq12f4q1  g4.f+g4.ed+4.df+4.gc+4.d
+	a-4.gf+4.ga-4.b->c4.<ab4.a  g4.f+g4.eQ4f4Q8  g4.f+g4.ed+4.db4.b-f+4.g  [REWIND-1-4]5 >
+	c4.<ba+4.b>c4.de4.de-4.d  c4.<a+b4.g+Q4a4Q8  b4.a+b4.ag4.a>e4.d<a+4.b  [REWIND-1-4]5 >
+	e-4.dc+4.de4.fg4.fg4.f  g4.f+g4.eQ4f4Q8  g4.f+g4.ed+4.df+4.gc+4.d
 	[r1r4]2
 	<a-4.gf+4.ga-4.b->c4.<ab4.a  [REWIND-1-4]2
 	>c4.<ba+4.b>c4.de4.de-4.d  [REWIND-1-4]2
 	e-4.dc+4.de-4.fg4.f+g4.f+
-	 <g4.f+g4.eq12f4q1  a4.g+a4.f+q12g4q1  [REWIND-1-4]2
-	 b4.a+b4.g+q12a4q1  >c+4.cc+4.<a+q12b4q1  [REWIND-1-4]2
-	 >d4.c+d4.<b>q12c4q1  e4.d+e4.cq12d4q1
+	 <g4.f+g4.eQ4f4Q8  a4.g+a4.f+Q4g4Q8  [REWIND-1-4]2
+	 b4.a+b4.g+Q4a4Q8  >c+4.cc+4.<a+Q4b4Q8  [REWIND-1-4]2
+	 >d4.c+d4.<b>Q4c4Q8  e4.d+e4.cQ4d4Q8
 	<a4.ga4.b>c4.<ab-4.ga-4.g  [REWIND-1-4]2
 	>d-4.cd-4.ed4.c+d4.<b>c4.<b  [REWIND-1-4]2
 	>f4.ef4.f+g4.ef4.de-4.d
 D	ASSERT_STEP_A 13680, "10.III"
-	<f+4.ga-4.b->c4.<ab-4.af4.e  [REWIND-1-4]2
-	a+4.b>c4.de4.de-4.d<b-4.a  [REWIND-1-4]2
-	>c+4.de-4.fg4.f+g4.f+d4.c+
-	 <e-4.ef4.ga4.g+a4.gf4.e  [REWIND-1-4]2
-	 a-4.ab-4.>cd4.<b>c4.<ba4.g  [REWIND-1-4]2
-	 >c4.c+d4.ef+4.ef4.ed-4.c<
+	<f+4.ga-4.b->c4.<ab-4.af4.e  [REWIND-1-4]2 // low
+	a+4.b>c4.de4.de-4.d<b-4.a  [REWIND-1-4]2 // mid
+	>c+4.de-4.fg4.f+g4.f+d4.c+  // high
+	 <e-4.ef4.ga4.g+a4.gf4.e  [REWIND-1-4]2 // low
+	 a-4.ab-4.>cd4.<b>c4.<ba4.g  [REWIND-1-4]2 // mid
+	 >c4.c+d4.ef+4.ef4.ed-4.c< // high
 	[d+4.dd+ef4.e]2  d+4.dd+4.ef4.ga-4.b-a-4.g  [REWIND-1-4]4
 	[f+4.ff+ga-4.g]2  f+4.ff+4.ga-4.b->c4.de-4.d  [REWIND-1-4]4
-	>[c4.<b-b>cd-4.c]2  <b4.b-b4.>cd-4.e-f4.ga-4.g
+	[<b4.b-b>cd-4.c]2  <b4.b-b4.>cd-4.e-f4.ga-4.g
 	 <f0b-0>f4r1  r1r4
 E	ASSERT_STEP_A 16080, "10.IV"
 	l12
 	[r1r4]7
-	<[e4]5  [e4]5  [d+4]3e2  [REWIND-1-4]3
-	[b4]5  >c+4c+4<b4>c+4c+4<  [f+4]3g2  [REWIND-1-4]3
-	>[e4]5  f+2d+8.d+16f+2  <[b4]3a+2
+	<[e4]5  [e4]5  [d+4]3e2  [REWIND-1-4]3 // low
+	[b4]5  >c+4c+4<b4>c+4c+4<  [f+4]3g2  [REWIND-1-4]3 // mid
+	>[e4]5  f+2d+8.d+16f+2  <[b4]3a+2 // high
 	[r1r4]2
 	[ Q8 g0b-0>e2< g0b-0>e8.< g0b-0>e16< g0b-0>e2< :
-	  Q4 <a8.a16ag+a>c<b>cf4^12c<a ]2
-	  Q4 a8.a16ag+a>c<b>cf8r8r4
+	  V+15 Q4 a8.a16ag+a>c<b>cf4^12c<a V-15 ]2
+	  V+15 Q4 a8.a16ag+a>c<b>cf8r8r4 V-15
 F	ASSERT_STEP_A 19920, "10.V"
 	Q8
 	<g0b0>e-2.^2^  8r8r1  [r1r4]7
 	<b0>e0g2.^2^  2.^2<  r1r4
-	<g0b0>e1^4^  2.r2
+	E_127,32,1.,2.,32 <g0b0>e1^4^  1r4  E127  // fadeout
 G	ASSERT_STEP_A 23280, "10.VI"
 	
 
-
-
 // ---- Horns Low --------------------------------------------------------------
 _ 11	CH11 K-7
-	INSTRUMENTNAME "sf2_realistic" @60 o3 V85
+	TRACKNAME "Horns (Low)" INSTRUMENTNAME "sf2_realistic" @60 o3 V80
 A	[r1r4]2
-	V_55,85,0,%2400,2
+	V_50,80,0,%2400,2
 	d2.^2^2.a2  a-2.^2^2.r2  r1r4
 	d2.^2^2.a2  a-2.>e-2d2.^2^4r1  r1r4
 	c0a-0>c2.^2^2.^2^4<r1
 B	ASSERT_STEP_A 3840, "10.I"
 	l16
 	[r1r4]8
-	// FIXME: there are slurs
 	// copy of high part (partly)
 	// FIXME: there are slurs
 	<b-2.b-0>e-0g2  <a-0>c0f2.f0a-0>c2<
@@ -495,16 +497,16 @@ C	ASSERT_STEP_A 9360, "11.II"
 	c0e-0a-2.^2^  2.^2^  2.^2
 	// copy of high part (up to start of the section E)
 	[r1r4]2
-	a-4.gf+4.ga-4.b->c4.<ab4.a  g4.f+g4.eq12f4q1  g4.f+g4.ed+4.db4.b-f+4.g  [REWIND-1-4]5 >
-	c4.<ba+4.b>c4.de4.de-4.d  c4.<a+b4.g+q12a4q1  b4.a+b4.ag4.a>e4.d<a+4.b  [REWIND-1-4]5 >
-	e-4.dc+4.de4.fg4.fg4.f  g4.f+g4.eq12f4q1  g4.f+g4.ed+4.df+4.gc+4.d
+	a-4.gf+4.ga-4.b->c4.<ab4.a  g4.f+g4.eQ4f4Q8  g4.f+g4.ed+4.db4.b-f+4.g  [REWIND-1-4]5 >
+	c4.<ba+4.b>c4.de4.de-4.d  c4.<a+b4.g+Q4a4Q8  b4.a+b4.ag4.a>e4.d<a+4.b  [REWIND-1-4]5 >
+	e-4.dc+4.de4.fg4.fg4.f  g4.f+g4.eQ4f4Q8  g4.f+g4.ed+4.df+4.gc+4.d
 	[r1r4]2
 	<a-4.gf+4.ga-4.b->c4.<ab4.a  [REWIND-1-4]2
 	>c4.<ba+4.b>c4.de4.de-4.d  [REWIND-1-4]2
 	e-4.dc+4.de-4.fg4.f+g4.f+
-	 <g4.f+g4.eq12f4q1  a4.g+a4.f+q12g4q1  [REWIND-1-4]2
-	 b4.a+b4.g+q12a4q1  >c+4.cc+4.<a+q12b4q1  [REWIND-1-4]2
-	 >d4.c+d4.<b>q12c4q1  e4.d+e4.cq12d4q1
+	 <g4.f+g4.eQ4f4Q8  a4.g+a4.f+Q4g4Q8  [REWIND-1-4]2
+	 b4.a+b4.g+Q4a4Q8  >c+4.cc+4.<a+Q4b4Q8  [REWIND-1-4]2
+	 >d4.c+d4.<b>Q4c4Q8  e4.d+e4.cQ4d4Q8
 	<a4.ga4.b>c4.<ab-4.ga-4.g  [REWIND-1-4]2
 	>d-4.cd-4.ed4.c+d4.<b>c4.<b  [REWIND-1-4]2
 	>f4.ef4.f+g4.ef4.de-4.d
@@ -517,30 +519,30 @@ D	ASSERT_STEP_A 13680, "11.III"
 	 >c4.c+d4.ef+4.ef4.ed-4.c<
 	[d+4.dd+ef4.e]2  d+4.dd+4.ef4.ga-4.b-a-4.g  [REWIND-1-4]4
 	[f+4.ff+ga-4.g]2  f+4.ff+4.ga-4.b->c4.de-4.d  [REWIND-1-4]4
-	>[c4.<b-b>cd-4.c]2  <b4.b-b4.>cd-4.e-f4.ga-4.g
+	[<b4.b-b>cd-4.c]2  <b4.b-b4.>cd-4.e-f4.ga-4.g
 	 <f0b-0>f4r1  r1r4
 E	ASSERT_STEP_A 16080, "11.IV"
 	l12
 	[r1r4]7
-	<[g+4]5  f+4f+4g+4f+4f+4  f+4b4f+4g+2  [REWIND-1-4]3
-	[b4]5  a+4a+4b4a+4a+4  b4>d+4<b4a2  [REWIND-1-4]3
+	<[g+4]5  f+4f+4g+4f+4f+4  f+4b4f+4g2  [REWIND-1-4]3
+	[b4]5  a+4a+4b4a+4a+4  b4>d+4<b4a+2  [REWIND-1-4]3
 	>[d+4]5  c+4c+4d+4c+4c+4  d+4f+4d+4d2<
 	[r1r4]2
 	c0e0>d2 <c+0e0d8.< c+0e0>d16 c+0e0>d2
-	  Q4 <a8.a16ag+a>c<b>cf4^12c<a
+	  V+15 Q4 <a8.a16ag+a>c<b>cf4^12c<a V-15
 	  Q8 e0>d0g2< e0>d0g8.< e0>d0g16< e0>d0g2<
 	  Q4 a8.a16ag+a>c<b>cf8r8r4
 F	ASSERT_STEP_A 19920, "11.V"
 	Q8
 	<g0b0>e-4.r4.r2  [r1r4]8
 	<d0g0>c2.^2^  2.^2<  r1r4
-	<g0b0>e1^4^  2.r2
+	E_127,32,1.,2.,32 <g0b0>e1^4^  1r4  E127 // fadeout
 G	ASSERT_STEP_A 23280, "11.VI"
 
 
 // ---- Trumpets High ----------------------------------------------------------
 _ 12	CH12
-	INSTRUMENTNAME "sf2_realistic" @56 o4 V110
+	TRACKNAME "Trumpets (High)" INSTRUMENTNAME "sf2_realistic" @56 o5 V100
 A	[r1r4]13
 	d-2.^2^  2.^2^  4r1
 B	ASSERT_STEP_A 3840, "12.I"
@@ -551,49 +553,52 @@ B	ASSERT_STEP_A 3840, "12.I"
 	// FIXME: there are slurs
 	r2.g+0>c+2<  f+0b8r8r1  r2.g+0>c+2<  f+0b8r8r1
 	r2.g+0>c+2<  f+0b8r8r2f+0>c+2<
-	f+0b8r8r2.r8.f+  >d+0f+8<r8r2.r8.f+
-	  >d+0f+8<r8r2r8.f+>d+0f+4^
-	  8<r8r8.f+>d+0f+8r8r4r8. [<b0>d+ d+0f+4..]5d+0f+
+	V+5 f+0b8r8r2.r8.f+  >d+0f+8<r8r2.r8.f+
+	  V+5 >d+0f+8<r8r2r8.f+>d+0f+4^
+	  8 V+5 <r8r8.f+>d+0f+8r8r4r8. [<b0>d+ d+0f+4..]5d+0f+
 C	ASSERT_STEP_A 9360, "12.II"
 	l8
 	f-0a-2.^2^  2.^2^  2.^2<
+	V-15
 	[r1r4]2
+	V+10
 	a-4.gf+4.ga4.b->c4.de-4.d
-	g4.f+g4.eq12f4q1  g4.f+g4.ed+4.e<b4.>cr2  [REWIND-1-4]3
-	e4.d+e4.c+q12d4q1  e4.d+e4.c<b4.>c<<b4.>cf+4.g
-	[ [c0>c12<]3[c0>c4<]2[c0>c8<]2c0>c4< ]4
+	g4.f+g4.eQ4f4Q8  g4.f+g4.ed+4.e<b4.>cr2  [REWIND-1-4]3
+	e4.d+e4.c+Q4d4Q8  e4.d+e4.c<b4.>c<<b4.>cf+4.g
+	V-10
+	Q5 [ [c0>c12<]3[c0>c4<]2[c0>c8<]2c0>c4< ]4 Q8
 	[r1r4]3
-	r2.a-4.g  REWIND-1-4
-	r2.>d-2
+	r2.a-4.g  REWIND-1-4 // low
+	r2.>d-2< // high
 D	ASSERT_STEP_A 13680, "12.III"
-	f8r8r1  r2.b-4.a8  g+8r8r1  r2.f+2  [REWIND-1-4]4
-	b8r8r1  r2.>e-2  c+8r8r1  r2.f+2
-	<e8r8r2f+2  e8r8r2f+2  e2.^4.r8  r2.e2  b-4r1  r1r4  [REWIND-1-4]6
-	>e8r8r2f+2  e8r8r2f+2  e2.^4.r8  r2.e2  b-4r1  r1r4<
+	Q7 f8r8r1  r2.b-4.a8  g+8r8r1  r2.f+2  [REWIND-1-4]4 // loq
+	b8r8r1  r2.>e-2  c+8r8r1  r2.f+2 // high
+	V+5 <e8r8r2f+2  V+5 e8r8r2f+2  e2.^4.r8  r2.e2  b-4r1  r1r4  [REWIND-1-4]6
+	>e8r8r2f+2  e8r8r2f+2  e2.^4.r8  r2.e2  b-4r1  r1r4< V-10
 E	ASSERT_STEP_A 16080, "12.IV"
 	l12
 	[r1r4]2
-	Q4 b8.b16ba+b>d<bgQ8d2^  8r8r1  [REWIND-1-4]2
+	Q4 b8.b16ba+b>d<bgQ7d2^  8r8r1  [REWIND-1-4]2
 	Q4 g8.g16gdgbgdr2  r1r4
 	r1r4
-	Q4 b8.b16ba+b>d<bgQ8d2  >d8.d16dc+dfd<b-f2  [REWIND-1-4]2
+	Q4 b8.b16ba+b>d<bgQ7d2  Q4>d8.d16dc+dfd<b-Q7f2  [REWIND-1-4]2
 	Q4 g8.g16gdgbgdr2  b-8.b-16b-gb->d<b-fr2
 	[r1r4]2
-	  Q4 g+8.g+16g+fg+bg+e>c2<  g+8.g+16g+fg+bg+b>e4^12<bg  Q8 e-0g4r1
+	  Q4 g+8.g+16g+fg+bg+e>c2<  g+8.g+16g+fg+bg+b>e4^12<bg  e-0g4r1
 	r1r4  Q4 d8.d16dc+dfefb-4^12fd
 	r1r4  Q4 d8.d16dc+dfefb-ab->dc+d
 F	ASSERT_STEP_A 19920, "12.V"
-	r1r4  Q4 c4c4c4c<b>cc<b>c  [ Q8 e-2c8.c16e4c4 ]2
+	r1r4  Q4 c4c4c4c<b>cc<b>c  Q7 [ e-2c8.c16e-4c4 ]2
 	e2c8.c16e4c4  f2c8.c16f4c4  f2c8.c16f4c4
 	[ c0a2c0e8.c0e16c0a4c0e4 ]2
-	c0a8r8r1  r1r4  r1r4
-	<<a1^4^  2.r2
+	Q8 c0a8r8r1  r1r4  r1r4
+	E_127,32,1.,2.,32 <<a1^4^  1r4 E127  // fadeout
 G	ASSERT_STEP_A 23280, "12.VI"
 
 
 // ---- Trumpets Low -----------------------------------------------------------
 _ 13	CH13
-	INSTRUMENTNAME "sf2_realistic" @56 o4 V100
+	TRACKNAME "Trumpets (Low)" INSTRUMENTNAME "sf2_realistic" @56 o4 V90
 A	[r1r4]16
 B	ASSERT_STEP_A 3840, "13.I"
 	l16
@@ -606,14 +611,14 @@ B	ASSERT_STEP_A 3840, "13.I"
 	<r1r4  r8.gr4..gr2  r8.gr4..gr4..g  r4..gr4..gr4>>
 C	ASSERT_STEP_A 9360, "13.II"
 	l8
-	[ [c12]3c4c4c8c8c4 ]3  [REWIND-1-4]3
-	d-2.^2^  2.^2^  2.^2<
-	[ [c0>c12<]3[c0>c4<]2[c0>c8<]2c0>c4< ]7  [r1r4]2
-	> d-2e-2d-2c8r8r2.<
-	[ [c0>c12<]3[c0>c4<]2[c0>c8<]2c0>c4< ]3
+	Q5 [ [c12]3c4c4c8c8c4 ]3  [REWIND-1-4]3
+	Q8 d-2.^2^  2.^2^  2.^2<
+	Q5 [ [c0>c12<]3[c0>c4<]2[c0>c8<]2c0>c4< ]7  [r1r4]2
+	Q8 > d-2e-2d-2c8r8r2.<
+	Q5 [ [c0>c12<]3[c0>c4<]2[c0>c8<]2c0>c4< ]3
 	  [c0>c12<]3[c0>c4<]2f4.e8r-2>d-2<
 D	ASSERT_STEP_A 13680, "13.III"
-	d+8r8r1  r2.g4.f+8  e+8r8r1  [REWIND-1-4]3
+	Q7 d+8r8r1  r2.g4.f+8  e+8r8r1  [REWIND-1-4]3
 	b8r8r1  r2.>e-2  c+8r8r1<
 	r2.f+0>f+2  <e0>e8r8r2<f+0>f+2  <e0>e8r8r2<f+0>f+2  <e0>e2.^4.r8
 	r2.<e0>e2  <b-0>b-4r1  r1r4
@@ -627,52 +632,58 @@ F	ASSERT_STEP_A 19920, "13.V"
 	[ [a-0>c4<]5 ]4
 	[ f+0>e2<f0>e8.<f0>e16[<f0>e4]2 ]2
 	<f0>e8r8r1  r1r4  r1r4
-	<<a1^4^  2.r2
+	Q8 E_127,32,1.,2.,32 <<a1^4^  1r4  E127 // fadeout
 G	ASSERT_STEP_A 23280, "13.VI"
 
 
 
 // ---- Tenor Trombones --------------------------------------------------------
 _ 14	CH14
-	INSTRUMENTNAME "sf2_realistic" @57 o3 V100
+	TRACKNAME "Tenor Trombones" INSTRUMENTNAME "sf2_realistic" @57 o4 V100
 A	[r1r4]16
 B	ASSERT_STEP_A 3840, "14.I"
 	l16
+	V+10 // solo-ish
 	d-2.^2^  2.b-2  c+0a2.^2^  2.r2
-	<a-0.>d-2.f0b-2  e0a2.a0>e2  a-0>d-2.d-0f2  c+0e2.c+0e2
+	<a-0.>d-2.f0b-2  e0a2.a0>e2  <a-0>d-2.d-0f2  c+0e2.c+0e2
+	V-10
 	c0e-1r4  [r1r4]2  r2.<a-0>f2^  8r8r1
 	r2.<a-0>f2  <b0>e-8r8r1
-	r2.<a-0>f2^  8r8r2<a-0>f2^  8r8r1  [r1r4]3  d+0f+2.^2^  2.^2<
+	r2.<a-0>f2^  8r8r2<a-0>f2^  8r8r1  [r1r4]3  d+0f+2.^2^  2.^2
 C	ASSERT_STEP_A 9360, "14.II"
 	l8
-	[ [c12]3c4c4c8c8c4 ]3
-	[ f4.ed+4.ef4.ga4.b>c4.<b ]2 [REWIND-1-4]4
+	V+10 Q5 [ [c12]3c4c4c8c8c4 ]3 V-10
+	Q8 V+10 // solo-ish
+	< [ f4.ed+4.ef4.ga4.b>c4.<b ]2 [REWIND-1-4]4
 	[ a-4.g8f+4.ga4.b->c4.de-4.d< ]2
+	V-10
 	[r1r4]3
 	f4.ed+4.ef4.ga4.b>c4.<b  [REWIND-1-4]2
 	a-4.g8f+4.ga4.b->c4.de-4.d
 	[r1r4]3
 	[r1r4]2  r2.d-2
 D	ASSERT_STEP_A 13680, "14.III"
-	<b8r8r1  r2.>e-2  c+8r8r1
+	Q8 <b8r8r1  r2.>e-2  c+8r8r1
 	r2.f+2  e8r8r2f+2  e8r8r2f+2  e8r8r1  r2.e2
 	e-4r1  r1r4
 E	ASSERT_STEP_A 16080, "14.IV"
 	l12
 	[r1r4]6
-	d8.d16dcdfd<b-f2>  [r1r4]5
-	[ r1r4  d0f2.^4.r8 ]2
+	Q5 d8.d16dcdfd<b-f2>  [r1r4]5
+	Q8 [ r1r4  d0f2.^4.r8 ]2
 F	ASSERT_STEP_A 19920, "14.V"
 	[r1r4]7
-	[ <c0>c8.<0>c16<a-0>a-8r8r2. ]2
-	c0a8r8r1  r1r4  r1r4
-	<c0e1^4^  2.r2
+	V+10 Q5
+	[ <c0>c8.<0>c16<a-0>a-4r2. ]2
+	c0a4r1  r1r4  r1r4
+	Q8 E_127,32,1.,2.,32 <c0e1^4^  1r4  E127 // fadeout
+	V-10
 G	ASSERT_STEP_A 23280, "14.VI"
 
 
 // ---- Bass Trombone ----------------------------------------------------------
 _ 15	CH15
-	INSTRUMENTNAME "sf2_realistic" @57 o3 V100
+	TRACKNAME "Bass Trombones" INSTRUMENTNAME "sf2_realistic" @57 o3 V95
 A	[r1r4]16
 B	ASSERT_STEP_A 3840, "15.I"
 	l16
@@ -682,12 +693,12 @@ B	ASSERT_STEP_A 3840, "15.I"
 	b2.^2^  2.^2
 C	ASSERT_STEP_A 9360, "15.II"
 	l8
-	[ [c12]3c4c4c8c8c4 ]3
-	[ d-4.c<b4.>cd4.e-f4.ga-4.g ]2  [r1r4]3
+	V+10 Q5 [ [c12]3c4c4c8c8c4 ]3 V-10
+	Q8 [ d-4.c<b4.>cd4.e-f4.ga-4.g ]2  [r1r4]3
 	d-4.c<b4.>cd4.e-f4.ga-4.g  [r1r4]3
 	[r1r4]2  r2.f2
 D	ASSERT_STEP_A 13680, "15.III"
-	g8r8r1  r2.g2  a8r8r1  r2.b-2>
+	Q8 g8r8r1  r2.g2  a8r8r1  r2.b-2>
 	c8r8r2<b-2  >c8<r8r2b-2  >c8r8r1  r2.c2
 	<g-4r1  r1r4
 E	ASSERT_STEP_A 16080, "15.IV"
@@ -696,13 +707,13 @@ E	ASSERT_STEP_A 16080, "15.IV"
 F	ASSERT_STEP_A 19920, "15.V"
 	[r1r4]9
 	a-2.^2^  2.^2  r1r4
-	<f+1^4^  2.r2
+	E_127,32,1.,2.,32 <f+1^4^  1r4  E127 // fadeout
 G	ASSERT_STEP_A 23280, "15.VI"
 
 
 // ---- Tenor Tuba -------------------------------------------------------------
 _ 16	CH16 K-2
-	INSTRUMENTNAME "sf2_realistic" @58 o4 V100
+	TRACKNAME "Tenor Tuba" INSTRUMENTNAME "sf2_realistic" @58 o4 V80
 A	[r1r4]16
 B	ASSERT_STEP_A 3840, "16.I"
 	l16
@@ -715,7 +726,7 @@ C	ASSERT_STEP_A 9360, "16.II"
 	l8
 	[ [d12]3d4d4d8d8d4 ]3
 	<b-4.ag+4.ab-4.>cd4.ef4.e  [r1r4]2
-	a4.g+a4.f+q12g4q1  a4.g+a4.f+f4.f+c+4.d<g+4.a  [r1r4]8
+	a4.g+a4.f+Q4g4Q8  a4.g+a4.f+f4.f+c+4.d<g+4.a  [r1r4]8
 D	ASSERT_STEP_A 13680, "16.III"
 	[r1r4]10
 E	ASSERT_STEP_A 16080, "16.IV"
@@ -734,7 +745,7 @@ G	ASSERT_STEP_A 23280, "16.VI"
 
 // ---- Bass Tuba --------------------------------------------------------------
 _ 17	CH17
-	INSTRUMENTNAME "sf2_realistic" @58 o3 V100
+	TRACKNAME "Bass Tuba" INSTRUMENTNAME "sf2_realistic" @58 o3 V80
 A	[r1r4]16
 B	ASSERT_STEP_A 3840, "17.I"
 	l16
@@ -758,8 +769,9 @@ G	ASSERT_STEP_A 23280, "17.VI"
 
 // ---- Timpani 1 --------------------------------------------------------------
 _ 18	CH18
-	INSTRUMENTNAME "sf2_realistic" @47 o3 V100 v80
-A	(48 [ [g12]3g4g4g8g8g4 )3 ]16
+	// FIXME: the contents disappeared...
+	TRACKNAME "Timpani 1" INSTRUMENTNAME "sf2_realistic" @47 o3 V80 v80
+A	V-48 [ [g12]3g4g4g8g8g4 V+3 ]16
 B	ASSERT_STEP_A 3840, "18.I"
 	[ [g12]3g4g4g8g8g4 ]23
 C	ASSERT_STEP_A 9360, "18.II"
@@ -778,7 +790,7 @@ G	ASSERT_STEP_A 23280, "18.VI"
 
 // ---- Timpani 2 --------------------------------------------------------------
 _ 19	CH19
-	INSTRUMENTNAME "sf2_realistic" @47 o3 V100 v80
+	TRACKNAME "Timpani 2" INSTRUMENTNAME "sf2_realistic" @47 o3 V80 v80
 A	[r1r4]16
 B	ASSERT_STEP_A 3840, "19.I"
 	l16
@@ -801,7 +813,7 @@ G	ASSERT_STEP_A 23280, "19.VI"
 
 // ---- Side Drum --------------------------------------------------------------
 _ 20	CH9
-	INSTRUMENTNAME "sf2_realistic_drum_orchestral" o2 V100 v100
+	TRACKNAME "Side Drum" INSTRUMENTNAME "sf2_realistic_drum_orchestral" o2 V80 v100
 	[r1r4]16
 B	ASSERT_STEP_A 3840, "20.I"
 	[r1r4]23
@@ -824,7 +836,7 @@ G	ASSERT_STEP_A 23280, "20.VI"
 
 // ---- Cymbals ----------------------------------------------------------------
 _ 21	CH9
-	INSTRUMENTNAME "sf2_realistic_drum_orchestral" o4 V100 v100
+	TRACKNAME "Cymbals" INSTRUMENTNAME "sf2_realistic_drum_orchestral" o4 V80 v100
 	[r1r4]16
 B	ASSERT_STEP_A 3840, "21.I"
 	[r1r4]23
@@ -842,7 +854,7 @@ G	ASSERT_STEP_A 23280, "21.VI"
 
 // ---- Bass Drum --------------------------------------------------------------
 _ 22	CH9
-	INSTRUMENTNAME "sf2_realistic_drum_orchestral" o2 V100 v100
+	TRACKNAME "Bass Drum" INSTRUMENTNAME "sf2_realistic_drum_orchestral" o2 V100 v100
 	[r1r4]16
 B	ASSERT_STEP_A 3840, "22.I"
 	[r1r4]23
@@ -861,7 +873,7 @@ G	ASSERT_STEP_A 23280, "22.VI"
 
 // ---- Gong -------------------------------------------------------------------
 _ 23	CH9
-	INSTRUMENTNAME "sf2_realistic_drum_ethnic" o3 V60 v60
+	TRACKNAME "Gong" INSTRUMENTNAME "sf2_realistic_drum_ethnic" o3 V60 v60
 	[a2.a2]16
 B	ASSERT_STEP_A 3840, "23.I"
 	[a2.a2]23
@@ -881,7 +893,7 @@ G	ASSERT_STEP_A 23280, "23.VI"
 
 // ---- Harp I -----------------------------------------------------------------
 _ 24	CH24
-	INSTRUMENTNAME "sf2_realistic" @46 o5 V100
+	TRACKNAME "Harp I" INSTRUMENTNAME "sf2_realistic" @46 o5 V80
 A	[ g12<g12>g12<g4>g4<g8>g8<g4> ]16
 B	ASSERT_STEP_A 3840, "24.I"
 	[ g12<g12>g12<g4>g4<g8>g8<g4> ]12  g4r1  r1r4
@@ -899,7 +911,7 @@ G	ASSERT_STEP_A 23280, "24.VI"
 
 // ---- Harp II ----------------------------------------------------------------
 _ 25	CH25
-	INSTRUMENTNAME "sf2_realistic" @46 o4 V90
+	TRACKNAME "Harp II" INSTRUMENTNAME "sf2_realistic" @46 o4 V90
 A	[ g12>g12<g12>g4<g4>g8<g8>g4< ]16
 B	ASSERT_STEP_A 3840, "25.I"
 	[ g12>g12<g12>g4<g4>g8<g8>g4< ]12  g4r1  r1r4
@@ -917,7 +929,7 @@ G	ASSERT_STEP_A 23280, "25.VI"
 
 // ---- Organ ------------------------------------------------------------------
 _ 26	CH26
-	INSTRUMENTNAME "sf2_realistic" @16 o4 V80
+	TRACKNAME "Organ" INSTRUMENTNAME "sf2_realistic" @16 o4 V60
 A	[r1r4]16
 B	ASSERT_STEP_A 3840, "26.I"
 	[r1r4]23
@@ -961,7 +973,7 @@ G	ASSERT_STEP_A 23280, "26.VI"
 
 // ---- 1st. Violin ------------------------------------------------------------
 _ 27	CH27
-	INSTRUMENTNAME "sf2_realistic" @40 o4 V110
+	TRACKNAME "1st. Violin" INSTRUMENTNAME "sf2_realistic" @40 o4 V110 E127
 A	(48 Q4 [ [g12]3g4g4g8g8g4 )3]16
 B	ASSERT_STEP_A 3840, "27.I"
 	[ [g12]3g4g4g8g8g4 ]8
@@ -974,7 +986,7 @@ C	ASSERT_STEP_A 9360, "27.II"
 	V-10
 	[ [c0>c12<]3[c0>c4<]2[c0>c8<]2c0>c4< ]7
 	Q8 > V+15 [ d-2e-2d-2crr2. ]2 < V-15
-	g4.f+g4.eq12f4q1  a4.g+a4.f+q12g4q1
+	g4.f+g4.eQ4f4Q8  a4.g+a4.f+Q4g4Q8
 	>d-4.cd-4.<b>c4.<ab-4.ga-4.g
 D	ASSERT_STEP_A 13680, "27.III"
 	f+4.ga-4.b->c4.de-4.d<b-4.a	  g+4.ab-4.>cd4.ef4.ef+2
@@ -994,14 +1006,14 @@ F	ASSERT_STEP_A 19920, "27.V"
 	ref+g+ a<b+>c+d+ e<g+ab b+ef+g+ a<b+>c+d+
 	  cea>c< f+g+a>c+ cea>c< f+g+a>c+ cef+g+
 	Q4 a8r8r1<<<
-	Q8 a1^4^  2.r2
+	E_127,32,1.,2.,32 Q8 a1^4^  1r4  E127 // fadeout
 G	ASSERT_STEP_A 23280, "27.VI"
 
 
 
 // ---- 2nd. Violin ------------------------------------------------------------
 _ 28	CH28
-	INSTRUMENTNAME "sf2_realistic" @40 o4 V100
+	TRACKNAME "2nd Violins" INSTRUMENTNAME "sf2_realistic" @40 o4 V100 E127
 A	(48 Q4 [ [g12]3g4g4g8g8g4 )3]16
 B	ASSERT_STEP_A 3840, "28.I"
 	[r1r4]8
@@ -1012,7 +1024,7 @@ C	ASSERT_STEP_A 9360, "28.II"
 	V+10 [ [c0>c12<]3[c0>c4<]2[c0>c8<]2c0>c4< ]3
 	V-10 [ [c0>c12<]3[c0>c4<]2[c0>c8<]2c0>c4< ]7
 	Q8 d-2e-2d-2crr2.  <f4.ed+4.ef4.ga4.b>c4.<b>
-	e4.d+e4.c+q12d4q1  f+4.e+f+4.d+q12e4q1
+	e4.d+e4.c+Q4d4Q8  f+4.e+f+4.d+Q4e4Q8
 	b-4.ab-4.g+a4.f+g4.e>d-2<
 D	ASSERT_STEP_A 13680, "28.III"
 	brr4<a-4.b->c4.de-4.g>e-2  c+rr4<<b-4.>cd4.ef4.a>d-4.c
@@ -1034,13 +1046,13 @@ F	ASSERT_STEP_A 19920, "28.V"
 	rb+>d+e f+<f+g+a b+ef+g+ a<b+>d+e f+<bab>
 	  cea>c< f+g+a>c+< b+<b+>d+e f>c<b>g+ f+g+ab>
 	Q4 c8r8r1<<<
-	Q8 a1^4^  2.r2
+	E_127,32,1.,2.,32 Q8 a1^4^  1r4  E127 // fadeout
 G	ASSERT_STEP_A 23280, "28.VI"
 
 
 // ---- Violas -----------------------------------------------------------------
 _ 29	CH29
-	INSTRUMENTNAME "sf2_realistic" @41 o4 V100
+	TRACKNAME "Violas" INSTRUMENTNAME "sf2_realistic" @41 o4 V100 E127
 A	(48 Q4 [ [g12]3g4g4g8g8g4 )3 ]16
 B	ASSERT_STEP_A 3840, "29.I"
 	[r1r4]8
@@ -1050,7 +1062,7 @@ C	ASSERT_STEP_A 9360, "29.II"
 	V+10 [ [c0>c12<]3[c0>c4<]2[c0>c8<]2c0>c4< ]3
 	V-10 [ [c0>c12<]3[c0>c4<]2[c0>c8<]2c0>c4< ]7
 	Q8 a-4.gf+4.ga-4.b->c4.de-4.d  <a-4.gf+4.ga4.b->c4.de-4.d
-	g4.f+g4.eq12f4q1  g4.f+g4.dq12e4q1
+	g4.f+g4.eQ4f4Q8  g4.f+g4.dQ4e4Q8
 	>d-4.cd-4.<b>c4.<ab-4.gf4.e
 D	ASSERT_STEP_A 13680, "29.III"
 	d+4.ef4.ga4.b>c4.<bg4.f+  e+4.f+g4.ab4.>c+d4.c+<b-4.a
@@ -1070,13 +1082,13 @@ F	ASSERT_STEP_A 19920, "29.V"
 	r>ed+c+ <b+ag+f+ egf+f eed+c+ <b+f+ab
 	  r<b+>d+e f+b+a+>f+ e+<a>c+d eb+a+g+ f+g+ab
 	Q4 >c8r8r1<<<
-	Q8 c1^4^  2.r2
+	E_127,32,1.,2.,32 Q8 c1^4^  1r4  E127 // fadeout
 G	ASSERT_STEP_A 23280, "29.VI"
 
 
 // ---- Violoncellos -----------------------------------------------------------
 _ 30	CH30
-	INSTRUMENTNAME "sf2_realistic" @42 o3 V100
+	TRACKNAME "Violoncellos" INSTRUMENTNAME "sf2_realistic" @42 o3 V100 E127
 A	(48 Q4 [ [g12]3g4g4g8g8g4 )3 ]16
 B	ASSERT_STEP_A 3840, "30.I"
 	Q4 [ [g12]3g4g4g8g8g4 ]23
@@ -1085,7 +1097,7 @@ C	ASSERT_STEP_A 9360, "30.II"
 	V+10 [ [c0>c12<]3[c0>c4<]2[c0>c8<]2c0>c4< ]3
 	V-10 [ [c0>c12<]3[c0>c4<]2[c0>c8<]2c0>c4< ]7
 	Q8 d-4.c<b4.>cd-4.ef4.ga-4.g  d-4.c<b4.>cd-4.e-f4.ga-4.g>
-	c4.<b>c4.<aq12b4q1  >d4.c+d4.<b>q12c4q1
+	c4.<b>c4.<aQ8b4Q8  >d4.c+d4.<b>Q4c4Q8
 	g-4.fg-4.ef4.de-4.cd-4.c
 D	ASSERT_STEP_A 13680, "30.III"
 	<b-4.>cd-4.e-f4.ga-4.ge-4.d  c+4.de-4.fg4.ab-4.ar2<
@@ -1107,13 +1119,13 @@ F	ASSERT_STEP_A 19920, "30.V"
 	Q7 red+c+< b+ag+f+ eg+f+f eed+c+ <b+ag+f+
 	  r<b+>d+e f+>c+<b+>g+ f+<b>d+e f+>c+<b+g+ f+g+ab
 	Q4 >c8r8r1<<<
-	Q8 f1^4^  2.r2
+	E_127,32,1.,2.,32 Q8 f1^4^  1r4  E127 // fadeout
 G	ASSERT_STEP_A 23280, "30.VI"
 
 
 // ---- Doublebasses -----------------------------------------------------------
 _ 31	CH31
-	INSTRUMENTNAME "sf2_realistic" @43 o3 V100
+	TRACKNAME "Doublebasses" INSTRUMENTNAME "sf2_realistic" @43 o3 V100 E127
 A	(48 Q6 [ [g12]3g4g4g8g8g4 )3 ]16
 B	ASSERT_STEP_A 3840, "31.I"
 	Q6 [ [g12]3g4g4g8g8g4 ]23
@@ -1137,5 +1149,5 @@ F	ASSERT_STEP_A 19920, "30.V"
 	[r1r4]2
 	>
 	g+8r8r2 r>ed+c+<b+ag+f+  r<b+>d+ef+r8.r2.  r1r4
-	<g+1^4^  2.r2
+	E_127,32,1.,2.,32 <g+1^4^  1r4 E127	// fadeout
 G	ASSERT_STEP_A 23280, "31.VI"
