@@ -22,7 +22,7 @@ launch `augene-editor` application. It is a cross-platform Kotlin/JVM Compose fo
 
 ![augene editor: configuration tab](docs/images/augene-config.png)
 
-By default those lists are actually empty. It's a screenshot of the app that has loaded sample data that makes use of Collective (bundled with Tracktion [Waveform](https://www.tracktion.com/products/waveform)).
+By default those lists are actually empty. It's a screenshot of the app that has loaded sample data that makes use of VST3 plugins.
 
 To use this app, there are couple of things to do - Configure the app. Namely paths to two external tools are needed:
 
@@ -54,7 +54,7 @@ make
 
 ### Enabling VST2
 
-If you have VST2 SDK and would like to add support for VST2, open AugenePlayer.jucer in Projucer (and probably AudioPluginHost.jucer if you once tried to build it from build.sh) on Projucer and select `juce_audio_processors` module and enable VST(2) there, then save project.
+It is not confirmed in augene-ng era, but if you have VST2 SDK and would like to add support for VST2, open AugenePlayer.jucer in Projucer (and probably AudioPluginHost.jucer if you once tried to build it from build.sh) on Projucer and select `juce_audio_processors` module and enable VST(2) there, then save project.
 
 ## kotractive, augene, and augene-editor
 
