@@ -494,6 +494,7 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
     private fun populateTrackName(track: Midi2Track): String? {
         val tnEv = track.messages.firstOrNull { m -> Midi2Music.isMetaEventMessageStarter(m) && m.metaEventType == MidiMetaType.TRACK_NAME }
         var trackName = if (tnEv == null) null else UmpRetriever.getSysex8Data(track.messages.drop(track.messages.indexOf(tnEv)).iterator())
+                .drop(8) // skip: manufacturer ID, device ID, sub ID1, sub ID2, FFh, FFh, FFh, and message type
                 .toByteArray().decodeToString()
         if (trackName == null) {
             var firstProgramChangeValue = -1
