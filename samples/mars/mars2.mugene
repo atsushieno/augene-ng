@@ -15,46 +15,50 @@
 // ---- Tempo Sequence ---------------------------------------------------------
 _ 0	BEAT5,2
 G	MARKER "VI"
-	t120
+	t125
 	[r1r4 r1r4 t+1]8
 H	MARKER "VII"
 	ASSERT_STEP_B 3840, "0.VII"
-	t130
-	[r1r4]8
-	t133
+	t135
+	[r1r4]4
+	t137
+	[r1r4]4
+	t140
 	[r1r4]3
 	r1[r32 t-8]8
 I	MARKER "VII-middle"
 	ASSERT_STEP_B 6720, "0.VII-middle"
 	BEAT5,4
-	t145
+	t147
 	[r1r4]23
 	r2[r8 t-5]6
 J	MARKER "VIII"
 	ASSERT_STEP_B 12480, "0.VIII"
-	t140
+	t145
 	[r1r4]12
 K	MARKER "IX"
 	ASSERT_STEP_B 15360, "0.IX"
 	[r1r4]13
 L	MARKER "X"
 	ASSERT_STEP_B 18480, "0.X"
-	[r1r4]7  t_140,60,2,2^8,16 r1r4
+	[r1r4]7  r1 t_145,70,0,8.. r4
 M	MARKER "X-middle"
 	BEAT5,2
 	ASSERT_STEP_B 20400, "0.X-middle"
-	t140
-	[r1r4]10
+	t145
+	[r1r4]2
+	[ r1r4  r2..[r32 t-8]8r8 t145 ]2
+	[r1r4]4
 N	MARKER "XI"
+	t150
 	BEAT3,4
 	ASSERT_STEP_B 22800, "0.XI"
-	t150
 	[r2. t+2]3  [r2.]2
 	t135
 	r2.
 O	MARKER "XII"
 	ASSERT_STEP_B 23664, "0.XII"
-	t100
+	t110
 	[r2.]4
 	t80 r2. t70 r2. t50 r2t30r4
 	t30
@@ -702,23 +706,24 @@ P	ASSERT_STEP_B 24816, "15.End"
 
 // ---- Tenor Tuba -------------------------------------------------------------
 _ 16	CH16 K-2
-	INSTRUMENTNAME "sf2_realistic" @58 o4 V80
+	INSTRUMENTNAME "sf2_realistic" @58 o4 V100
 G	[r1r4 r1r4]8
 H	ASSERT_STEP_B 3840, "16.VII"
 	[r1r4]12
 I	ASSERT_STEP_B 6720, "16.VII-middle"
-	[ [g12]3g4g4g8g8g4 ]3
-	<g2.g2^  2.>d2  d-2.^2^  2.^2^  4r1
-	<g2.^2^  2.d2  d-2.f2  e2.a2  a2.>f2  e2.a2
-	[ [a12]3a4a4a8a8a4 ]6
-	f2.>d2  c2.g2  f2.>d2  c2.<e-2
+	Q6 > [ [a12]3a4a4a8a8a4 ]3
+	Q8 <a2.a2^  2.>e2  e-2.^2^  2.^2^  4r1
+	<a2.^2^  2.e2  e-2.f2  e2.a2  a2.>f2  e2.a2<
+	Q6 [ [a12]3a4a4a8a8a4 ]6
+	Q8 f2.>d2  c2.g2  f2.>d2  c2.<e-2
 J	ASSERT_STEP_B 12480, "16.VIII"
+	Q6
 	c+4r1  r1r4  <a4a4a4[a12g+12a12]2  >c2<a8.a16>c4<a4  a8.a16>c+2<a8.a16>c4<
 	  a8.a16>d2<a8.a16>c4<  a8.a16>d-2<a8.a16>d-4<
 	  [ a8.a16>e-2<a8.a16>e-4< ]2
 	d8r8r1  r1r4  a8.a16>e-2<a8.a16>e-4
 K	ASSERT_STEP_B 15360, "16.IX"
-	[r1r4]12  r2.b-2
+	Q8 [r1r4]12  r2.b-2
 L	ASSERT_STEP_B 18480, "16.X"
 	a-8r8r1  r2.>c2<  b-8r8r1  r2.<g2  a8r8r2g2  a8r8r2g2  a8r8r1  r2.>>c2<
 M	ASSERT_STEP_B 20400, "16.X-middle"
@@ -726,20 +731,21 @@ M	ASSERT_STEP_B 20400, "16.X-middle"
 N	ASSERT_STEP_B 22800, "16.XI"
 	[r2.]6
 O	ASSERT_STEP_B 23664, "16.XII"
-	[a12]3a4r4  r4a8a8a4  r4a8a8r4  [a12]3a4r4  r4a4a4  r4r4a4  a4a4r4<
+	Q6 [a12]3a4r4  r4a8a8a4  r4a8a8r4  [a12]3a4r4
+	Q8 r4a4a4  r4r4a4  a4a4r4<
 	d2.
 P	ASSERT_STEP_B 24816, "16.End"
 
 
 // ---- Bass Tuba --------------------------------------------------------------
 _ 17	CH17
-	INSTRUMENTNAME "sf2_realistic" @58 o3 V80
+	INSTRUMENTNAME "sf2_realistic" @58 o3 V100
 G	[r1r4 r1r4]8
 H	ASSERT_STEP_B 3840, "17.VII"
 	[r1r4]12
 I	ASSERT_STEP_B 6720, "17.VII-middle"
-	[ [g12]3g4g4g8g8g4 ]3
-	<g2.g2^  2.>d2  d-2.^2^  2.^2^  4r1
+	Q6 [ [g12]3g4g4g8g8g4 ]3
+	Q7 <g2.g2^  2.>d2  d-2.^2^  2.^2^  4r1
 	<g2.^2^  2.>d2  d-2.a-2  g2.>d2  d-2.a-2  g2.r2
 	[r1r4]2
 	<d-2.b-2  a2.>e2  c+2.r2
@@ -756,7 +762,8 @@ M	ASSERT_STEP_B 20400, "17.X-middle"
 N	ASSERT_STEP_B 22800, "17.XI"
 	g8r8r2  [r2.]5
 O	ASSERT_STEP_B 23664, "17.XII"
-	[c12]3c4r4  [r4c8c8c4]2  [c12]3c4r4  r4c4c4  r4r4c4  c4c4r4
+	Q6 [c12]3c4r4  [r4c8c8c4]2  [c12]3c4r4
+	Q8 r4c4c4  r4r4c4  c4c4r4
 	c2.
 P	ASSERT_STEP_B 24816, "17.End"
 
