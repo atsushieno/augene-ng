@@ -45,6 +45,7 @@ jobs:
         path: |
           kotractive-project/kotractive/build/libs/*.jar
           augene-project/augene/build/outputs/aar/*.aar
+          augene-project/augene-console/build/libs/*.jar
           augene-editor-project/desktop/build/compose/binaries/main/deb/*.msi
           augene-editor-project/desktop/build/compose/binaries/main/deb/*.dmg
           augene-editor-project/desktop/build/compose/binaries/main/deb/*.deb
