@@ -73,7 +73,7 @@ P	MARKER "End"
 
 // ---- Piccolos ---------------------------------------------------------------
 _ 1	CH1
-	INSTRUMENTNAME "sf2_realistic" @72 o6 V90
+	INSTRUMENTNAME "sf2_realistic;simple_reverb" @72 o6 V90
 	l8
 G	[r1r4]16
 H	ASSERT_STEP_B 3840, "1.VII"
@@ -104,7 +104,7 @@ P	ASSERT_STEP_B 24816, "1.End"
 
 // ---- Flutes -----------------------------------------------------------------
 _ 2	CH2
-	INSTRUMENTNAME "sf2_realistic" @73 o6 V90
+	INSTRUMENTNAME "sf2_realistic;simple_reverb" @73 o6 V90
 	l8
 G	[r1r4]16
 H	ASSERT_STEP_B 3840, "2.VII"
@@ -141,7 +141,7 @@ P	ASSERT_STEP_B 24816, "2.End"
 
 // ---- Oboes ------------------------------------------------------------------
 _ 3	CH3
-	INSTRUMENTNAME "sf2_realistic" @68 o4 V90
+	INSTRUMENTNAME "sf2_realistic;simple_reverb" @68 o4 V90
 G	[r1r4 r1r4]4
 	l8 >
 	[ d4.c+<b+4.>c+d4.d+ :1 e4.e+f+4.e+ :2 e4.ga4.g+ :3 f+4.e+e4.e+ ]3
@@ -190,7 +190,7 @@ P	ASSERT_STEP_B 24816, "3.End"
 
 // ---- English Horn -----------------------------------------------------------
 _ 4	CH4
-	INSTRUMENTNAME "sf2_realistic" @69 o4 V90
+	INSTRUMENTNAME "sf2_realistic;simple_reverb" @69 o4 V90
 G	[r1r4 r1r4]4
 	l8
 	[ a4.g+g4.g+a4.a+ :1 b4.>cd-4.c< :2 b4.>de4.d+< :3 >d-4.c<b4.>c ]3
@@ -228,7 +228,7 @@ P	ASSERT_STEP_B 24816, "4.End"
 
 // ---- Bass Oboe --------------------------------------------------------------
 _ 5	CH5
-	INSTRUMENTNAME "sf2_realistic" @68 o4 V90
+	INSTRUMENTNAME "sf2_realistic;simple_reverb" @68 o4 V90
 G	[r1r4 r1r4]4
 	l8
 	[ d4.c+<b+4.>c+d4.d+ :1 e4.e+f+4.e+ :2 e4.ga4.g+ :3 f+4.e+e4.e+ ]3
@@ -267,7 +267,7 @@ P	ASSERT_STEP_B 24816, "5.End"
 
 // ---- Clarinets --------------------------------------------------------------
 _ 6	CH6 K-2
-	INSTRUMENTNAME "sf2_realistic" @71 o4 V85
+	INSTRUMENTNAME "sf2_realistic;simple_reverb" @71 o4 V85
 	l8
 G	[r1r4 r1r4]8
 H	ASSERT_STEP_B 3840, "6.VII"
@@ -330,7 +330,7 @@ P	ASSERT_STEP_B 24816, "6.End"
 
 // ---- Bass Clarinets ---------------------------------------------------------
 _ 7	CH7 K-2
-	INSTRUMENTNAME "sf2_realistic" @71 o4 V90
+	INSTRUMENTNAME "sf2_realistic;simple_reverb" @71 o4 V90
 G	[r1r4 r1r4]8
 H	ASSERT_STEP_B 3840, "7.VII"
 	l8
@@ -365,7 +365,7 @@ P	ASSERT_STEP_B 24816, "7.End"
 
 // ---- Bassoons ---------------------------------------------------------------
 _ 8 CH8
-	INSTRUMENTNAME "sf2_realistic" @70 o2 V90
+	INSTRUMENTNAME "sf2_realistic;simple_reverb" @70 o2 V90
 G	l8
 	[a4.g+g4.g+a4.b :1 b+4.>c+d4.c+< :2 >c+4.d+e+4.e< :3 >d4.c+<b+4.>c+ ]3
 	  e+4.ed+4.ee+4.f+a4.g+g4.g+
@@ -418,7 +418,7 @@ P	ASSERT_STEP_B 24816, "0.End"
 
 // ---- Double Bassoons --------------------------------------------------------
 _ 9	CH9
-	INSTRUMENTNAME "sf2_realistic" @70 o2 V90
+	INSTRUMENTNAME "sf2_realistic;simple_reverb" @70 o2 V90
 G	l8 // copy of track 8
 	[a4.g+g4.g+a4.b :1 b+4.>c+d4.c+< :2 >c+4.d+e+4.e< :3 >d4.c+<b+4.>c+ ]3
 	e+4.ed+4.ee+4.f+a4.g+g4.g+
@@ -455,7 +455,7 @@ P	ASSERT_STEP_B 24816, "9.End"
 
 // ---- Horns High -------------------------------------------------------------
 _ 10	CH10 K-7
-	INSTRUMENTNAME "sf2_realistic" @60 o4 V80
+	INSTRUMENTNAME "sf2_realistic;simple_reverb" @60 o4 V80
 G	[r1r4 r1r4]4
 	e-0>e-1.^1^  1.^1^  1.^1^  1.^1<
 H	ASSERT_STEP_B 3840, "10.VII"
@@ -515,7 +515,7 @@ P	ASSERT_STEP_B 24816, "10.End"
 
 // ---- Horns Low --------------------------------------------------------------
 _ 11	CH11 K-7
-	INSTRUMENTNAME "sf2_realistic" @60 o3 V80
+	INSTRUMENTNAME "sf2_realistic;simple_reverb" @60 o3 V80
 G	[r1r4 r1r4]4 // copy of track 10
 	e-0>e-1.^1^  1.^1^  1.^1^  1.^1<
 H	ASSERT_STEP_B 3840, "11.VII" // copy of track 10
@@ -574,7 +574,7 @@ P	ASSERT_STEP_B 24816, "11.End"
 
 // ---- Trumpets High ----------------------------------------------------------
 _ 12	CH12
-	INSTRUMENTNAME "sf2_realistic" @56 o5 V100
+	INSTRUMENTNAME "sf2_realistic;simple_reverb" @56 o5 V100
 	l8
 G	[r1r4 r1r4]4
 	Q5 [ [g+12]3g+4r2r2g+8g+8g+4r2 ]4
@@ -616,7 +616,7 @@ P	ASSERT_STEP_B 24816, "12.End"
 
 // ---- Trumpets Low -----------------------------------------------------------
 _ 13	CH13
-	INSTRUMENTNAME "sf2_realistic" @56 o5 V90
+	INSTRUMENTNAME "sf2_realistic;simple_reverb" @56 o5 V90
 G	[r1r4 r1r4]8
 H	ASSERT_STEP_B 3840, "13.VII"
 	l8
@@ -650,7 +650,7 @@ P	ASSERT_STEP_B 24816, "13.End"
 
 // ---- Tenor Trombones --------------------------------------------------------
 _ 14	CH14
-	INSTRUMENTNAME "sf2_realistic" @57 o4 V100
+	INSTRUMENTNAME "sf2_realistic;simple_reverb" @57 o4 V100
 G	[r1r4 r1r4]4
 	l8
 	Q6 [ [f+12]3f+4r2r2f+8f+8f+4r2 ]4
@@ -686,7 +686,7 @@ P	ASSERT_STEP_B 24816, "14.End"
 
 // ---- Bass Trombone ----------------------------------------------------------
 _ 15	CH15
-	INSTRUMENTNAME "sf2_realistic" @57 o3 V95
+	INSTRUMENTNAME "sf2_realistic;simple_reverb" @57 o3 V95
 G	[r1r4 r1r4]8
 H	ASSERT_STEP_B 3840, "15.VII"
 	l8
@@ -718,7 +718,7 @@ P	ASSERT_STEP_B 24816, "15.End"
 
 // ---- Tenor Tuba -------------------------------------------------------------
 _ 16	CH16 K-2
-	INSTRUMENTNAME "sf2_realistic" @58 o4 V100
+	INSTRUMENTNAME "sf2_realistic;simple_reverb" @58 o4 V100
 G	[r1r4 r1r4]8
 H	ASSERT_STEP_B 3840, "16.VII"
 	[r1r4]12
@@ -751,7 +751,7 @@ P	ASSERT_STEP_B 24816, "16.End"
 
 // ---- Bass Tuba --------------------------------------------------------------
 _ 17	CH17
-	INSTRUMENTNAME "sf2_realistic" @58 o3 V100
+	INSTRUMENTNAME "sf2_realistic;simple_reverb" @58 o3 V100
 G	[r1r4 r1r4]8
 H	ASSERT_STEP_B 3840, "17.VII"
 	[r1r4]12
@@ -782,7 +782,7 @@ P	ASSERT_STEP_B 24816, "17.End"
 
 // ---- Timpani 1 --------------------------------------------------------------
 _ 18	CH18
-	INSTRUMENTNAME "sf2_realistic" @47 o3 V80 v110
+	INSTRUMENTNAME "sf2_realistic;simple_reverb" @47 o3 V80 v110
 G	[r1r4r1r4]4
 	// FIXME: make sure that they are either single note or roll.
 	[ g1.g1 ]4
@@ -808,13 +808,13 @@ P	ASSERT_STEP_B 24816, "18.End"
 
 // ---- Timpani 2 --------------------------------------------------------------
 //_ 19	CH19
-//	INSTRUMENTNAME "sf2_realistic" @47 o3 V80 v80
+//	INSTRUMENTNAME "sf2_realistic;simple_reverb" @47 o3 V80 v80
 // ... no content in the latter half ...
 
 
 // ---- Side Drum --------------------------------------------------------------
 _ 20	CH9
-	INSTRUMENTNAME "sf2_realistic_drum_orchestral" o2 V80 v100
+	INSTRUMENTNAME "sf2_realistic_drum_orchestral;simple_reverb" o2 V80 v100
 G	[ [c12]3c4r2 r2 c8c8c4r2 ]8
 H	ASSERT_STEP_B 3840, "20.VII"
 	[ d1.d1 ]5  r1r1r4r4
@@ -838,19 +838,19 @@ P	ASSERT_STEP_B 24816, "20.End"
 
 // ---- Cymbals ----------------------------------------------------------------
 //_ 21	CH9
-//	INSTRUMENTNAME "sf2_realistic_drum_orchestral" o4 V80 v100
+//	INSTRUMENTNAME "sf2_realistic_drum_orchestral;simple_reverb" o4 V80 v100
 // ... no content in the latter half ...
 
 
 // ---- Bass Drum --------------------------------------------------------------
 //_ 22	CH9
-//	INSTRUMENTNAME "sf2_realistic_drum_orchestral" o2 V80 v100
+//	INSTRUMENTNAME "sf2_realistic_drum_orchestral;simple_reverb" o2 V80 v100
 // ... no content in the latter half ...
 
 
 // ---- Gong -------------------------------------------------------------------
 _ 23	CH9
-	INSTRUMENTNAME "sf2_realistic_drum_ethnic" o3 V60 v60
+	INSTRUMENTNAME "sf2_realistic_drum_ethnic;simple_reverb" o3 V60 v60
 G	[r1r4]16
 H	ASSERT_STEP_B 3840, "23.VII"
 	[r1r4]12
@@ -874,18 +874,18 @@ P	ASSERT_STEP_B 24816, "23.End"
 
 // ---- Harp I -----------------------------------------------------------------
 //_ 24	CH24
-//	INSTRUMENTNAME "sf2_realistic" @46 o5 V80
+//	INSTRUMENTNAME "sf2_realistic;simple_reverb" @46 o5 V80
 // ... no content in the latter half ...
 
 // ---- Harp II ----------------------------------------------------------------
 //_ 25	CH25
-//	INSTRUMENTNAME "sf2_realistic" @46 o4 V70
+//	INSTRUMENTNAME "sf2_realistic;simple_reverb" @46 o4 V70
 // ... no content in the latter half ...
 
 
 // ---- Organ ------------------------------------------------------------------
 _ 26	CH26
-	INSTRUMENTNAME "sf2_realistic" @16 o4 V80
+	INSTRUMENTNAME "sf2_realistic;simple_reverb" @16 o4 V80
 G	[r1r4]16
 H	ASSERT_STEP_B 3840, "26.VII"
 G	[r1r4]12
@@ -939,7 +939,7 @@ P	ASSERT_STEP_B 24816, "26.End"
 
 // ---- 1st. Violin ------------------------------------------------------------
 _ 27	CH27
-	INSTRUMENTNAME "sf2_realistic" @40 o3 V105
+	INSTRUMENTNAME "sf2_realistic;simple_reverb" @40 o3 V105
 G	l8
 	TREBLE_A [g+1.g+1]4 TREBLE_END >>>
 	[ d4.c+<b+4.>c+d4.e+ :1 e4.e+f+4.e+ :2 e4.ga4.g+ :3 f+4.e+e4.e+ ]3
@@ -980,7 +980,7 @@ P	ASSERT_STEP_B 24816, "27.End"
 
 // ---- 2nd. Violin ------------------------------------------------------------
 _ 28	CH28
-	INSTRUMENTNAME "sf2_realistic" @40 o4 V100
+	INSTRUMENTNAME "sf2_realistic;simple_reverb" @40 o4 V100
 G	l8
 	TREBLE_A [g+1.g+1]4 TREBLE_END >
 	[ e4.c+<b+4.>c+d4.d+ :1 e4.e+f+4.e+ :2 e4.g+a4.g+ :3 g+4.f+f4.f+ ]3
@@ -1021,7 +1021,7 @@ P	ASSERT_STEP_B 24816, "28.End"
 
 // ---- Violas -----------------------------------------------------------------
 _ 29	CH29
-	INSTRUMENTNAME "sf2_realistic" @41 o4 V100
+	INSTRUMENTNAME "sf2_realistic;simple_reverb" @41 o4 V100
 G	[r1r4]8
 	TREBLE_A [ g+0>g+1.<g+0>g+1< ]4 TREBLE_END
 H	ASSERT_STEP_B 3840, "29.VII"
@@ -1060,7 +1060,7 @@ P	ASSERT_STEP_B 24816, "29.End"
 
 // ---- Violoncellos -----------------------------------------------------------
 _ 30	CH30
-	INSTRUMENTNAME "sf2_realistic" @42 o3 V100
+	INSTRUMENTNAME "sf2_realistic;simple_reverb" @42 o3 V100
 G	l8
 	[ a4.g+g4.g+a4.b :1 b+4.>c+d4.c+< :2 c+4.d+e+4.d+< :3 >c+4.c+<b+4.>c+ ]3
 	  >e+4.ed+4.ee+4.f+a4.g+g4.g+
@@ -1102,7 +1102,7 @@ P	ASSERT_STEP_B 24816, "30.End"
 
 // ---- Doublebasses -----------------------------------------------------------
 _ 31	CH31
-	INSTRUMENTNAME "sf2_realistic" @43 o3 V100
+	INSTRUMENTNAME "sf2_realistic;simple_reverb" @43 o3 V100
 G	l8 // copy of cello
 	[ a4.g+g4.g+a4.b :1 b+4.>c+d4.c+< :2 >c+4.d+e+4.d+< :3 >c+4.c+<b+4.>c+< ]3
 	  >e+4.ed+4.ee+4.f+a4.g+g4.g+

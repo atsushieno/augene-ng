@@ -11,6 +11,9 @@ internal val Ump.metaEventType : Int
 
 data class TimedMetaEvent(val position: Int, val event: List<Byte>)
 
+internal val TrackElement.instrumentNameSplit : List<String>
+    get() = this.Extension_InstrumentName?.split(';') ?: listOf()
+
 class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportContext) {
     // state
     private var consumed = false
@@ -83,10 +86,12 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
                 Name = populateTrackName(midiTrack)
                 Extension_InstrumentName = populateInstrumentName(midiTrack)
 
-                val graph = context.mappedPlugins[Extension_InstrumentName ?: ""]
-                if (graph != null)
-                    for (p in AugeneCompiler.toTracktion(JuceAudioGraph.toAudioGraph(graph)))
-                        Plugins.add(p.apply { Id = context.generateNewID() })
+                instrumentNameSplit.forEach {
+                    val graph = context.mappedPlugins[it]
+                    if (graph != null)
+                        for (p in AugeneCompiler.toTracktion(JuceAudioGraph.toAudioGraph(graph)))
+                            Plugins.add(p.apply { Id = context.generateNewID() })
+                }
             }
             context.edit.Tracks.add(ttrack)
             importTrack(midiTrack, ttrack)
@@ -423,17 +428,19 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
                                 if (sysex.size >= 1 + 9 + 1 + nameLen) { // 7D, "augene-ng", nameLen byte, name
                                     currentAutomationTarget =
                                         sysex.drop(11).take(nameLen).toByteArray().decodeToString()
-                                    var target = ttrack.Plugins.firstOrNull { it.Uid == currentAutomationTarget }
+                                    val target = ttrack.Plugins.firstOrNull { it.Uid == currentAutomationTarget }
                                     if (target == null) {
-                                        // create a stub PluginElement.
-                                        target = PluginElement().apply {
-                                            Name = ttrack.Extension_InstrumentName ?: "!!! STUB !!! REPLACE THIS !!!"
-                                            Uid = currentAutomationTarget
-                                            Id = context.generateNewID()
+                                        ttrack.instrumentNameSplit.forEach {
+                                            // create a stub PluginElement.
+                                            val inst = PluginElement().apply {
+                                                Name = it
+                                                Uid = currentAutomationTarget
+                                                Id = context.generateNewID()
+                                            }
+                                            ttrack.Plugins.add(inst)
+                                            currentAutomationTargetAsNumber = inst.Id!!.toInt()
                                         }
-                                        ttrack.Plugins.add(target)
                                     }
-                                    currentAutomationTargetAsNumber = target.Id!!.toInt()
                                 }
                                 else
                                     context.report("INSUFFICIENT AUTOMATION TARGET PLUGIN SYSEX BUFFER")

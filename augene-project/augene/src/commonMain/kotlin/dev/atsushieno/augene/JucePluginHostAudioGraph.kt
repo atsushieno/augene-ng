@@ -37,42 +37,53 @@ class JuceAudioGraph {
         fun load (reader: XmlReader) :  Sequence<JuceAudioGraph> =
             sequence {
                 val doc = XDocument.load (reader)
-                val input = doc.root!!.elements ("FILTER").firstOrNull { e ->
-                    e.elements ("PLUGIN").any { p -> p.attribute ("name")?.value.equals("Midi Input", true) && // it is MIDI Input since Waveform11 (maybe)
-                            p.attribute ("format")?.value == "Internal" }
+                val midiInFilter: (String?) -> Boolean = { s -> s != null && s.equals("Midi Input", true) }
+                val audioInFilter: (String?) -> Boolean = { s -> s != null && s == "Audio Input" }
+                val elementFilter: ((String?) -> Boolean) -> XElement? = { f ->
+                    doc.root!!.elements("FILTER").firstOrNull { e ->
+                        e.elements("PLUGIN").any { p ->
+                            f(p.attribute("name")?.value) && // it is MIDI Input since Waveform11 (maybe)
+                                    p.attribute("format")?.value == "Internal"
+                        }
+                    }
                 }
+                val midiInput = elementFilter(midiInFilter)
+                val audioInput = elementFilter(audioInFilter)
                 val output = doc.root!!.elements ("FILTER").firstOrNull { e ->
                     e.elements ("PLUGIN").any { p -> p.attribute ("name")?.value == "Audio Output" &&
                             p.attribute ("format")?.value == "Internal" }
                 }
-                if (input == null || output == null)
+                if ((midiInput == null && audioInput == null) || output == null)
                     return@sequence
-                var conn: XElement?
-                var uid = input.attribute ("uid")?.value
-                while (true) {
-                    conn = doc.root!!.elements ("CONNECTION").firstOrNull { e ->
-                        e.attribute ("srcFilter")?.value == uid }
-                    if (conn == null || conn == output)
-                        break
-                    if (uid != input.attribute ("uid")?.value) {
-                        val filter = doc.root!!.elements ("FILTER")
-                            .firstOrNull { e -> e.attribute ("uid")?.value == uid } ?: return@sequence
-                        val plugin = filter.element ("PLUGIN")
-                        if (plugin == null)
-                            return@sequence
-                        val state = filter.element ("STATE")
-                        val prog = plugin.attribute ("programNum")
-                        yield (JuceAudioGraph().apply {
-                            file = plugin.attribute ("file")?.value
-                            category = plugin.attribute ("category")?.value
-                            manufacturer = plugin.attribute ("manufacturer")?.value
-                            name = plugin.attribute ("name")?.value
-                            this.uid = plugin.attribute ("uid")?.value
-                            programNum = if (prog != null) prog.value.toInt() else 0
-                            this.state = state?.value
-                        })
+                listOf(midiInput, audioInput).forEach { input ->
+                    if (input == null)
+                        return@forEach
+                    var uid =
+                        input.attribute("uid")?.value // this on JVM results in "Debug information is inconsistent" on IDEA...?
+                    while (true) {
+                        val conn = doc.root!!.elements("CONNECTION").firstOrNull { e ->
+                            e.attribute("srcFilter")?.value == uid
+                        }
+                        if (conn == null || conn == output)
+                            break
+                        if (uid != input.attribute("uid")?.value) {
+                            val filter = doc.root!!.elements("FILTER")
+                                .firstOrNull { e -> e.attribute("uid")?.value == uid } ?: return@sequence
+                            val plugin = filter.element("PLUGIN") ?: continue
+                            val state = filter.element("STATE")
+                            val prog = plugin.attribute("programNum")
+                            yield(JuceAudioGraph().apply {
+                                file = plugin.attribute("file")?.value
+                                category = plugin.attribute("category")?.value
+                                manufacturer = plugin.attribute("manufacturer")?.value
+                                name = plugin.attribute("name")?.value
+                                this.uid = plugin.attribute("uid")?.value
+                                programNum = prog?.value?.toInt() ?: 0
+                                this.state = state?.value
+                            })
+                        }
+                        uid = conn.attribute("dstFilter")?.value
                     }
-                    uid = conn.attribute ("dstFilter")?.value
                 }
             }
 
