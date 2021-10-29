@@ -3,10 +3,10 @@
     <AudioGraph Id="sfizz_vpo3_1st_violin_sec_ks" Source="sfizz-vpo3-1st-violin-sec-ks.filtergraph" />
     <AudioGraph Id="sfizz_vpo3_2nd_violin_sec_ks" Source="sfizz-vpo3-2nd-violin-sec-ks.filtergraph" />
     <AudioGraph Id="sfizz_vpo3_alto_flute-ks" Source="sfizz-vpo3-alto-flute-ks.filtergraph" />
-    <AudioGraph Id="sfizz_vpo3_bass_clarinet-ks" Source="sfizz-vpo3-bass-clarinet-ks.filtergraph" />
+    <AudioGraph Id="sfizz_vpo3_bass_clarinet_ks" Source="sfizz-vpo3-bass-clarinet-ks.filtergraph" />
     <AudioGraph Id="sfizz_vpo3_bassdrum_snare_cymbals" Source="sfizz-vpo3-bassdrum-snare-cymbals.filtergraph" />
     <AudioGraph Id="sfizz_vpo3_bassoon_sec_ks" Source="sfizz-vpo3-bassoon-sec-ks.filtergraph" />
-    <AudioGraph Id="sfizz_vpo3_bass_trombone-ks" Source="sfizz-vpo3-bass-trombone-ks.filtergraph" />
+    <AudioGraph Id="sfizz_vpo3_bass_trombone_ks" Source="sfizz-vpo3-bass-trombone-ks.filtergraph" />
     <AudioGraph Id="sfizz_vpo3_celesta" Source="sfizz-vpo3-celesta.filtergraph" />
     <AudioGraph Id="sfizz_vpo3_cello_sec_ks" Source="sfizz-vpo3-cello-sec-ks.filtergraph" />
     <AudioGraph Id="sfizz_vpo3_clarinet_sec_ks" Source="sfizz-vpo3-clarinet-sec-ks.filtergraph" />

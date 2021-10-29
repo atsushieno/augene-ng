@@ -1,0 +1,10 @@
+<AugeneProject>
+  <Includes>
+    <Include Source="mars_sfizz1.augene" />
+    <Include Source="mars_sfizz2.augene" />
+  </Includes>
+  <MmlStrings>
+    <MmlString><![CDATA[#define STEP_DELTA_A 0]]></MmlString>
+    <MmlString><![CDATA[#define STEP_DELTA_B 23280]]></MmlString>
+  </MmlStrings>
+</AugeneProject>
