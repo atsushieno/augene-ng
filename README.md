@@ -1,9 +1,9 @@
 
 # augene-ng: MML compiler for audio plugins sequencer engine
 
-[![augene-ng demo 2021-10-28](http://img.youtube.com/vi/tImmG0JWBP4/0.jpg)](http://www.youtube.com/watch?v=tImmG0JWBP4 "augene-ng demo 2021-10-28")
+[![augene-ng demo 2021-10-30](http://img.youtube.com/vi/NElCHu7wT4s/0.jpg)](http://www.youtube.com/watch?v=NElCHu7wT4s "augene-ng demo 2021-10-30") (links to youtube video)
 
-augene(-ng, next gen) is an experimental compound music authoring toolchain that brings old-fashion MML (music macro language) compiler integrated into modern sequencer that is also used in Tracktion Waveform DAW (so far). It is nothing but a proof of concept so far, whilst I (@atsushieno) plan to use it for own production.
+augene(-ng, next gen) is an experimental compound music authoring toolchain that brings old-fashion MML (music macro language) compiler integrated into modern sequencer that is also used in Tracktion Waveform DAW (so far). It is nothing but a proof of concept so far, whilst I (@atsushieno) plan to use it for own production. Check out the youtube video linked from the sshot above to find out what I have achieved with this tool, as well as the actual project files under [`samples/mars`](./samples/mars) directory.
 
 You can also have a quick glance at the project by [my slides for lightening talk at ADC 2019](https://speakerdeck.com/atsushieno/create-music-in-199x-language-for-2019-sequencer) for a bit more details.
 
