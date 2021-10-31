@@ -2,7 +2,7 @@
 #define DRUMTRACKS 0.00001
 #macro REWIND len:length { r $len }
 
-1-30  PITCH_BEND_SENSITIVITY24 q0 v110
+//1-30  PITCH_BEND_SENSITIVITY24 q0 v110
 
 // For augene-ng, disable CH to switch MIDI channel.
 // For MIDI players, comment this out and enable CH.
@@ -70,18 +70,23 @@ P	MARKER "End"
 
 // ==== Woodwinds section ======================================================
 
+#macro 1-2 SUSTAIN { n36,0,32 E127 }
+#macro 1-2 NORMAL { n38,0,32 E127 }
+#macro 1-2 ACCENT { n39,0,32 E100 }
+#macro 1-2 STACCATO { n40,0,32 E127}
+
 
 // ---- Piccolos ---------------------------------------------------------------
 _ 1	CH1
-	INSTRUMENTNAME "sf2_realistic;simple_reverb" @72 o6 V90
-	l8
+	// INSTRUMENTNAME "sf2_realistic;simple_reverb" @72 o6 V110
+	o5 l8
 G	[r1r4]16
 H	ASSERT_STEP_B 3840, "1.VII"
 	[r1r4]8
 	c4.<ba+4.b>c4.<b>d4.c<b4.>c  e4.dc+4.dg4.f>c4.<b>e4.d
 I	ASSERT_STEP_B 6720, "1.VII-middle"
-	Q3 [ [g12]3g4g4g8g8g4 ]3
-	Q8 [r1r4]20  r2.<<a-0>d-2
+	STACCATO [ [g12]3g4g4g8g8g4 ]3
+	NORMAL [r1r4]20  r2.<<a-0>d-2
 J	ASSERT_STEP_B 12480, "1.VIII"
 	<g0b4r1  r2.>d-2<b4r1  [r1r4]9
 K	ASSERT_STEP_B 15360, "1.IX"
@@ -95,7 +100,7 @@ M	ASSERT_STEP_B 20400, "1.X-middle"
 	V+10 >g1.^1^  1.f2r2  [r1r4]6 V-10
 N	ASSERT_STEP_B 22800, "1.XI"
 	l16
-	[r2.]2  r<ab>c+ d+f+ga bd+ef  [r2.]2  d+f+b>d+< gab>c+ def+a
+	STACCATO [r2.]2  r<ab>c+ d+f+ga bd+ef  [r2.]2  d+f+b>d+< gab>c+ def+a
 O	ASSERT_STEP_B 23664, "1.XII"
 	g8r8r2  [r2.]7
 P	ASSERT_STEP_B 24816, "1.End"
@@ -104,25 +109,25 @@ P	ASSERT_STEP_B 24816, "1.End"
 
 // ---- Flutes -----------------------------------------------------------------
 _ 2	CH2
-	INSTRUMENTNAME "sf2_realistic;simple_reverb" @73 o6 V90
-	l8
+	// INSTRUMENTNAME "sf2_realistic;simple_reverb" @73 o7 V90
+	o6 < l8
 G	[r1r4]16
 H	ASSERT_STEP_B 3840, "2.VII"
 	[ c4.<bb-4.b>c4.d :1 d+4.ef4.e :2 e4.f+g+4.f :3 f4.ed+4.e ]3
 	a-4.gf+4.ga-4.a>c4.<ba+4.b  >c4.<ba+4.b>c4.<b>d4.c<b4.>c
 	e4.dc+4.d<a0>d2d0f2f0a2
 I	ASSERT_STEP_B 6720, "2.VII-middle"
-	Q4 [ [g12]3g4g4g8g8g4 ]3
-	Q8 [r1r4]20  r2.<a-0>d-2<
+	STACCATO [ [g12]3g4g4g8g8g4 ]3
+	NORMAL [r1r4]20  r2.<a-0>d-2<
 J	ASSERT_STEP_B 12480, "2.VIII"
 	g0b4r1  r2.>f0a2  e-0g4r1  [r1r4]9
 K	ASSERT_STEP_B 15360, "2.IX"
 	[r1r4]2
-	d4.c+d4.<b>Q4c4Q8  d4.c+d4.<ba+4.bf+4.gc+4.d
+	d4.c+d4.<b> STACCATO c4 NORMAL  d4.c+d4.<ba+4.bf+4.gc+4.d
 	> [ d-2e-2d-2c8r8r2. ]2
-	e4.d+e4.c+Q4d4Q8  f+4.e+f+4.c+Q4e4Q8  b-4.ab-4.g+a4.f+g4.ee-4.d
+	e4.d+e4.c+ STACCATO d4 NORMAL  f+4.e+f+4.c+ STACCATO e4 NORMAL  b-4.ab-4.g+a4.f+g4.ee-4.d
 	  [REWIND-1-4]4 // high
-	c4.<b>c4.<aQ4b4Q8  d4.c+d4.<b>Q4c4Q8  g-4.fg-4.ef4.de-4.cc4.<b // low
+	c4.<b>c4.<a STACCATO b4 NORMAL  d4.c+d4.<b> STACCATO c4 NORMAL  g-4.fg-4.ef4.de-4.cc4.<b // low
 L	ASSERT_STEP_B 18480, "2.X"
 	>c+4.de-4.fg4.ab4.af4.e  d+4.ef4.ga4.b>c4.<ba-4.g
 	  [ g-4.fg-ga-4.g ]2  g-4.fg-4.ab-4.rr2r2  [REWIND-1-4]8 // high
@@ -132,7 +137,7 @@ M	ASSERT_STEP_B 20400, "2.X-middle"
 	V+10 g1.^1^  1.f2<b2  g1.^2f2  [r1r4]4 V-10
 N	ASSERT_STEP_B 22800, "2.XI"
 	l16
-	[r2.]2  rf+ga bd+ef+ g<b>c+d<  ab>c<f+ gad+e f<fga
+	STACCATO [r2.]2  rf+ga bd+ef+ g<b>c+d<  ab>c<f+ gad+e f<fga
 	  r4>d+f+b>d+ <gab>c+  d+rr8 <gab>c+ def+a
 O	ASSERT_STEP_B 23664, "2.XII"
 	g8r8r2  [r2.]7
@@ -141,7 +146,8 @@ P	ASSERT_STEP_B 24816, "2.End"
 
 // ---- Oboes ------------------------------------------------------------------
 _ 3	CH3
-	INSTRUMENTNAME "sf2_realistic;simple_reverb" @68 o4 V90
+	// INSTRUMENTNAME "sf2_realistic;simple_reverb" @68 o5 V100
+	o5
 G	[r1r4 r1r4]4
 	l8 >
 	[ d4.c+<b+4.>c+d4.d+ :1 e4.e+f+4.e+ :2 e4.ga4.g+ :3 f+4.e+e4.e+ ]3
@@ -190,7 +196,8 @@ P	ASSERT_STEP_B 24816, "3.End"
 
 // ---- English Horn -----------------------------------------------------------
 _ 4	CH4
-	INSTRUMENTNAME "sf2_realistic;simple_reverb" @69 o4 V90
+	// INSTRUMENTNAME "sf2_realistic;simple_reverb" @69 o4 V110
+	o4
 G	[r1r4 r1r4]4
 	l8
 	[ a4.g+g4.g+a4.a+ :1 b4.>cd-4.c< :2 b4.>de4.d+< :3 >d-4.c<b4.>c ]3
@@ -228,7 +235,8 @@ P	ASSERT_STEP_B 24816, "4.End"
 
 // ---- Bass Oboe --------------------------------------------------------------
 _ 5	CH5
-	INSTRUMENTNAME "sf2_realistic;simple_reverb" @68 o4 V90
+	// INSTRUMENTNAME "sf2_realistic;simple_reverb" @68 o5 V110
+	o5
 G	[r1r4 r1r4]4
 	l8
 	[ d4.c+<b+4.>c+d4.d+ :1 e4.e+f+4.e+ :2 e4.ga4.g+ :3 f+4.e+e4.e+ ]3
@@ -267,8 +275,8 @@ P	ASSERT_STEP_B 24816, "5.End"
 
 // ---- Clarinets --------------------------------------------------------------
 _ 6	CH6 K-2
-	INSTRUMENTNAME "sf2_realistic;simple_reverb" @71 o4 V85
-	l8
+	// INSTRUMENTNAME "sf2_realistic;simple_reverb" @71 o5 V105
+	o5 l8
 G	[r1r4 r1r4]8
 H	ASSERT_STEP_B 3840, "6.VII"
 	>
@@ -330,7 +338,8 @@ P	ASSERT_STEP_B 24816, "6.End"
 
 // ---- Bass Clarinets ---------------------------------------------------------
 _ 7	CH7 K-2
-	INSTRUMENTNAME "sf2_realistic;simple_reverb" @71 o4 V90
+	// INSTRUMENTNAME "sf2_realistic;simple_reverb" @71 o5 V120
+	o5
 G	[r1r4 r1r4]8
 H	ASSERT_STEP_B 3840, "7.VII"
 	l8
@@ -365,8 +374,8 @@ P	ASSERT_STEP_B 24816, "7.End"
 
 // ---- Bassoons ---------------------------------------------------------------
 _ 8 CH8
-	INSTRUMENTNAME "sf2_realistic;simple_reverb" @70 o2 V90
-G	l8
+	// INSTRUMENTNAME "sf2_realistic;simple_reverb" @70 o4 V110
+G	o4 l8
 	[a4.g+g4.g+a4.b :1 b+4.>c+d4.c+< :2 >c+4.d+e+4.e< :3 >d4.c+<b+4.>c+ ]3
 	  e+4.ed+4.ee+4.f+a4.g+g4.g+
 	d4.c+<b+4.>c+d4.d+e4.e+f+4.e+  d+4.c+<b+4.>c+d4.d+e4.ga4.g+
@@ -418,8 +427,8 @@ P	ASSERT_STEP_B 24816, "0.End"
 
 // ---- Double Bassoons --------------------------------------------------------
 _ 9	CH9
-	INSTRUMENTNAME "sf2_realistic;simple_reverb" @70 o2 V90
-G	l8 // copy of track 8
+	// INSTRUMENTNAME "sf2_realistic;simple_reverb" @70 o4 V110
+G	o4 l8 // copy of track 8
 	[a4.g+g4.g+a4.b :1 b+4.>c+d4.c+< :2 >c+4.d+e+4.e< :3 >d4.c+<b+4.>c+ ]3
 	e+4.ed+4.ee+4.f+a4.g+g4.g+
 	d4.c+<b+4.>c+d4.d+e4.e+f+4.e+  d+4.c+<b+4.>cd4.d+e4.ga4.g+
@@ -452,11 +461,31 @@ P	ASSERT_STEP_B 24816, "9.End"
 
 // ==== Brasses section ========================================================
 
+#macro 10-11 NORMAL { n72,0,32 E127 }
+#macro 10-11 STACCATO { n76,0,32 E127 }
+
+#macro 12 SUSTAIN { n36,0,32 E127 }
+#macro 12 NORMAL { n38,0,32 E127 }
+#macro 12 ACCENT { n39,0,32 E100 }
+#macro 12 STACCATO { n40,0,32 E127}
+#macro 13 NORMAL { n36,0,32 E127 }
+#macro 13 STACCATO { n40,0,32 E127}
+
+#macro 14-15 SUSTAIN { n72,0,32 E127 }
+#macro 14-15 NORMAL { n74,0,32 E127 }
+#macro 14-15 ACCENT { n75,0,32 E100 }
+#macro 14-15 STACCATO { n76,0,32 E127 }
+
+#macro 16-17 SUSTAIN { n84,0,32 E127 }
+#macro 16-17 NORMAL { n86,0,32 E127 }
+#macro 16-17 ACCENT { n87,0,32 E100 }
+#macro 16-17 STACCATO { n88,0,32 E127 }
+
 
 // ---- Horns High -------------------------------------------------------------
-_ 10	CH10 K-7
-	INSTRUMENTNAME "sf2_realistic;simple_reverb" @60 o4 V80
-G	[r1r4 r1r4]4
+_ 10	CH10 K12-7
+G	o4
+	[r1r4 r1r4]4
 	e-0>e-1.^1^  1.^1^  1.^1^  1.^1<
 H	ASSERT_STEP_B 3840, "10.VII"
 	l8
@@ -514,9 +543,9 @@ P	ASSERT_STEP_B 24816, "10.End"
 
 
 // ---- Horns Low --------------------------------------------------------------
-_ 11	CH11 K-7
-	INSTRUMENTNAME "sf2_realistic;simple_reverb" @60 o3 V80
-G	[r1r4 r1r4]4 // copy of track 10
+_ 11	CH11 K12-7
+G	o3
+	[r1r4 r1r4]4 // copy of track 10
 	e-0>e-1.^1^  1.^1^  1.^1^  1.^1<
 H	ASSERT_STEP_B 3840, "11.VII" // copy of track 10
 	l8
@@ -529,7 +558,7 @@ H	ASSERT_STEP_B 3840, "11.VII" // copy of track 10
 	   a0>c+0e4.< g0b0>d< f+0a+0>c+4.< g0b0>d<
 	V+15 b4.ag+4.a>d4.cg4.f+r2 V-15
 I	ASSERT_STEP_B 6720, "11.VII-middle" // almost copy of track 10...
-	Q6 V+10 [ [<d0>d12]3[<d0>d4]2[<d0>d8]2<d0>d4 ]3 < V-10 Q8
+	V+10 [ STACCATO [<d0>d12]3 [<d0>d4]2[<d0>d8]2 NORMAL <d0>d4 ]3 < V-10
 	d2.^2^  2.<a0>a2  <a-0>a-2.^2^  2.^2^  4r1
 	d2.^2^  2.<a0>a2  <a-0>a-2.<e-0b-0>e-2<  d0a0>d2.<a0>d0a2<
 	a-0>d0a-2.e-0b-0>e-2<  d0a0>d2.<d0a0>d2<
@@ -573,25 +602,24 @@ P	ASSERT_STEP_B 24816, "11.End"
 
 
 // ---- Trumpets High ----------------------------------------------------------
-_ 12	CH12
-	INSTRUMENTNAME "sf2_realistic;simple_reverb" @56 o5 V100
-	l8
+_ 12	CH12 K12
+	o4 l8
 G	[r1r4 r1r4]4
-	Q5 [ [g+12]3g+4r2r2g+8g+8g+4r2 ]4
+	[ STACCATO [g+12]3g+4r2r2g+8 NORMAL g+8g+4r2 ]4
 H	ASSERT_STEP_B 3840, "12.VII"
 	[r1r4 r1r4]4
-	Q7 >c4.<ba+4.b>c4.<b>d4.c<b4.>c<  f0a1.>d0f2f0a2
+	NORMAL >c4.<ba+4.b>c4.<b>d4.c<b4.>c<  f0a1.>d0f2f0a2
 I	ASSERT_STEP_B 6720, "12.VII-middle"
-	Q4 V+15 [ [<g0>g12]3[<g0>g4]2[<g0>g8]2<g0>g4 ]3
-	V-15 [ [<g0>g12]3[<g0>g4]2[<g0>g8]2<g0>g4 ]11
-	Q8 <a-0>d-2.^2^  2.^2^  4r1  <<a-2.a0,4>d-2  <a-0>d-2.b-2  a2.a0>e2
-	Q4 [ [<g0>g12]3[<g0>g4]2[<g0>g8]2<g0>g4 ]4
+	V+15 [ STACCATO [<g0>g12]3 NORMALQ4 <g0>g4 Q6 <g0>g4 Q8 [<g0>g8]2 <g0>g4 ]3
+	V-15 [ STACCATO [<g0>g12]3 NORMALQ4 <g0>g4 Q6 <g0>g4 Q8 [<g0>g8]2 <g0>g4 ]11
+	<a-0>d-2.^2^  2.^2^  4r1  <<a-2.a0,4>d-2  <a-0>d-2.b-2  a2.a0>e2
+	[ STACCATO [<g0>g12]3 NORMALQ4 <g0>g4 Q6 <g0>g4 Q8 [<g0>g8]2 <g0>g4 ]4
 J	ASSERT_STEP_B 12480, "12.VIII"
 	l12
-	Q8 <g0>g4r1  r2.<d-0>d-2<  <b0>b4r1
+	<g0>g4r1  r2.<d-0>d-2<  <b0>b4r1
 	V+15 // solo
-	Q5 g4g4g4[gf+g]2  [ b-2g8.g16b-4g4 ]2  b2g8.g16b4g4
-	[ >c2<g8.g16>c4<g4 ]2  c0>c8r8r1  r1r4  c2<g8.g16>c4<g4
+	STACCATO g4g4g4[LEGATO64gf+gLEGATO0]2  [ NORMAL b-2 STACCATO g8.g16 NORMAL b-4g4 ]2  b2 STACCATO g8.g16 NORMAL b4g4
+	[ >c2 STACCATO <g8.g16> NORMAL c4<g4 ]2  c0>c8r8r1  r1r4  c2< STACCATO g8.g16 NORMAL >c4<g4
 	V-15
 K	ASSERT_STEP_B 15360, "12.IX"
 	l8
@@ -606,18 +634,18 @@ M	ASSERT_STEP_B 20400, "12.X-middle"
 N	ASSERT_STEP_B 22800, "12.XI"
 	<d+0b8r8r2  [r2.]5
 O	ASSERT_STEP_B 23664, "12.XII"
-	V+20 Q5 [d-0g12]3d-0g4r4  [ r4[d-0g8]2d-0g4 ]2
-	[d-0g12]3d-0g4r4
-	Q8 r4[d-0g4]2  r4r4d-0g4  [d-0g4]2r4
+	V+20 STACCATO [d-0g12]3 NORMAL d-0g4r4  [ r4[d-0g8]2d-0g4 ]2
+	Q5 [d-0g12]3 Q8 d-0g4r4
+	NORMAL r4[d-0g4]2  r4r4d-0g4  [d-0g4]2r4
 	V-20 Q8 <<g2.
 P	ASSERT_STEP_B 24816, "12.End"
 
 
 
 // ---- Trumpets Low -----------------------------------------------------------
-_ 13	CH13
-	INSTRUMENTNAME "sf2_realistic;simple_reverb" @56 o5 V90
-G	[r1r4 r1r4]8
+_ 13	CH13 K12
+G	o4
+	[r1r4 r1r4]8
 H	ASSERT_STEP_B 3840, "13.VII"
 	l8
 	Q4 [ [b12]3b4r2r2b4b4b8b8b4 ]5  Q5 f4.dc+4.dg4.f>c4.<b>e4.d
@@ -649,10 +677,9 @@ P	ASSERT_STEP_B 24816, "13.End"
 
 
 // ---- Tenor Trombones --------------------------------------------------------
-_ 14	CH14
-	INSTRUMENTNAME "sf2_realistic;simple_reverb" @57 o4 V100
-G	[r1r4 r1r4]4
-	l8
+_ 14	CH14 K12
+G	o3 l8
+	[r1r4 r1r4]4
 	Q6 [ [f+12]3f+4r2r2f+8f+8f+4r2 ]4
 H	ASSERT_STEP_B 3840, "14.VII"
 	[ [a12]3a4r2r2a4a4a8a8a4 ]5  Q8 f0a1.>d0f2f0a2<
@@ -685,9 +712,9 @@ P	ASSERT_STEP_B 24816, "14.End"
 
 
 // ---- Bass Trombone ----------------------------------------------------------
-_ 15	CH15
-	INSTRUMENTNAME "sf2_realistic;simple_reverb" @57 o3 V95
-G	[r1r4 r1r4]8
+_ 15	CH15 K12
+G	o2
+	[r1r4 r1r4]8
 H	ASSERT_STEP_B 3840, "15.VII"
 	l8
 	[r1r4 r1r4]6
@@ -717,9 +744,9 @@ P	ASSERT_STEP_B 24816, "15.End"
 
 
 // ---- Tenor Tuba -------------------------------------------------------------
-_ 16	CH16 K-2
-	INSTRUMENTNAME "sf2_realistic;simple_reverb" @58 o4 V100
-G	[r1r4 r1r4]8
+_ 16	CH16 K12-2
+G	o2
+	[r1r4 r1r4]8
 H	ASSERT_STEP_B 3840, "16.VII"
 	[r1r4]12
 I	ASSERT_STEP_B 6720, "16.VII-middle"
@@ -750,9 +777,9 @@ P	ASSERT_STEP_B 24816, "16.End"
 
 
 // ---- Bass Tuba --------------------------------------------------------------
-_ 17	CH17
-	INSTRUMENTNAME "sf2_realistic;simple_reverb" @58 o3 V100
-G	[r1r4 r1r4]8
+_ 17	CH17 K12
+G	o2
+	[r1r4 r1r4]8
 H	ASSERT_STEP_B 3840, "17.VII"
 	[r1r4]12
 I	ASSERT_STEP_B 6720, "17.VII-middle"
@@ -782,8 +809,9 @@ P	ASSERT_STEP_B 24816, "17.End"
 
 // ---- Timpani 1 --------------------------------------------------------------
 _ 18	CH18
-	INSTRUMENTNAME "sf2_realistic;simple_reverb" @47 o3 V80 v110
-G	[r1r4r1r4]4
+	// INSTRUMENTNAME "sf2_realistic;simple_reverb" @47 o3 V80 v110
+G	o3
+	[r1r4r1r4]4
 	// FIXME: make sure that they are either single note or roll.
 	[ g1.g1 ]4
 H	ASSERT_STEP_B 3840, "18.VII"
@@ -814,8 +842,9 @@ P	ASSERT_STEP_B 24816, "18.End"
 
 // ---- Side Drum --------------------------------------------------------------
 _ 20	CH9
-	INSTRUMENTNAME "sf2_realistic_drum_orchestral;simple_reverb" o2 V80 v100
-G	[ [c12]3c4r2 r2 c8c8c4r2 ]8
+	// INSTRUMENTNAME "sf2_realistic_drum_orchestral;simple_reverb" o2 V80 v100
+G	o2
+	[ [c12]3c4r2 r2 c8c8c4r2 ]8
 H	ASSERT_STEP_B 3840, "20.VII"
 	[ d1.d1 ]5  r1r1r4r4
 I	ASSERT_STEP_B 6720, "20.VII-middle"
@@ -850,8 +879,9 @@ P	ASSERT_STEP_B 24816, "20.End"
 
 // ---- Gong -------------------------------------------------------------------
 _ 23	CH9
-	INSTRUMENTNAME "sf2_realistic_drum_ethnic;simple_reverb" o3 V60 v60
-G	[r1r4]16
+	// INSTRUMENTNAME "sf2_realistic_drum_ethnic;simple_reverb" o3 V60 v60
+G	o3
+	[r1r4]16
 H	ASSERT_STEP_B 3840, "23.VII"
 	[r1r4]12
 I	ASSERT_STEP_B 6720, "23.VII-middle"
@@ -885,8 +915,9 @@ P	ASSERT_STEP_B 24816, "23.End"
 
 // ---- Organ ------------------------------------------------------------------
 _ 26	CH26
-	INSTRUMENTNAME "sf2_realistic;simple_reverb" @16 o4 V80
-G	[r1r4]16
+	// INSTRUMENTNAME "sf2_realistic;simple_reverb" @16 o4 V80
+G	o4
+	[r1r4]16
 H	ASSERT_STEP_B 3840, "26.VII"
 G	[r1r4]12
 I	ASSERT_STEP_B 6720, "26.VII-middle"
@@ -926,40 +957,41 @@ P	ASSERT_STEP_B 24816, "26.End"
 
 // ==== Strings Section ========================================================
 
-// FIXME: those treble spectra macros should be applied to *each* note-on, every time.
-#macro 27,28 TREBLE_A { M_0,80,0,4 }  // FIXME: for sfz use key switches
-#macro 27,28 TREBLE_END { M0 }  // FIXME: for sfz use key switches
-#macro 29 TREBLE_A { M_0,80,0,4 }  // FIXME: for sfz use key switches
-#macro 29 TREBLE_END { M0 }  // FIXME: for sfz use key switches
-#macro 30 TREBLE_A { M_0,80,0,4 }  // FIXME: for sfz use key switches
-#macro 30 TREBLE_END { M0 }  // FIXME: for sfz use key switches
-#macro 31 TREBLE_A { M_0,80,0,4 }  // FIXME: for sfz use key switches
-#macro 31 TREBLE_END { M0 }  // FIXME: for sfz use key switches
+#macro 27-29 SUSTAIN { n36,0,32 E127 }
+#macro 27-29 TREMOLO { n37,0,32 E70 }
+#macro 27-29 ACCENT { n39,0,32 E100 }
+#macro 27-29 STACCATO { n40,0,32 E127 }
+#macro 27-29 PIZZICATO { n41,0,32 E127 }
+#macro 30 SUSTAIN { n84,0,32 }
+#macro 30 TREMOLO { n85,0,32 }
+#macro 30 ACCENT { n87,0,32 }
+#macro 30 STACCATO { n88,0,32 }
+#macro 30 PIZZICATO { n89,0,32 }
 
 
 // ---- 1st. Violin ------------------------------------------------------------
-_ 27	CH27
-	INSTRUMENTNAME "sf2_realistic;simple_reverb" @40 o3 V105
-G	l8
-	TREBLE_A [g+1.g+1]4 TREBLE_END >>>
-	[ d4.c+<b+4.>c+d4.e+ :1 e4.e+f+4.e+ :2 e4.ga4.g+ :3 f+4.e+e4.e+ ]3
+_ 27	CH27 K12
+	// INSTRUMENTNAME "sf2_realistic;simple_reverb" @40 o3 V95 E127 v80
+G	o3 l8
+	TREMOLO [g+1.g+1]4 >>
+	SUSTAIN [ d4.c+<b+4.>c+d4.e+ :1 e4.e+f+4.e+ :2 e4.ga4.g+ :3 f+4.e+e4.e+ ]3
 	  a4.g+g4.g+a4.b>d4.c+<b4.>c+<
 H	ASSERT_STEP_B 3840, "27.VII"
 	[ c4.<bb-4.b>c4.d :1 d+4.ef4.e :2 e4.f+g+4.g :3 f4.ed+4.e ]3
 	a4.gf+4.ga-4.a>c4.<ba+4.b  c4.<ba+4.b>c4.<b>d4.c<b4.>c
 	e4.dc+4.dg4.f>c4.<b>e4.d
 I	ASSERT_STEP_B 6720, "27.VII-middle"
-	Q3 l12 [ gggg4g4g8g8g4 ]3 <<<
-	Q8 g2.^2  ^2.>d2  d-2.^2^  2.^2^  4r1<
+	ACCENT Q3 l12 [ gggg4g4g8g8g4 ]3 <<<
+	SUSTAIN Q8 g2.^2  ^2.>d2  d-2.^2^  2.^2^  4r1<
 	g2.^2^  2.>d2  d-2.<a-2  g-2.>d2
 	d-2.a-2  g2.d0>d2<  f0>d-2.^2^  2.^2^  4r1  [r1r4]3
 	< e-2.c2<  b-2.>f2  e-2.>c2  <b-2.>>d-2<<<
 J	ASSERT_STEP_B 12480, "27.VIII"
-	Q4 [ [g12]3g4g4g8g8g4 ]12
+	ACCENT Q4 [ [g12]3g4g4g8g8g4 ]12
 K	ASSERT_STEP_B 15360, "27.IX"
 	l8
 	[ [g12]3g4g4g8g8g4 ]5 >>>
-	Q8 V+15 [ d-2e-2d-4^  4c8r8r2. ]2 V-15
+	SUSTAIN Q8 V+15 [ d-2e-2d-4^  4c8r8r2. ]2 V-15
 	Q6 <g4.f+g4.ef4  a4.g+a4.f+g4  >d-4.cd-4.<b>c4^  8<ab-4.ge-4.d
 L	ASSERT_STEP_B 18480, "27.X"
 	Q8 c+4.de-4.fg4^  8ab-4.af4.e  d+4.ef4.ga4^  8b>c4.<ba-4.g
@@ -979,11 +1011,11 @@ P	ASSERT_STEP_B 24816, "27.End"
 
 
 // ---- 2nd. Violin ------------------------------------------------------------
-_ 28	CH28
-	INSTRUMENTNAME "sf2_realistic;simple_reverb" @40 o4 V100
-G	l8
-	TREBLE_A [g+1.g+1]4 TREBLE_END >
-	[ e4.c+<b+4.>c+d4.d+ :1 e4.e+f+4.e+ :2 e4.g+a4.g+ :3 g+4.f+f4.f+ ]3
+_ 28	CH28 K12
+	// INSTRUMENTNAME "sf2_realistic;simple_reverb" o4 V100 E127
+G	o4 < l8
+	TREMOLO [g+1.g+1]4 >
+	SUSTAIN [ e4.c+<b+4.>c+d4.d+ :1 e4.e+f+4.e+ :2 e4.g+a4.g+ :3 g+4.f+f4.f+ ]3
 	  a4.g+g4.g+a4.b>d4.c+<b+4.>c+<
 H	ASSERT_STEP_B 3840, "28.VII"
 	[ f4.d+d4.d+e4.f+ :1 g4.g+a4.g+ :2 g+4.a+>c4.<b :3 a4.a-g4.a ]3
@@ -1020,12 +1052,13 @@ P	ASSERT_STEP_B 24816, "28.End"
 
 
 // ---- Violas -----------------------------------------------------------------
-_ 29	CH29
-	INSTRUMENTNAME "sf2_realistic;simple_reverb" @41 o4 V100
-G	[r1r4]8
-	TREBLE_A [ g+0>g+1.<g+0>g+1< ]4 TREBLE_END
+_ 29	CH29 K12
+	// INSTRUMENTNAME "sf2_realistic;simple_reverb" o5 V100 E127
+G	o4
+	[r1r4]8
+	TREMOLO [ g+0>g+1.<g+0>g+1< ]4
 H	ASSERT_STEP_B 3840, "29.VII"
-	l8
+	SUSTAIN l8
 	[ g4.f+f4.f+g4.a :1 a+4.b>c4.<b :2 b4.>c+d+4.d< :3 >c4.<ba+4.b ]3
 	>e-4.dc+4.de-4.eg4.g-f4.g  a4.a-g4.a-a4.g+a4.gf+4.g
 	  e4.dc+4.dg4.f>c4.<b>e4.d<
@@ -1059,9 +1092,9 @@ P	ASSERT_STEP_B 24816, "29.End"
 
 
 // ---- Violoncellos -----------------------------------------------------------
-_ 30	CH30
-	INSTRUMENTNAME "sf2_realistic;simple_reverb" @42 o3 V100
-G	l8
+_ 30	CH30 K12
+	// INSTRUMENTNAME "sf2_realistic;simple_reverb" o5< V100 E127
+G	o4 < l8
 	[ a4.g+g4.g+a4.b :1 b+4.>c+d4.c+< :2 c+4.d+e+4.d+< :3 >c+4.c+<b+4.>c+ ]3
 	  >e+4.ed+4.ee+4.f+a4.g+g4.g+
 	[ d4.c+<b+4.>c+d4.d+ :1 e4.e+f+4.e+ :2 e4.ga4.g+ :3 d4.c+c4.c+ ]3
@@ -1101,9 +1134,9 @@ P	ASSERT_STEP_B 24816, "30.End"
 
 
 // ---- Doublebasses -----------------------------------------------------------
-_ 31	CH31
-	INSTRUMENTNAME "sf2_realistic;simple_reverb" @43 o3 V100
-G	l8 // copy of cello
+_ 31	CH31 K12
+	// INSTRUMENTNAME "sf2_realistic;simple_reverb" o3 V100 E127
+G	o2 l8 // copy of cello
 	[ a4.g+g4.g+a4.b :1 b+4.>c+d4.c+< :2 >c+4.d+e+4.d+< :3 >c+4.c+<b+4.>c+< ]3
 	  >e+4.ed+4.ee+4.f+a4.g+g4.g+
 	[ d4.c+<b+4.>c+d4.d+ :1 e4.e+f+4.e+ :2 e4.ga4.g+ :3 d4.c+c4.c+ ]3

@@ -10,7 +10,7 @@
 #macro L_ON { LEGATO64 }
 #macro L_OFF { LEGATO0 }
 
-1-30  PITCH_BEND_SENSITIVITY24 E127 q0 v110
+1-30  PITCH_BEND_SENSITIVITY24 E127 q0 v120
 
 // For augene-ng, disable CH to switch MIDI channel.
 // For MIDI players, comment this out and enable CH.
@@ -23,7 +23,7 @@ _ 0	BEAT5,4 t120
 _ 0-31	r %STEP_DELTA_A
 
 
-#conditional track 0-9
+//#conditional track 0,10-17
 
 
 // ---- Tempo Sequence ---------------------------------------------------------
@@ -63,11 +63,16 @@ G	MARKER "VI"
 
 // ==== Woodwinds section ======================================================
 
+#macro 1-2 SUSTAIN { n36,0,32 E127 }
+#macro 1-2 NORMAL { n38,0,32 E127 }
+#macro 1-2 ACCENT { n39,0,32 E100 }
+#macro 1-2 STACCATO { n40,0,32 E127}
+
 
 // ---- Piccolos ---------------------------------------------------------------
-_ 1	CH1
-	TRACKNAME "Piccolos" INSTRUMENTNAME "sfizz_vpo3_piccolo_ks;simple_reverb" @72 o6 V110
-A	[r1r4]16
+_ 1	CH1 K12
+	TRACKNAME "Piccolos" INSTRUMENTNAME "sfizz_vpo3_piccolo_ks;simple_reverb" o5 V100
+A	NORMAL [r1r4]16
 B	ASSERT_STEP_A 3840, "1.I"
 	[r1r4]20
 	r1r8.[b0>d+16d+0f+4..<]5 >d+0f+16
@@ -76,7 +81,7 @@ C	ASSERT_STEP_A 9360, "1.II"
 	f0a-2.^2^  2.^2^  2.^2
 	[r1r4]9  d-2e-2d-4^  4cr2..<
 	// FIXME: there are slurs
-	g4.f+g4.eQ4f4Q8  a4.g+a4.f+Q4g4Q8>  d-4.cd-4.<b>c4^  8<ab-4.ga-4.g
+	g4.f+g4.e STACCATO f4 NORMAL  a4.g+a4.f+ STACCATO g4 NORMAL>  d-4.cd-4.<b>c4^  8<ab-4.ga-4.g
 D	ASSERT_STEP_A 13680, "1.III"
 	f+4. g a-4. b- a0>c4.< b0>d c0e-4.< b0>d< g0b-4.f+0a
 	e+0g+4. f+0a g0b-4. a0>c< b0>d4. c+0e d0f4. c0e< b-0>d-4.< a0>c<
@@ -86,21 +91,21 @@ D	ASSERT_STEP_A 13680, "1.III"
 E	ASSERT_STEP_A 16080, "1.IV"
 	l24
 	[r1r4]6
-	V+10 r1b->cde-fg  a-8r8r1<< V-10 [r1r4]3
+	STACCATO V+10 r1b->cde-fg  a-8r8r1<< V-10 [r1r4]3
 	V+10 l16 r2gab>c de-fg l24^96ab>cl24^192de- V-10
-	Q5 l12 f2c8.c16f2  d8.d16 dc+d fef b-4^12fd
-	  f2c8.c16f2 d8.d16 dc+d fef b-ab-> dc+d<
+	l12 NORMAL f2 STACCATO c8.c16 NORMAL f2  STACCATO d8.d16 dc+d fef NORMAL b-4^12fd
+	  NORMAL f2 STACCATO c8.c16 NORMAL f2 STACCATO d8.d16 dc+d fef b-ab-> dc+d<
 F	ASSERT_STEP_A 19920, "1.V"
 	l16
 	[r1r4]9
-	Q6 ref+g+ ar8.r2.  r2cea>c< f+g+a>c+ cef+g+  a8r8r1
-	Q8 [r1r4]2
+	NORMAL ref+g+ ar8.r2.  r2cea>c< f+g+a>c+ cef+g+  a8r8r1
+	[r1r4]2
 G	ASSERT_STEP_A 23280, "1.VI"
 
 
 // ---- Flutes -----------------------------------------------------------------
-_ 2	CH2
-	TRACKNAME "Flutes" INSTRUMENTNAME "sfizz_vpo3_flute_sec_ks;simple_reverb" @73 o7 V90
+_ 2	CH2 K12
+	TRACKNAME "Flutes" INSTRUMENTNAME "sfizz_vpo3_flute_sec_ks;simple_reverb" o6 V90
 A	[r1r4]16
 B	ASSERT_STEP_A 3840, "2.I"
 	l16
@@ -337,10 +342,10 @@ G	ASSERT_STEP_A 23280, "7.VI"
 
 // ---- Bassoons ---------------------------------------------------------------
 _ 8 CH8
-	TRACKNAME "Bassoons" INSTRUMENTNAME "sfizz_vpo3_bassoon_sec_ks;simple_reverb" @70 o4 V110
+	TRACKNAME "Bassoons" INSTRUMENTNAME "sfizz_vpo3_bassoon_sec_ks;simple_reverb" o3 V110
 A	l8
 	[r1r4]2
-	V_55,85,0,%2400,2
+	V_75,110,0,%2400,2
 	g2.^2^  2.>d2<  d-0>d-2.^2^  2.r2
 	r1r4  <g2.^2^  2.>d2  d-2.<a-0>e-0a-2
 	g0>d0g2.d0g0>d2  <d-0g0>d-2.<e-0a-2  d0g2.d0g0>d2<
@@ -379,10 +384,10 @@ G	ASSERT_STEP_A 23280, "8.VI"
 
 // ---- Double Bassoons --------------------------------------------------------
 _ 9	CH9
-	TRACKNAME "Double Bassoons" INSTRUMENTNAME "sfizz_vpo3_bassoon_sec_ks;simple_reverb" @70 o4 V110
+	TRACKNAME "Double Bassoons" INSTRUMENTNAME "sfizz_vpo3_bassoon_sec_ks;simple_reverb" o3 V110
 A	l8
 	[r1r4]2
-	V_55,85,0,%2400,2
+	V_75,110,0,%2400,2
 	g2.^2^  2.>d2  d-2.^2^  2.r2<  r1r4  g2.^2^  2.>d2  d-2.a-2
 	  g2.>d2  d-2.e-2  d2.r2<<
 	[r1r4]3
@@ -413,11 +418,31 @@ G	ASSERT_STEP_A 23280, "9.VI"
 
 // ==== Brasses Section ========================================================
 
+#macro 10-11 NORMAL { n72,0,32 E127 }
+#macro 10-11 STACCATO { n76,0,32 E127 }
+
+#macro 12 SUSTAIN { n36,0,32 E127 }
+#macro 12 NORMAL { n38,0,32 E127 }
+#macro 12 ACCENT { n39,0,32 E100 }
+#macro 12 STACCATO { n40,0,32 E127}
+#macro 13 NORMAL { n36,0,32 E127 }
+#macro 13 STACCATO { n40,0,32 E127}
+
+#macro 14-15 SUSTAIN { n72,0,32 E127 }
+#macro 14-15 NORMAL { n74,0,32 E127 }
+#macro 14-15 ACCENT { n75,0,32 E100 }
+#macro 14-15 STACCATO { n76,0,32 E127 }
+
+#macro 16-17 SUSTAIN { n84,0,32 E127 }
+#macro 16-17 NORMAL { n86,0,32 E127 }
+#macro 16-17 ACCENT { n87,0,32 E100 }
+#macro 16-17 STACCATO { n88,0,32 E127 }
+
 
 // ---- Horns High -------------------------------------------------------------
-_ 10	CH10 K-7
-	TRACKNAME "Horns (High)" INSTRUMENTNAME "sfizz_vpo3_french_horn_sec_ks;simple_reverb" @60 o4 V80
-A	[r1r4]13
+_ 10	CH10 K12-7
+	TRACKNAME "Horns (High)" INSTRUMENTNAME "sfizz_vpo3_french_horn_sec_perf_ks;simple_reverb" o4 V110
+A	NORMAL [r1r4]13
 	V-10 e-0a-0>e-2.^2^  2.^2^  4<r1 V+10
 B	ASSERT_STEP_A 3840, "10.I"
 	l16
@@ -427,7 +452,8 @@ B	ASSERT_STEP_A 3840, "10.I"
 	e-0g0b-2.b-0>e-0g2<  a-0>c0f2.<a-0>c0e-2<  b-0>d-0g-2.^2^  2.<a-0>c0e-2<
 	b-0>d-0g-2.^2^  2.<a-0>c0e-2<  b-0>d-0g-2.<a-0>c0e-2<
 	b-0>d-0g-8r8r1
-	r2r8.<d>d2  r4..<d>d2.  r8.<d>d4..<d>d2  r8.[<d>d4..]4<d>d4
+	r2r8.<STACCATO d NORMAL>d2  r4..<STACCATO d NORMAL>d2.
+	  r8.<STACCATO d NORMAL>d4..<d>d2  r8.[<STACCATO d NORMAL>d4..]4<STACCATO d NORMAL>d4
 C	ASSERT_STEP_A 9360, "10.II"
 	l8
 	<a-0>c0e-2.^2^  2.^2^  2.^2<
@@ -475,10 +501,10 @@ G	ASSERT_STEP_A 23280, "10.VI"
 	
 
 // ---- Horns Low --------------------------------------------------------------
-_ 11	CH11 K-7
-	TRACKNAME "Horns (Low)" INSTRUMENTNAME "sfizz_vpo3_french_horn_sec_ks;simple_reverb" @60 o3 V80
-A	[r1r4]2
-	V_50,80,0,%2400,2
+_ 11	CH11 K12-7
+	TRACKNAME "Horns (Low)" INSTRUMENTNAME "sfizz_vpo3_french_horn_sec_perf_ks;simple_reverb" o3 V110
+A	NORMAL [r1r4]2
+	V_70,100,0,%2400,2
 	d2.^2^2.a2  a-2.^2^2.r2  r1r4
 	d2.^2^2.a2  a-2.>e-2d2.^2^4r1  r1r4
 	c0a-0>c2.^2^2.^2^4<r1
@@ -492,7 +518,7 @@ B	ASSERT_STEP_A 3840, "10.I"
 	b-0>d-0g-2.^2^  2.<a-0>c0e-2<  b-0>d-0g-2.<a-0>c0e-2<
 	[b-0>d-0g-1<r4]2
 	b-0>d-0g-2.r8.d-<b-0>d-0g-4^  4r8.d-<b-0>d-0g-4r2
-	r8.[<d>d4..]4<dd4
+	r8.[STACCATO <d> NORMALd4..]4<dd4
 C	ASSERT_STEP_A 9360, "11.II"
 	l8
 	c0e-0a-2.^2^  2.^2^  2.^2
@@ -542,9 +568,9 @@ G	ASSERT_STEP_A 23280, "11.VI"
 
 
 // ---- Trumpets High ----------------------------------------------------------
-_ 12	CH12
-	TRACKNAME "Trumpets (High)" INSTRUMENTNAME "sfizz_vpo3_trumpet_sec_ks;simple_reverb" @56 o5 V100
-A	[r1r4]13
+_ 12	CH12 K12
+	TRACKNAME "Trumpets (High)" INSTRUMENTNAME "sfizz_vpo3_trumpet_sec_ks;simple_reverb" o4 V100
+A	NORMAL [r1r4]13
 	d-2.^2^  2.^2^  4r1
 B	ASSERT_STEP_A 3840, "12.I"
 	l16
@@ -562,12 +588,12 @@ C	ASSERT_STEP_A 9360, "12.II"
 	f-0a-2.^2^  2.^2^  2.^2<
 	V-15
 	[r1r4]2
-	V+10
+	V+15
 	a-4.gf+4.ga4.b->c4.de-4.d
 	g4.f+g4.eQ4f4Q8  g4.f+g4.ed+4.e<b4.>cr2  [REWIND-1-4]3
 	e4.d+e4.c+Q4d4Q8  e4.d+e4.c<b4.>c<<b4.>cf+4.g
-	V-10
-	Q5 [ [c0>c12<]3[c0>c4<]2[c0>c8<]2c0>c4< ]4 Q8
+	V-15
+	STACCATO Q5 [ [c0>c12<]3 NORMAL[c0>c4<]2[c0>c8<]2c0>c4< ]4 Q8
 	[r1r4]3
 	r2.a-4.g  REWIND-1-4 // low
 	r2.>d-2< // high
@@ -579,28 +605,30 @@ D	ASSERT_STEP_A 13680, "12.III"
 E	ASSERT_STEP_A 16080, "12.IV"
 	l12
 	[r1r4]2
-	Q4 b8.b16ba+b>d<bgQ7d2^  8r8r1  [REWIND-1-4]2
-	Q4 g8.g16gdgbgdr2  r1r4
+	STACCATO b8.b16ba+b>d<bg NORMAL d2^  8r8r1  [REWIND-1-4]2
+	STACCATO g8.g16gdgbgdr2  r1r4
 	r1r4
-	Q4 b8.b16ba+b>d<bgQ7d2  Q4>d8.d16dc+dfd<b-Q7f2  [REWIND-1-4]2
-	Q4 g8.g16gdgbgdr2  b-8.b-16b-gb->d<b-fr2
+	NORMAL b8. STACCATO b16ba+b>d<bg NORMAL d2
+	  >d8. STACCATO d16dc+dfd<b- NORMAL f2  [REWIND-1-4]2
+	g8. STACCATO g16gdgbgdr2  NORMAL b-8. STACCATO b-16b-gb->d<b-fr2
 	[r1r4]2
-	  Q4 g+8.g+16g+fg+bg+e>c2<  g+8.g+16g+fg+bg+b>e4^12<bg  e-0g4r1
-	r1r4  Q4 d8.d16dc+dfefb-4^12fd
-	r1r4  Q4 d8.d16dc+dfefb-ab->dc+d
+	  STACCATO g+8.g+16g+fg+bg+e> NORMAL c2<
+	  STACCATO g+8.g+16g+fg+bg+b> NORMAL e4^12<bg  e-0g4r1
+	r1r4  STACCATO d8.d16dc+dfef NORMAL b-4^12fd
+	r1r4  STACCATO d8.d16dc+dfefb-ab->dc+d
 F	ASSERT_STEP_A 19920, "12.V"
-	r1r4  Q4 c4c4c4c<b>cc<b>c  Q7 [ e-2c8.c16e-4c4 ]2
-	e2c8.c16e4c4  f2c8.c16f4c4  f2c8.c16f4c4
-	[ c0a2c0e8.c0e16c0a4c0e4 ]2
+	r1r4  NORMAL c4c4c4 STACCATO c<b>cc<b>c  NORMAL [ e-2 STACCATO c8.c16 NORMAL e-4c4 ]2
+	e2 STACCATO c8.c16 NORMAL e4c4  f2 STACCATO c8.c16 NORMAL f4c4  f2 STACCATO c8.c16 NORMAL f4c4
+	[ c0a2 STACCATO c0e8.c0e16 NORMAL c0a4c0e4 ]2
 	Q8 c0a8r8r1  r1r4  r1r4
 	E_127,32,1.,2.,32 <<a1^4^  1r4 E127  // fadeout
 G	ASSERT_STEP_A 23280, "12.VI"
 
 
 // ---- Trumpets Low -----------------------------------------------------------
-_ 13	CH13
-	TRACKNAME "Trumpets (Low)" INSTRUMENTNAME "sfizz_vpo3_trumpet_sec_ks;simple_reverb" @56 o4 V90
-A	[r1r4]16
+_ 13	CH13 K12
+	TRACKNAME "Trumpets (Low)" INSTRUMENTNAME "sfizz_vpo3_trumpet_sec_perf_ks;simple_reverb" o4 V100
+A	NORMAL [r1r4]16
 B	ASSERT_STEP_A 3840, "13.I"
 	l16
 	[r1r4]7  r2.a2  a-1r4
@@ -612,14 +640,14 @@ B	ASSERT_STEP_A 3840, "13.I"
 	<r1r4  r8.gr4..gr2  r8.gr4..gr4..g  r4..gr4..gr4>>
 C	ASSERT_STEP_A 9360, "13.II"
 	l8
-	Q5 [ [c12]3c4c4c8c8c4 ]3  [REWIND-1-4]3
-	Q8 d-2.^2^  2.^2^  2.^2<
-	Q5 [ [c0>c12<]3[c0>c4<]2[c0>c8<]2c0>c4< ]7  [r1r4]2
-	Q8 > d-2e-2d-2c8r8r2.<
-	Q5 [ [c0>c12<]3[c0>c4<]2[c0>c8<]2c0>c4< ]3
-	  [c0>c12<]3[c0>c4<]2f4.e8r-2>d-2<
+	Q5 [ STACCATO [c12]3 NORMAL c4c4c8c8c4 ]3  [REWIND-1-4]3
+	NORMAL Q8 d-2.^2^  2.^2^  2.^2<
+	Q5 [ STACCATO [c0>c12<]3 NORMAL [c0>c4<]2[c0>c8<]2c0>c4< ]7  [r1r4]2
+	NORMAL Q8 > d-2e-2d-2c8r8r2.<
+	Q5 [ STACCATO [c0>c12<]3 NORMAL [c0>c4<]2[c0>c8<]2c0>c4< ]3
+	  STACCATO [c0>c12<]3 NORMAL [c0>c4<]2f4.e8r-2>d-2<
 D	ASSERT_STEP_A 13680, "13.III"
-	Q7 d+8r8r1  r2.g4.f+8  e+8r8r1  [REWIND-1-4]3
+	NORMAL Q7 d+8r8r1  r2.g4.f+8  e+8r8r1  [REWIND-1-4]3
 	b8r8r1  r2.>e-2  c+8r8r1<
 	r2.f+0>f+2  <e0>e8r8r2<f+0>f+2  <e0>e8r8r2<f+0>f+2  <e0>e2.^4.r8
 	r2.<e0>e2  <b-0>b-4r1  r1r4
@@ -639,9 +667,9 @@ G	ASSERT_STEP_A 23280, "13.VI"
 
 
 // ---- Tenor Trombones --------------------------------------------------------
-_ 14	CH14
-	TRACKNAME "Tenor Trombones" INSTRUMENTNAME "sfizz_vpo3_trombone_sec_ks;simple_reverb" @57 o4 V100
-A	[r1r4]16
+_ 14	CH14 K12
+	TRACKNAME "Tenor Trombones" INSTRUMENTNAME "sfizz_vpo3_trombone_sec_ks;simple_reverb" o3 V105
+A	NORMAL [r1r4]16
 B	ASSERT_STEP_A 3840, "14.I"
 	l16
 	V+10 // solo-ish
@@ -653,7 +681,7 @@ B	ASSERT_STEP_A 3840, "14.I"
 	r2.<a-0>f2^  8r8r2<a-0>f2^  8r8r1  [r1r4]3  d+0f+2.^2^  2.^2
 C	ASSERT_STEP_A 9360, "14.II"
 	l8
-	V+10 Q5 [ [c12]3c4c4c8c8c4 ]3 V-10
+	V+10 Q5 [ STACCATO [c12]3 NORMAL c4c4c8c8c4 ]3 V-10
 	Q8 V+10 // solo-ish
 	< [ f4.ed+4.ef4.ga4.b>c4.<b ]2 [REWIND-1-4]4
 	[ a-4.g8f+4.ga4.b->c4.de-4.d< ]2
@@ -670,12 +698,12 @@ D	ASSERT_STEP_A 13680, "14.III"
 E	ASSERT_STEP_A 16080, "14.IV"
 	l12
 	[r1r4]6
-	Q5 d8.d16dcdfd<b-f2>  [r1r4]5
+	Q5 STACCATO d8.d16dcdfd<b- NORMAL f2>  [r1r4]5
 	Q8 [ r1r4  d0f2.^4.r8 ]2
 F	ASSERT_STEP_A 19920, "14.V"
 	[r1r4]7
 	V+10 Q5
-	[ <c0>c8.<0>c16<a-0>a-4r2. ]2
+	[ STACCATO <c0>c8.<0>c16<a-0> NORMAL a-4r2. ]2
 	c0a4r1  r1r4  r1r4
 	Q8 E_127,32,1.,2.,32 <c0e1^4^  1r4  E127 // fadeout
 	V-10
@@ -683,9 +711,9 @@ G	ASSERT_STEP_A 23280, "14.VI"
 
 
 // ---- Bass Trombone ----------------------------------------------------------
-_ 15	CH15
-	TRACKNAME "Bass Trombones" INSTRUMENTNAME "sfizz_vpo3_bass_trombone_ks;simple_reverb" @57 o3 V95
-A	[r1r4]16
+_ 15	CH15 K12
+	TRACKNAME "Bass Trombones" INSTRUMENTNAME "sfizz_vpo3_bass_trombone_ks;simple_reverb" o2 V95
+A	NORMAL [r1r4]16
 B	ASSERT_STEP_A 3840, "15.I"
 	l16
 	d-2.^2^  2.b-2  a2.^2^  2.r2  f2.b-2>  c2.e2  f2.b-2  a2.a2
@@ -694,8 +722,8 @@ B	ASSERT_STEP_A 3840, "15.I"
 	b2.^2^  2.^2
 C	ASSERT_STEP_A 9360, "15.II"
 	l8
-	V+10 Q5 [ [c12]3c4c4c8c8c4 ]3 V-10
-	Q8 [ d-4.c<b4.>cd4.e-f4.ga-4.g ]2  [r1r4]3
+	V+10 Q5 STACCATO [ [c12]3c4c4c8c8c4 ]3 V-10
+	NORMAL Q8 [ d-4.c<b4.>cd4.e-f4.ga-4.g ]2  [r1r4]3
 	d-4.c<b4.>cd4.e-f4.ga-4.g  [r1r4]3
 	[r1r4]2  r2.f2
 D	ASSERT_STEP_A 13680, "15.III"
@@ -713,20 +741,19 @@ G	ASSERT_STEP_A 23280, "15.VI"
 
 
 // ---- Tenor Tuba -------------------------------------------------------------
-#macro 16 KS_SUSTAIN { o7d0 } // 06c with K-2 
-_ 16	CH16 K-2
-	TRACKNAME "Tenor Tuba" INSTRUMENTNAME "sfizz_vpo3_tuba_ks;simple_reverb" KS_SUSTAIN o3 V100
-A	[r1r4]16
+_ 16	CH16 K12-2 // FIXME: wrong key switches?
+	TRACKNAME "Tenor Tuba" INSTRUMENTNAME "sfizz_vpo3_tuba_ks;simple_reverb" o2 V90
+A	NORMAL [r1r4]16
 B	ASSERT_STEP_A 3840, "16.I"
 	l16
 	[r1r4]8
 	f2.>d2  c2.g2  f2.d2  c2.e-2^  8r8r1
 	[r1r4]4
-	r2r8.<a>a2  r2r8.<a>a2  r4r8.<a>a2.
-	r8.<a>a4..<a>a2  r8.[<a>a4..]4<a>a4
+	r2r8.STACCATO<a>NORMALa2  r2r8.STACCATO<a>NORMALa2  r4r8.STACCATO<a>NORMALa2.
+	r8.STACCATO<a>NORMALa4..STACCATO<a>NORMALa2  r8.[STACCATO<a>NORMALa4..]4STACCATO<a>NORMALa4
 C	ASSERT_STEP_A 9360, "16.II"
 	l8
-	[ [d12]3d4d4d8d8d4 ]3
+	[ STACCATO [d12]3d4d4d8d8 NORMAL d4 ]3
 	<b-4.ag+4.ab-4.>cd4.ef4.e  [r1r4]2
 	a4.g+a4.f+Q4g4Q8  a4.g+a4.f+f4.f+c+4.d<g+4.a  [r1r4]8
 D	ASSERT_STEP_A 13680, "16.III"
@@ -734,11 +761,11 @@ D	ASSERT_STEP_A 13680, "16.III"
 E	ASSERT_STEP_A 16080, "16.IV"
 	l16 >
 	V+15 // solo
-	Q6 [ [e4]3[e12d+12e12]2  g2e8.eg4e4^  2.^8r4. ]2
+	Q6 [ [e4]3 STACCATO [e12d+12e12]2  NORMAL g2e8.eg4e4^  2.^8r4. ]2
 	V-15 r1r4
 	[r1r4]9
 F	ASSERT_STEP_A 19920, "16.V"
-	Q6 [d4]3[d12c+12d12]2  f2d8.df2
+	Q6 [d4]3 STACCATO [d12c+12d12]2  NORMAL f2d8.df2
 	d8.df2d8.df4  d8.df+2d8.df+4
 	  d8.dg2d8.dg4  [d8.da-2d8.da-4]2
 	[d8.db1]2  [r1r4]3
@@ -747,17 +774,16 @@ G	ASSERT_STEP_A 23280, "16.VI"
 
 
 // ---- Bass Tuba --------------------------------------------------------------
-#macro 17 KS_SUSTAIN { o7c0 } // 06c
-_ 17	CH17
-	TRACKNAME "Bass Tuba" INSTRUMENTNAME "sfizz_vpo3_tuba_ks;simple_reverb" KS_SUSTAIN o2 V100
-A	[r1r4]16
+_ 17	CH17 K12
+	TRACKNAME "Bass Tuba" INSTRUMENTNAME "sfizz_vpo3_tuba_ks;simple_reverb" o2 V90
+A	NORMAL [r1r4]16
 B	ASSERT_STEP_A 3840, "17.I"
 	l16
 	[r1r4]8
 	e-2.>c2  <b-2.>f2  e-2.>c2<  b-2.r2  [r1r4]8
 	r1r4<  g2.^2^  2.^2
 C	ASSERT_STEP_A 9360, "17.II"
-	Q6 [[c12]3c4c4c8c8c4]3
+	Q6 [STACCATO [c12]3 NORMAL c4c4c8c8c4]3
 	[r1r4]14  r2.<f2
 D	ASSERT_STEP_A 13680, "17.III"
 	Q8 g8r8r1  r2.g2  a8r8r1  r2.b-2>  c8r8r2<b-2  >c8r8r2<b-2  >c8r8r1
@@ -897,7 +923,7 @@ G	ASSERT_STEP_A 23280, "23.VI"
 
 // ---- Harp I -----------------------------------------------------------------
 _ 24	CH24
-	TRACKNAME "Harp I" INSTRUMENTNAME "sfizz_vpo3_harp_ks;simple_reverb" @46 o6 V80
+	TRACKNAME "Harp I" INSTRUMENTNAME "sfizz_vpo3_harp_ks;simple_reverb" o5 V60
 A	[ g12<g12>g12<g4>g4<g8>g8<g4> ]16
 B	ASSERT_STEP_A 3840, "24.I"
 	[ g12<g12>g12<g4>g4<g8>g8<g4> ]12  g4r1  r1r4
@@ -915,7 +941,7 @@ G	ASSERT_STEP_A 23280, "24.VI"
 
 // ---- Harp II ----------------------------------------------------------------
 _ 25	CH25
-	TRACKNAME "Harp II" INSTRUMENTNAME "sfizz_vpo3_harp_ks;simple_reverb" @46 o5 V90
+	TRACKNAME "Harp II" INSTRUMENTNAME "sfizz_vpo3_harp_ks;simple_reverb" o4 V60
 A	[ g12>g12<g12>g4<g4>g8<g8>g4< ]16
 B	ASSERT_STEP_A 3840, "25.I"
 	[ g12>g12<g12>g4<g4>g8<g8>g4< ]12  g4r1  r1r4
@@ -964,51 +990,53 @@ G	ASSERT_STEP_A 23280, "26.VI"
 
 // ==== Strings Section ========================================================
 
-// FIXME: those treble spectra macros should be applied to *each* note-on, every time.
-#macro 27,28 TREBLE_A { M_0,80,0,4 }  // FIXME: for sfz use key switches
-#macro 27,28 TREBLE_END { M0 }  // FIXME: for sfz use key switches
-#macro 29 TREBLE_A { M_0,80,0,4 }  // FIXME: for sfz use key switches
-#macro 29 TREBLE_END { M0 }  // FIXME: for sfz use key switches
-#macro 30 TREBLE_A { M_0,80,0,4 }  // FIXME: for sfz use key switches
-#macro 30 TREBLE_END { M0 }  // FIXME: for sfz use key switches
-#macro 31 TREBLE_A { M_0,80,0,4 }  // FIXME: for sfz use key switches
-#macro 31 TREBLE_END { M0 }  // FIXME: for sfz use key switches
+#macro 27-29 SUSTAIN { n36,0,32 E127 }
+#macro 27-29 TREMOLO { n37,0,32 E70 }
+#macro 27-29 ACCENT { n39,0,32 E100 }
+#macro 27-29 STACCATO { n40,0,32 E127 }
+#macro 27-29 PIZZICATO { n41,0,32 E127 }
+#macro 30 SUSTAIN { n84,0,32 }
+#macro 30 TREMOLO { n85,0,32 }
+#macro 30 ACCENT { n87,0,32 }
+#macro 30 STACCATO { n88,0,32 }
+#macro 30 PIZZICATO { n89,0,32 }
 
 
 // ---- 1st. Violin ------------------------------------------------------------
-_ 27	CH27
-	TRACKNAME "1st. Violin" INSTRUMENTNAME "sfizz_vpo3_1st_violin_sec_ks;simple_reverb" @40 o4 V105 E127
-A	(48 Q4 [ [g12]3g4g4g8g8g4 )3]16
+_ 27	CH27 K12
+	TRACKNAME "1st. Violin" INSTRUMENTNAME "sfizz_vpo3_1st_violin_sec_ks;simple_reverb" o3 E127 v80
+A	ACCENT V80-48 Q4 [ [g12]3g4g4g8g8g4 V+3]16
 B	ASSERT_STEP_A 3840, "27.I"
 	[ [g12]3g4g4g8g8g4 ]8
-	Q8 [r1r4]3  r2.>>>d-2  <b2.^2^  2.>d-2<
+	SUSTAIN Q8 [r1r4]3  r2.>>>d-2  <b2.^2^  2.>d-2<
 	b2.^2^  2.>d-2<  b2.>d-2<
-	TREBLE_A [d+0b2.d+0b2]6 TREBLE_END
+	TREMOLO [d+0b2.d+0b2]6
 C	ASSERT_STEP_A 9360, "27.II"
-	l8 Q4 V+10
-	[ [c0>c12<]3[c0>c4<]2[c0>c8<]2c0>c4< ]3
-	V-10
+	l8 Q4 V+5
+	ACCENT [ [c0>c12<]3[c0>c4<]2[c0>c8<]2c0>c4< ]3
+	V-5
 	[ [c0>c12<]3[c0>c4<]2[c0>c8<]2c0>c4< ]7
-	Q8 > V+15 [ d-2e-2d-2crr2. ]2 < V-15
+	SUSTAIN Q8 > V+15 [ d-2e-2d-2crr2. ]2 < V-15
 	g4.f+g4.eQ4f4Q8  a4.g+a4.f+Q4g4Q8
 	>d-4.cd-4.<b>c4.<ab-4.ga-4.g
 D	ASSERT_STEP_A 13680, "27.III"
 	f+4.ga-4.b->c4.de-4.d<b-4.a	  g+4.ab-4.>cd4.ef4.ef+2
 	err2f+2  err2f+2  err<a+b4.>cd-4.e-f4.ga-4.g<
-	Q4 V-10 [[<b-0>b-4]5 ]2 V+10
+	ACCENT Q4 V-10 [[<b-0>b-4]5 ]2 V+10
 E	ASSERT_STEP_A 16080, "27.IV"
 	l24 < Q4
-	[ [d0b-4]5  [c-0a-4]2d0b-4[c-0a-4]2  [d0b4]5 ]2  Q7[d0b-4]4b-cdefg
+	SUSTAIN [ [d0b-4]5  [c-0a-4]2d0b-4[c-0a-4]2  [d0b4]5 ]2  ACCENT Q7[d0b-4]4b-cdefg
 	l12 Q4
-	[g+4]3[g+gg+]2  b2g+8.g+16b2  >c2e4<b+2  >c+2.c+4e4
+	SUSTAIN [g+4]3 ACCENT [g+gg+]2  SUSTAIN b2 ACCENT g+8.g+16 SUSTAIN b2  >c2e4<b+2  >c+2.c+4e4
 	Q8
-	c2.^2  f2c8.c16f2  g2.^2  f2c8.c16f2  a2.^2<
+	SUSTAIN c2.^2  f2 ACCENT c8.c16 SUSTAIN f2  g2.^2  f2 ACCENT c8.c16 SUSTAIN f2  a2.^2<
 F	ASSERT_STEP_A 19920, "27.V"
 	l16
 	[r1r4]7
-	Q7 [ r4 ref+g+ a<b+>c+d+ er8. r4 ]2
+	ACCENT Q7 [ r4 ref+g+ a<b+>c+d+ er8. r4 ]2
 	ref+g+ a<b+>c+d+ e<g+ab b+ef+g+ a<b+>c+d+
 	  cea>c< f+g+a>c+ cea>c< f+g+a>c+ cef+g+
+	// FIXME: keys out of range...
 	Q4 a8r8r1<<<
 	E_127,32,1.,2.,32 Q8 a1^4^  1r4  E127 // fadeout
 G	ASSERT_STEP_A 23280, "27.VI"
@@ -1016,56 +1044,56 @@ G	ASSERT_STEP_A 23280, "27.VI"
 
 
 // ---- 2nd. Violin ------------------------------------------------------------
-_ 28	CH28
-	TRACKNAME "2nd Violins" INSTRUMENTNAME "sfizz_vpo3_2nd_violin_sec_ks;simple_reverb" @40 o4 V100 E127
-A	(48 Q4 [ [g12]3g4g4g8g8g4 )3]16
+_ 28	CH28 K12
+	TRACKNAME "2nd Violins" INSTRUMENTNAME "sfizz_vpo3_2nd_violin_sec_ks;simple_reverb" o4 E127
+A	ACCENT V95-48 Q4 [ [g12]3g4g4g8g8g4 V+3]16
 B	ASSERT_STEP_A 3840, "28.I"
 	[r1r4]8
 	[ [g12]3g4g4g8g8g4 ]9
-	Q8 TREBLE_A [d+0b2.d+0b2]6 TREBLE_END
+	Q8 TREMOLO [d+0b2.d+0b2]6 SUSTAIN
 C	ASSERT_STEP_A 9360, "28.II"
 	l8 Q4
-	V+10 [ [c0>c12<]3[c0>c4<]2[c0>c8<]2c0>c4< ]3
+	ACCENT V+10 [ [c0>c12<]3[c0>c4<]2[c0>c8<]2c0>c4< ]3
 	V-10 [ [c0>c12<]3[c0>c4<]2[c0>c8<]2c0>c4< ]7
-	Q8 d-2e-2d-2crr2.  <f4.ed+4.ef4.ga4.b>c4.<b>
+	SUSTAIN Q8 d-2e-2d-2crr2.  <f4.ed+4.ef4.ga4.b>c4.<b>
 	e4.d+e4.c+Q4d4Q8  f+4.e+f+4.d+Q4e4Q8
 	b-4.ab-4.g+a4.f+g4.e>d-2<
 D	ASSERT_STEP_A 13680, "28.III"
 	brr4<a-4.b->c4.de-4.g>e-2  c+rr4<<b-4.>cd4.ef4.a>d-4.c
 	[b4.a+b>cd-4.c<]2  b4.a+b4.>cd-4.e-f4.ge2<
-	Q4 V-10 [[<e-0>e-4]5 ]2 V+10
-E	ASSERT_STEP_A 16080, "28.IV" V110
+	Q4 V-5 [[<e-0>e-4]5 ]2 V+5
+E	ASSERT_STEP_A 16080, "28.IV"
 	l24 < Q4
 	[ [e-4]5 ]2  [<g0>d4]5  [ [e-4]5 ]2
 	[<b0>d4]5  [d0b-4]4b->cde-fg
-	[g+4]3[g+12g12g+12]2
-	Q8 V100  b2g+8.g+16b2  >c+2e4<b+2
-	TREBLE_A <e0b2.e0b2 TREBLE_END
+	ACCENT [g+4]3[g+12g12g+12]2
+	SUSTAIN Q8 V100  b2g+8.g+16b2  >c+2e4<b+2
+	TREMOLO <e0b2.e0b2 SUSTAIN
 	  l16r<gab> cde-f gab>c de-fg l24^48 ab>cl48^96de-l16
-	[ f2c8.c16f2 : g2.^2 ]2  a2.^2<
+	SUSTAIN [ f2c8.c16f2 : g2.^2 ]2  a2.^2<
 F	ASSERT_STEP_A 19920, "28.V"
 	l16
 	[r1r4]7
-	Q7 [ r4 rb+>d+e f+<f+g+a br8. r4 ]2
+	ACCENT Q7 [ r4 rb+>d+e f+<f+g+a br8. r4 ]2
 	rb+>d+e f+<f+g+a b+ef+g+ a<b+>d+e f+<bab>
 	  cea>c< f+g+a>c+< b+<b+>d+e f>c<b>g+ f+g+ab>
-	Q4 c8r8r1<<<
+	SUSTAIN Q4 c8r8r1<<<
 	E_127,32,1.,2.,32 Q8 a1^4^  1r4  E127 // fadeout
 G	ASSERT_STEP_A 23280, "28.VI"
 
 
 // ---- Violas -----------------------------------------------------------------
-_ 29	CH29
-	TRACKNAME "Violas" INSTRUMENTNAME "sfizz_vpo3_viola_sec_ks;simple_reverb" @41 o4 V100 E127
-A	(48 Q4 [ [g12]3g4g4g8g8g4 )3 ]16
+_ 29	CH29 K12
+	TRACKNAME "Violas" INSTRUMENTNAME "sfizz_vpo3_viola_sec_ks;simple_reverb" o4 E127
+A	ACCENT V90-48 Q4 [ [g12]3g4g4g8g8g4 V+3 ]16
 B	ASSERT_STEP_A 3840, "29.I"
 	[r1r4]8
-	Q4 [ [g12]3g4g4g8g8g4 ]15
+	ACCENT Q4 [ [g12]3g4g4g8g8g4 ]15
 C	ASSERT_STEP_A 9360, "29.II"
 	l8 Q4
 	V+10 [ [c0>c12<]3[c0>c4<]2[c0>c8<]2c0>c4< ]3
 	V-10 [ [c0>c12<]3[c0>c4<]2[c0>c8<]2c0>c4< ]7
-	Q8 a-4.gf+4.ga-4.b->c4.de-4.d  <a-4.gf+4.ga4.b->c4.de-4.d
+	SUSTAIN Q8 a-4.gf+4.ga-4.b->c4.de-4.d  <a-4.gf+4.ga4.b->c4.de-4.d
 	g4.f+g4.eQ4f4Q8  g4.f+g4.dQ4e4Q8
 	>d-4.cd-4.<b>c4.<ab-4.gf4.e
 D	ASSERT_STEP_A 13680, "29.III"
@@ -1076,31 +1104,31 @@ E	ASSERT_STEP_A 16080, "29.IV"
 	l24 < Q4
 	[ [e-0b-4]5  [e-0c-4]2b-4[e-0c-4]2  [d4]5 ]2  [d0b-4]5 >
 	[e0>c+4<]5  [f+0>d+4<]2e0>c+4<[f+0>d+4<]2
-	Q4 l12 g+8.g+16 g+gg+ bgd< Q8g0>d-2<
-	TREBLE_A e0b2.e0b2 TREBLE_END
+	ACCENT Q4 l12 g+8.g+16 g+gg+ bgd< Q8g0>d-2<
+	TREMOLO e0b2.e0b2 ACCENT
 	  l16rgab> cde-f gab>c< defg l24^48abcl48^96de-l16
-	f4r1  <r4[d0b-4]4  e-0>c4<r1  r4[d0b-4]4
+	SUSTAIN f4r1  <r4[d0b-4]4  e-0>c4<r1  r4[d0b-4]4
 F	ASSERT_STEP_A 19920, "29.V"
 	[r1r4]7
-	Q7 [ r4 r>ed+c+ <b+ag+f+ g+r8. r4 ]2
+	ACCENT Q7 [ r4 r>ed+c+ <b+ag+f+ g+r8. r4 ]2
 	r>ed+c+ <b+ag+f+ egf+f eed+c+ <b+f+ab
 	  r<b+>d+e f+b+a+>f+ e+<a>c+d eb+a+g+ f+g+ab
-	Q4 >c8r8r1<<<
+	SUSTAIN Q4 >c8r8r1<<<
 	E_127,32,1.,2.,32 Q8 c1^4^  1r4  E127 // fadeout
 G	ASSERT_STEP_A 23280, "29.VI"
 
 
 // ---- Violoncellos -----------------------------------------------------------
-_ 30	CH30
-	TRACKNAME "Violoncellos" INSTRUMENTNAME "sfizz_vpo3_cello_sec_ks;simple_reverb" @42 o3 V100 E127
-A	(48 Q4 [ [g12]3g4g4g8g8g4 )3 ]16
+_ 30	CH30 K12
+	TRACKNAME "Violoncellos" INSTRUMENTNAME "sfizz_vpo3_cello_sec_ks;simple_reverb" o3 E127
+A	ACCENT V90-48 Q4 [ [g12]3g4g4g8g8g4 V+3 ]16
 B	ASSERT_STEP_A 3840, "30.I"
 	Q4 [ [g12]3g4g4g8g8g4 ]23
 C	ASSERT_STEP_A 9360, "30.II"
 	l8 Q4
 	V+10 [ [c0>c12<]3[c0>c4<]2[c0>c8<]2c0>c4< ]3
 	V-10 [ [c0>c12<]3[c0>c4<]2[c0>c8<]2c0>c4< ]7
-	Q8 d-4.c<b4.>cd-4.ef4.ga-4.g  d-4.c<b4.>cd-4.e-f4.ga-4.g>
+	SUSTAIN Q8 d-4.c<b4.>cd-4.ef4.ga-4.g  d-4.c<b4.>cd-4.e-f4.ga-4.g>
 	c4.<b>c4.<aQ8b4Q8  >d4.c+d4.<b>Q4c4Q8
 	g-4.fg-4.ef4.de-4.cd-4.c
 D	ASSERT_STEP_A 13680, "30.III"
@@ -1112,7 +1140,7 @@ E	ASSERT_STEP_A 16080, "30.IV"
 	[ [g-4]5  a-4a-4g-4a-4a-4 : [g4]5 ]2  g4g4g4g-4g-4
 	  f4f4f+4g4g+4
 	[ [a4]5 ]2  [g+4]3a4a4
-	TREBLE_A g+2.g+2  a2.a2 TREBLE_END
+	TREMOLO g+2.g+2  a2.a2 SUSTAIN
 	f4r1  r4[f4]4  a4r1
 	r4[f4]4
 F	ASSERT_STEP_A 19920, "30.V"
@@ -1120,17 +1148,17 @@ F	ASSERT_STEP_A 19920, "30.V"
 	[r1r4]7
 	[r1r4]2
 	>>
-	Q7 red+c+< b+ag+f+ eg+f+f eed+c+ <b+ag+f+
+	ACCENT Q7 red+c+< b+ag+f+ eg+f+f eed+c+ <b+ag+f+
 	  r<b+>d+e f+>c+<b+>g+ f+<b>d+e f+>c+<b+g+ f+g+ab
 	Q4 >c8r8r1<<<
-	E_127,32,1.,2.,32 Q8 f1^4^  1r4  E127 // fadeout
+	SUSTAIN E_127,32,1.,2.,32 Q8 f1^4^  1r4  E127 // fadeout
 G	ASSERT_STEP_A 23280, "30.VI"
 
 
 // ---- Doublebasses -----------------------------------------------------------
-_ 31	CH31
-	TRACKNAME "Doublebasses" INSTRUMENTNAME "sfizz_vpo3_contrabass_sec_ks;simple_reverb" @43 o3 V100 E127
-A	(48 Q6 [ [g12]3g4g4g8g8g4 )3 ]16
+_ 31	CH31 K12
+	TRACKNAME "Doublebasses" INSTRUMENTNAME "sfizz_vpo3_contrabass_sec_ks;simple_reverb" o2 E127
+A	V100-48 Q6 [ [g12]3g4g4g8g8g4 V+3 ]16
 B	ASSERT_STEP_A 3840, "31.I"
 	Q6 [ [g12]3g4g4g8g8g4 ]23
 C	ASSERT_STEP_A 9360, "31.II"

@@ -585,8 +585,8 @@ E	ASSERT_STEP_A 16080, "12.IV"
 	Q4 b8.b16ba+b>d<bgQ7d2  Q4>d8.d16dc+dfd<b-Q7f2  [REWIND-1-4]2
 	Q4 g8.g16gdgbgdr2  b-8.b-16b-gb->d<b-fr2
 	[r1r4]2
-	  Q4 g+8.g+16g+fg+bg+e>c2<  g+8.g+16g+fg+bg+b>e4^12<bg  e-0g4r1
-	r1r4  Q4 d8.d16dc+dfefb-4^12fd
+	  Q4 g+8.g+16g+fg+bg+e>Q7c2<  Q4g+8.g+16g+fg+bg+b>Q7e4^12<bg  e-0g4r1
+	r1r4  Q4 d8.d16dc+dfefQ7b-4^12fd
 	r1r4  Q4 d8.d16dc+dfefb-ab->dc+d
 F	ASSERT_STEP_A 19920, "12.V"
 	r1r4  Q4 c4c4c4c<b>cc<b>c  Q7 [ e-2c8.c16e-4c4 ]2

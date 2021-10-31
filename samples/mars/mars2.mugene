@@ -104,8 +104,8 @@ P	ASSERT_STEP_B 24816, "1.End"
 
 // ---- Flutes -----------------------------------------------------------------
 _ 2	CH2
-	INSTRUMENTNAME "sf2_realistic;simple_reverb" @73 o6 V90
-	l8
+	INSTRUMENTNAME "sf2_realistic;simple_reverb" @73 o7 V90
+	< l8
 G	[r1r4]16
 H	ASSERT_STEP_B 3840, "2.VII"
 	[ c4.<bb-4.b>c4.d :1 d+4.ef4.e :2 e4.f+g+4.f :3 f4.ed+4.e ]3
@@ -616,8 +616,9 @@ P	ASSERT_STEP_B 24816, "12.End"
 
 // ---- Trumpets Low -----------------------------------------------------------
 _ 13	CH13
-	INSTRUMENTNAME "sf2_realistic;simple_reverb" @56 o5 V90
-G	[r1r4 r1r4]8
+	INSTRUMENTNAME "sf2_realistic;simple_reverb" @56 o4 V90
+G	>
+	[r1r4 r1r4]8
 H	ASSERT_STEP_B 3840, "13.VII"
 	l8
 	Q4 [ [b12]3b4r2r2b4b4b8b8b4 ]5  Q5 f4.dc+4.dg4.f>c4.<b>e4.d
@@ -939,8 +940,8 @@ P	ASSERT_STEP_B 24816, "26.End"
 
 // ---- 1st. Violin ------------------------------------------------------------
 _ 27	CH27
-	INSTRUMENTNAME "sf2_realistic;simple_reverb" @40 o3 V105
-G	l8
+	INSTRUMENTNAME "sf2_realistic;simple_reverb" @40 o4 V105
+G	< l8
 	TREBLE_A [g+1.g+1]4 TREBLE_END >>>
 	[ d4.c+<b+4.>c+d4.e+ :1 e4.e+f+4.e+ :2 e4.ga4.g+ :3 f+4.e+e4.e+ ]3
 	  a4.g+g4.g+a4.b>d4.c+<b4.>c+<

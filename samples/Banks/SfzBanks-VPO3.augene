@@ -16,7 +16,9 @@
     <AudioGraph Id="sfizz_vpo3_english_horn_ks" Source="sfizz-vpo3-english-horn-ks.filtergraph" />
     <AudioGraph Id="sfizz_vpo3_english_horn_perf_ks" Source="sfizz-vpo3-english-horn-perf-ks.filtergraph" />
     <AudioGraph Id="sfizz_vpo3_flute_sec_ks" Source="sfizz-vpo3-flute-sec-ks.filtergraph" />
+    <AudioGraph Id="sfizz_vpo3_flute_sec_perf_ks" Source="sfizz-vpo3-flute-sec-perf-ks.filtergraph" />
     <AudioGraph Id="sfizz_vpo3_french_horn_sec_ks" Source="sfizz-vpo3-french-horn-sec-ks.filtergraph" />
+    <AudioGraph Id="sfizz_vpo3_french_horn_sec_perf_ks" Source="sfizz-vpo3-french-horn-sec-perf-ks.filtergraph" />
     <AudioGraph Id="sfizz_vpo3_harp_ks" Source="sfizz-vpo3-harp-ks.filtergraph" />
     <AudioGraph Id="sfizz_vpo3_oboe_sec_ks" Source="sfizz-vpo3-oboe-sec-ks.filtergraph" />
     <AudioGraph Id="sfizz_vpo3_oboe_sec_perf_ks" Source="sfizz-vpo3-oboe-sec-perf-ks.filtergraph" />
@@ -25,7 +27,9 @@
     <AudioGraph Id="sfizz_vpo3_timpani_ks" Source="sfizz-vpo3-timpani-ks.filtergraph" />
     <AudioGraph Id="sfizz_vpo3_trombone_sec_ks" Source="sfizz-vpo3-trombone-sec-ks.filtergraph" />
     <AudioGraph Id="sfizz_vpo3_trumpet_sec_ks" Source="sfizz-vpo3-trumpet-sec-ks.filtergraph" />
+    <AudioGraph Id="sfizz_vpo3_trumpet_sec_perf_ks" Source="sfizz-vpo3-trumpet-sec-perf-ks.filtergraph" />
     <AudioGraph Id="sfizz_vpo3_tuba_ks" Source="sfizz-vpo3-tuba-ks.filtergraph" />
+    <AudioGraph Id="sfizz_vpo3_tuba_perf_ks" Source="sfizz-vpo3-tuba-perf-ks.filtergraph" />
     <AudioGraph Id="sfizz_vpo3_viola_sec_ks" Source="sfizz-vpo3-viola-sec-ks.filtergraph" />
   </AudioGraphs>
 </AugeneProject>
