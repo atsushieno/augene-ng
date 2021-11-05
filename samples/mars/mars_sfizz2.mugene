@@ -807,6 +807,8 @@ O	ASSERT_STEP_B 23664, "17.XII"
 P	ASSERT_STEP_B 24816, "17.End"
 
 
+// ==== Percussions ============================================================
+
 // ---- Timpani 1 --------------------------------------------------------------
 _ 18	CH18
 	// INSTRUMENTNAME "sf2_realistic;simple_reverb" @47 o3 V80 v110
@@ -842,8 +844,8 @@ P	ASSERT_STEP_B 24816, "18.End"
 
 // ---- Side Drum --------------------------------------------------------------
 _ 20	CH9
-	// INSTRUMENTNAME "sf2_realistic_drum_orchestral;simple_reverb" o2 V80 v100
-G	o2
+	// INSTRUMENTNAME "sf2_realistic_drum_orchestral;simple_reverb" o V80 v100
+G	o4
 	[ [c12]3c4r2 r2 c8c8c4r2 ]8
 H	ASSERT_STEP_B 3840, "20.VII"
 	[ d1.d1 ]5  r1r1r4r4
@@ -893,12 +895,12 @@ K	ASSERT_STEP_B 15360, "23.IX"
 L	ASSERT_STEP_B 18480, "23.X"
 	[r1r4]8
 M	ASSERT_STEP_B 20400, "23.X-middle"
-	a1.^1^  1.r1
+	GONG1.^1^  1.r1
 	[r1r4]6
 N	ASSERT_STEP_B 22800, "23.XI"
-	[a2.]6
+	[GONG2.]6
 O	ASSERT_STEP_B 23664, "23.XII"
-	a2.  [r2.]7
+	GONG2.  [r2.]7
 P	ASSERT_STEP_B 24816, "23.End"
 
 

@@ -598,7 +598,7 @@ C	ASSERT_STEP_A 9360, "12.II"
 	r2.a-4.g  REWIND-1-4 // low
 	r2.>d-2< // high
 D	ASSERT_STEP_A 13680, "12.III"
-	Q7 f8r8r1  r2.b-4.a8  g+8r8r1  r2.f+2  [REWIND-1-4]4 // loq
+	f8r8r1  r2.b-4.a8  g+8r8r1  r2.f+2  [REWIND-1-4]4 // loq
 	b8r8r1  r2.>e-2  c+8r8r1  r2.f+2 // high
 	V+5 <e8r8r2f+2  V+5 e8r8r2f+2  e2.^4.r8  r2.e2  b-4r1  r1r4  [REWIND-1-4]6
 	>e8r8r2f+2  e8r8r2f+2  e2.^4.r8  r2.e2  b-4r1  r1r4< V-10
@@ -741,7 +741,7 @@ G	ASSERT_STEP_A 23280, "15.VI"
 
 
 // ---- Tenor Tuba -------------------------------------------------------------
-_ 16	CH16 K12-2 // FIXME: wrong key switches?
+_ 16	CH16 K12-2
 	TRACKNAME "Tenor Tuba" INSTRUMENTNAME "sfizz_vpo3_tuba_ks;simple_reverb" o2 V90
 A	NORMAL [r1r4]16
 B	ASSERT_STEP_A 3840, "16.I"
@@ -797,10 +797,13 @@ F	ASSERT_STEP_A 19920, "17.V"
 G	ASSERT_STEP_A 23280, "17.VI"
 
 
+
+// ==== Percussions ============================================================
+
 // ---- Timpani 1 --------------------------------------------------------------
 _ 18	CH18
 	// FIXME: the contents disappeared...
-	TRACKNAME "Timpani 1" INSTRUMENTNAME "sf2_realistic;simple_reverb" @47 o3 V80 v80
+	TRACKNAME "Timpani 1" INSTRUMENTNAME "sfizz_vpo3_timpani_ks;simple_reverb" @47 o3 V100
 A	V-48 [ [g12]3g4g4g8g8g4 V+3 ]16
 B	ASSERT_STEP_A 3840, "18.I"
 	[ [g12]3g4g4g8g8g4 ]23
@@ -820,7 +823,7 @@ G	ASSERT_STEP_A 23280, "18.VI"
 
 // ---- Timpani 2 --------------------------------------------------------------
 _ 19	CH19
-	TRACKNAME "Timpani 2" INSTRUMENTNAME "sf2_realistic;simple_reverb" @47 o3 V80 v80
+	TRACKNAME "Timpani 2" INSTRUMENTNAME "sfizz_vpo3_timpani_ks;simple_reverb" @47 o3 V100
 A	[r1r4]16
 B	ASSERT_STEP_A 3840, "19.I"
 	l16
@@ -843,7 +846,7 @@ G	ASSERT_STEP_A 23280, "19.VI"
 
 // ---- Side Drum --------------------------------------------------------------
 _ 20	CH9
-	TRACKNAME "Side Drum" INSTRUMENTNAME "sf2_realistic_drum_orchestral;simple_reverb" o2 V80 v100
+	TRACKNAME "Side Drum" INSTRUMENTNAME "sfizz_vpo3_bassdrum_snare_cymbals;simple_reverb" o4 V115 v120
 	[r1r4]16
 B	ASSERT_STEP_A 3840, "20.I"
 	[r1r4]23
@@ -866,7 +869,7 @@ G	ASSERT_STEP_A 23280, "20.VI"
 
 // ---- Cymbals ----------------------------------------------------------------
 _ 21	CH9
-	TRACKNAME "Cymbals" INSTRUMENTNAME "sf2_realistic_drum_orchestral;simple_reverb" o4 V80 v100
+	TRACKNAME "Cymbals" INSTRUMENTNAME "sfizz_vpo3_bassdrum_snare_cymbals;simple_reverb" o5 V100 v100
 	[r1r4]16
 B	ASSERT_STEP_A 3840, "21.I"
 	[r1r4]23
@@ -883,8 +886,8 @@ G	ASSERT_STEP_A 23280, "21.VI"
 
 
 // ---- Bass Drum --------------------------------------------------------------
-_ 22	CH9
-	TRACKNAME "Bass Drum" INSTRUMENTNAME "sf2_realistic_drum_orchestral;simple_reverb" o2 V100 v100
+_ 22	CH9 K3
+	TRACKNAME "Bass Drum" INSTRUMENTNAME "sfizz_vpo3_bassdrum_snare_cymbals;simple_reverb" o2 V100 v127
 	[r1r4]16
 B	ASSERT_STEP_A 3840, "22.I"
 	[r1r4]23
@@ -902,22 +905,25 @@ G	ASSERT_STEP_A 23280, "22.VI"
 
 
 // ---- Gong -------------------------------------------------------------------
-_ 23	CH9
-	TRACKNAME "Gong" INSTRUMENTNAME "sf2_realistic_drum_ethnic;simple_reverb" o3 V60 v60
-	[a2.a2]16
+#macro 23 GONG len:length { E96 E_96,127,0,2,16 n47,$len }
+_ 23	CH9 K2
+	TRACKNAME "Gong" INSTRUMENTNAME "sfizz_vpo3_percussion_misc;simple_reverb" o3 V100
+	//[GONG2. GONG2 ]16
+	[GONG2.]26 GONG2
 B	ASSERT_STEP_A 3840, "23.I"
-	[a2.a2]23
+	//[GONG2. GONG2 ]23
+	[GONG2.]37 GONG1
 C	ASSERT_STEP_A 9360, "23.II"
-	a2.a2
+	GONG2. GONG2
 	[r1r4]17
 D	ASSERT_STEP_A 13680, "23.III"
 	[r1r4]10
 E	ASSERT_STEP_A 16080, "23.IV"
 	[r1r4]16
 F	ASSERT_STEP_A 19920, "23.V"
-	[a2.a2]9
-	a1r4  r1r4  r1r4
-	a1^4^2.r2
+	[GONG2.GONG2]9
+	GONG1r4  r1r4  r1r4
+	GONG1^4^2.r2
 G	ASSERT_STEP_A 23280, "23.VI"
 
 
