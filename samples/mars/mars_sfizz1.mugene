@@ -29,31 +29,31 @@ _ 0-31	r %STEP_DELTA_A
 // ---- Tempo Sequence ---------------------------------------------------------
 _ 0	BEAT5,4
 A	MARKER "Intro"
-	t140
+	t145
 	[r1r4]16
 B	MARKER "I"
 	ASSERT_STEP_A 3840, "0.I"
 	[r1r4]14
-	t145
+	t150
 	[r1r4 t+1 ]8
 	r1r4
 C	MARKER "II"
 	ASSERT_STEP_A 9360, "0.II"
-	t145
+	t150
 	[r1r4]18
 D	MARKER "III"
 	ASSERT_STEP_A 13680, "0.III"
-	t140
+	t145
 	[r1r4]8
 	[r2 t+2 ]5
 E	MARKER "IV"
 	ASSERT_STEP_A 16080, "0.IV"
-	t145
+	t150
 	[r1r4]16
 F	MARKER "V"
 	ASSERT_STEP_A 19920, "0.V"
 	[r1r4]7
-	t145 r1r4  t150 r1r4  t155 [r1r4t+2]3
+	[ t+5 r1r4 ]3 [ t+2 r1r4 ]2
 	t60
 	[r1r4]2
 G	MARKER "VI"
@@ -71,7 +71,8 @@ G	MARKER "VI"
 
 // ---- Piccolos ---------------------------------------------------------------
 _ 1	CH1 K12
-	TRACKNAME "Piccolos" INSTRUMENTNAME "sfizz_vpo3_piccolo_ks;simple_reverb" o5 V100
+	TRACKNAME "Piccolos" INSTRUMENTNAME "sfizz_vpo3_piccolo_ks;simple_reverb"
+	o5 V100 P48
 A	NORMAL [r1r4]16
 B	ASSERT_STEP_A 3840, "1.I"
 	[r1r4]20
@@ -105,7 +106,8 @@ G	ASSERT_STEP_A 23280, "1.VI"
 
 // ---- Flutes -----------------------------------------------------------------
 _ 2	CH2 K12
-	TRACKNAME "Flutes" INSTRUMENTNAME "sfizz_vpo3_flute_sec_ks;simple_reverb" o6 V90
+	TRACKNAME "Flutes" INSTRUMENTNAME "sfizz_vpo3_flute_sec_ks;simple_reverb"
+	o6 V90 P52
 A	[r1r4]16
 B	ASSERT_STEP_A 3840, "2.I"
 	l16
@@ -147,7 +149,8 @@ G	ASSERT_STEP_A 23280, "2.VI"
 
 // ---- Oboes ------------------------------------------------------------------
 _ 3	CH3
-	TRACKNAME "Oboes" INSTRUMENTNAME "sfizz_vpo3_oboe_sec_ks;simple_reverb" @68 o5 V100
+	TRACKNAME "Oboes" INSTRUMENTNAME "sfizz_vpo3_oboe_sec_ks;simple_reverb"
+	o5 V100 P72
 A	[r1r4]10  r2.d2  d-2.a-2  g2.>d2<  a-0>d-2.^2^  2.^2^  4r1
 B	ASSERT_STEP_A 3840, "3.I"
 	[r1r4]11  r2.f0a-2  f+0b2.^2^  2.f0a-2
@@ -188,7 +191,8 @@ G	ASSERT_STEP_A 23280, "3.VI"
 
 // ---- English Horn -----------------------------------------------------------
 _ 4	CH4
-	TRACKNAME "English Horn" INSTRUMENTNAME "sfizz_vpo3_english_horn_perf_ks;simple_reverb" @69 o4 V110
+	TRACKNAME "English Horn" INSTRUMENTNAME "sfizz_vpo3_english_horn_perf_ks;simple_reverb"
+	o4 V110 P68
 A	[r1r4]9  r2.e-2  d2.d2  d2.b-2  a2.>d2
 	c2.^2^  2.^2^  4r1
 B	ASSERT_STEP_A3840, "4.I"
@@ -223,7 +227,8 @@ G	ASSERT_STEP_A 23280, "4.VI"
 
 // ---- Bass Oboe --------------------------------------------------------------
 _ 5	CH5
-	TRACKNAME "Bass Oboe" INSTRUMENTNAME "sfizz_vpo3_oboe_sec_perf_ks;simple_reverb" @68 o5 V110
+	TRACKNAME "Bass Oboe" INSTRUMENTNAME "sfizz_vpo3_oboe_sec_perf_ks;simple_reverb"
+	o5 V110 P76
 A	[r1r4]4
 	d-2.^2^  2.r2  [r1r4]3  r2.e-2  d2.d2
 	d-2.a-2  g2.>d2  d-2.^2^  2.^2^  4r1
@@ -253,7 +258,8 @@ G	ASSERT_STEP_A 23280, "5.VI"
 
 // ---- Clarinets --------------------------------------------------------------
 _ 6	CH6 K-2
-	TRACKNAME "Clarinets" INSTRUMENTNAME "sfizz_vpo3_clarinet_sec_ks;simple_reverb" @71 o5 V105
+	TRACKNAME "Clarinets" INSTRUMENTNAME "sfizz_vpo3_clarinet_sec_ks;simple_reverb"
+	o5 V105 P56
 A	[r1r4]12  <a0>e0a2.e0a0>e2<  e-0b-0>e-2.^2^  2.^2^  4r1
 B	ASSERT_STEP_A 3840, "6.I"
 	l16
@@ -310,7 +316,8 @@ G	ASSERT_STEP_A 23280, "6.VI"
 
 // ---- Bass Clarinets ---------------------------------------------------------
 _ 7	CH7 K-2
-	TRACKNAME "Bass Clarinets" INSTRUMENTNAME "sfizz_vpo3_bass_clarinet_perf_ks;simple_reverb" @71 o5 V120
+	TRACKNAME "Bass Clarinets" INSTRUMENTNAME "sfizz_vpo3_bass_clarinet_perf_ks;simple_reverb"
+	o5 V120 P60
 A	[r1r4]9  r2.<b-2a2.>e2  e-2.f2  e2.a2  g2.^2^  2.^2^  4r1<
 B	ASSERT_STEP_A 3840, "7.I"
 	l16
@@ -342,7 +349,8 @@ G	ASSERT_STEP_A 23280, "7.VI"
 
 // ---- Bassoons ---------------------------------------------------------------
 _ 8 CH8
-	TRACKNAME "Bassoons" INSTRUMENTNAME "sfizz_vpo3_bassoon_sec_ks;simple_reverb" o3 V110
+	TRACKNAME "Bassoons" INSTRUMENTNAME "sfizz_vpo3_bassoon_sec_ks;simple_reverb"
+	o3 V110 P76
 A	l8
 	[r1r4]2
 	V_75,110,0,%2400,2
@@ -384,7 +392,8 @@ G	ASSERT_STEP_A 23280, "8.VI"
 
 // ---- Double Bassoons --------------------------------------------------------
 _ 9	CH9
-	TRACKNAME "Double Bassoons" INSTRUMENTNAME "sfizz_vpo3_bassoon_sec_ks;simple_reverb" o3 V110
+	TRACKNAME "Double Bassoons" INSTRUMENTNAME "sfizz_vpo3_bassoon_sec_ks;simple_reverb"
+	o3 V110 P80
 A	l8
 	[r1r4]2
 	V_75,110,0,%2400,2
@@ -428,20 +437,16 @@ G	ASSERT_STEP_A 23280, "9.VI"
 #macro 13 NORMAL { n36,0,32 E127 }
 #macro 13 STACCATO { n40,0,32 E127}
 
-#macro 14-15 SUSTAIN { n72,0,32 E127 }
-#macro 14-15 NORMAL { n74,0,32 E127 }
-#macro 14-15 ACCENT { n75,0,32 E100 }
-#macro 14-15 STACCATO { n76,0,32 E127 }
-
-#macro 16-17 SUSTAIN { n84,0,32 E127 }
-#macro 16-17 NORMAL { n86,0,32 E127 }
-#macro 16-17 ACCENT { n87,0,32 E100 }
-#macro 16-17 STACCATO { n88,0,32 E127 }
+#macro 14-17 SUSTAIN { n84,0,32 E127 }
+#macro 14-17 NORMAL { n86,0,32 E127 }
+#macro 14-17 ACCENT { n87,0,32 E100 }
+#macro 14-17 STACCATO { n88,0,32 E127 }
 
 
 // ---- Horns High -------------------------------------------------------------
 _ 10	CH10 K12-7
-	TRACKNAME "Horns (High)" INSTRUMENTNAME "sfizz_vpo3_french_horn_sec_perf_ks;simple_reverb" o4 V110
+	TRACKNAME "Horns (High)" INSTRUMENTNAME "sfizz_vpo3_french_horn_sec_perf_ks;simple_reverb"
+	o4 V110 P56
 A	NORMAL [r1r4]13
 	V-10 e-0a-0>e-2.^2^  2.^2^  4<r1 V+10
 B	ASSERT_STEP_A 3840, "10.I"
@@ -502,7 +507,8 @@ G	ASSERT_STEP_A 23280, "10.VI"
 
 // ---- Horns Low --------------------------------------------------------------
 _ 11	CH11 K12-7
-	TRACKNAME "Horns (Low)" INSTRUMENTNAME "sfizz_vpo3_french_horn_sec_perf_ks;simple_reverb" o3 V110
+	TRACKNAME "Horns (Low)" INSTRUMENTNAME "sfizz_vpo3_french_horn_sec_perf_ks;simple_reverb"
+	o3 V110 P60
 A	NORMAL [r1r4]2
 	V_70,100,0,%2400,2
 	d2.^2^2.a2  a-2.^2^2.r2  r1r4
@@ -569,7 +575,8 @@ G	ASSERT_STEP_A 23280, "11.VI"
 
 // ---- Trumpets High ----------------------------------------------------------
 _ 12	CH12 K12
-	TRACKNAME "Trumpets (High)" INSTRUMENTNAME "sfizz_vpo3_trumpet_sec_ks;simple_reverb" o4 V100
+	TRACKNAME "Trumpets (High)" INSTRUMENTNAME "sfizz_vpo3_trumpet_sec_ks;simple_reverb"
+	o4 V100 P68
 A	NORMAL [r1r4]13
 	d-2.^2^  2.^2^  4r1
 B	ASSERT_STEP_A 3840, "12.I"
@@ -627,7 +634,8 @@ G	ASSERT_STEP_A 23280, "12.VI"
 
 // ---- Trumpets Low -----------------------------------------------------------
 _ 13	CH13 K12
-	TRACKNAME "Trumpets (Low)" INSTRUMENTNAME "sfizz_vpo3_trumpet_sec_perf_ks;simple_reverb" o4 V100
+	TRACKNAME "Trumpets (Low)" INSTRUMENTNAME "sfizz_vpo3_trumpet_sec_perf_ks;simple_reverb"
+	o4 V100 P72
 A	NORMAL [r1r4]16
 B	ASSERT_STEP_A 3840, "13.I"
 	l16
@@ -668,7 +676,8 @@ G	ASSERT_STEP_A 23280, "13.VI"
 
 // ---- Tenor Trombones --------------------------------------------------------
 _ 14	CH14 K12
-	TRACKNAME "Tenor Trombones" INSTRUMENTNAME "sfizz_vpo3_trombone_sec_ks;simple_reverb" o3 V105
+	TRACKNAME "Tenor Trombones" INSTRUMENTNAME "sfizz_vpo3_trombone_sec_ks;simple_reverb"
+	o3 V100 P76
 A	NORMAL [r1r4]16
 B	ASSERT_STEP_A 3840, "14.I"
 	l16
@@ -712,7 +721,8 @@ G	ASSERT_STEP_A 23280, "14.VI"
 
 // ---- Bass Trombone ----------------------------------------------------------
 _ 15	CH15 K12
-	TRACKNAME "Bass Trombones" INSTRUMENTNAME "sfizz_vpo3_bass_trombone_ks;simple_reverb" o2 V95
+	TRACKNAME "Bass Trombones" INSTRUMENTNAME "sfizz_vpo3_bass_trombone_ks;simple_reverb"
+	o2 V95 P80
 A	NORMAL [r1r4]16
 B	ASSERT_STEP_A 3840, "15.I"
 	l16
@@ -742,7 +752,8 @@ G	ASSERT_STEP_A 23280, "15.VI"
 
 // ---- Tenor Tuba -------------------------------------------------------------
 _ 16	CH16 K12-2
-	TRACKNAME "Tenor Tuba" INSTRUMENTNAME "sfizz_vpo3_tuba_ks;simple_reverb" o2 V90
+	TRACKNAME "Tenor Tuba" INSTRUMENTNAME "sfizz_vpo3_tuba_ks;simple_reverb"
+	o2 V90 P76
 A	NORMAL [r1r4]16
 B	ASSERT_STEP_A 3840, "16.I"
 	l16
@@ -775,7 +786,8 @@ G	ASSERT_STEP_A 23280, "16.VI"
 
 // ---- Bass Tuba --------------------------------------------------------------
 _ 17	CH17 K12
-	TRACKNAME "Bass Tuba" INSTRUMENTNAME "sfizz_vpo3_tuba_ks;simple_reverb" o2 V90
+	TRACKNAME "Bass Tuba" INSTRUMENTNAME "sfizz_vpo3_tuba_ks;simple_reverb" 
+	o2 V90 P80
 A	NORMAL [r1r4]16
 B	ASSERT_STEP_A 3840, "17.I"
 	l16
@@ -803,7 +815,8 @@ G	ASSERT_STEP_A 23280, "17.VI"
 // ---- Timpani 1 --------------------------------------------------------------
 _ 18	CH18
 	// FIXME: the contents disappeared...
-	TRACKNAME "Timpani 1" INSTRUMENTNAME "sfizz_vpo3_timpani_ks;simple_reverb" @47 o3 V100
+	TRACKNAME "Timpani 1" INSTRUMENTNAME "sfizz_vpo3_timpani_ks;simple_reverb"
+	o3 V100 P48
 A	V-48 [ [g12]3g4g4g8g8g4 V+3 ]16
 B	ASSERT_STEP_A 3840, "18.I"
 	[ [g12]3g4g4g8g8g4 ]23
@@ -823,7 +836,8 @@ G	ASSERT_STEP_A 23280, "18.VI"
 
 // ---- Timpani 2 --------------------------------------------------------------
 _ 19	CH19
-	TRACKNAME "Timpani 2" INSTRUMENTNAME "sfizz_vpo3_timpani_ks;simple_reverb" @47 o3 V100
+	TRACKNAME "Timpani 2" INSTRUMENTNAME "sfizz_vpo3_timpani_ks;simple_reverb"
+	o3 V100 P48
 A	[r1r4]16
 B	ASSERT_STEP_A 3840, "19.I"
 	l16
@@ -846,8 +860,9 @@ G	ASSERT_STEP_A 23280, "19.VI"
 
 // ---- Side Drum --------------------------------------------------------------
 _ 20	CH9
-	TRACKNAME "Side Drum" INSTRUMENTNAME "sfizz_vpo3_bassdrum_snare_cymbals;simple_reverb" o4 V115 v120
-	[r1r4]16
+	TRACKNAME "Side Drum" INSTRUMENTNAME "sfizz_vpo3_bassdrum_snare_cymbals;simple_reverb"
+	o4 V115 v120 P64
+A	[r1r4]16
 B	ASSERT_STEP_A 3840, "20.I"
 	[r1r4]23
 C	ASSERT_STEP_A 9360, "20.II"
@@ -869,8 +884,9 @@ G	ASSERT_STEP_A 23280, "20.VI"
 
 // ---- Cymbals ----------------------------------------------------------------
 _ 21	CH9
-	TRACKNAME "Cymbals" INSTRUMENTNAME "sfizz_vpo3_bassdrum_snare_cymbals;simple_reverb" o5 V100 v100
-	[r1r4]16
+	TRACKNAME "Cymbals" INSTRUMENTNAME "sfizz_vpo3_bassdrum_snare_cymbals;simple_reverb"
+	o5 V100 v100 P64
+A	[r1r4]16
 B	ASSERT_STEP_A 3840, "21.I"
 	[r1r4]23
 C	ASSERT_STEP_A 9360, "21.II"
@@ -887,8 +903,9 @@ G	ASSERT_STEP_A 23280, "21.VI"
 
 // ---- Bass Drum --------------------------------------------------------------
 _ 22	CH9 K3
-	TRACKNAME "Bass Drum" INSTRUMENTNAME "sfizz_vpo3_bassdrum_snare_cymbals;simple_reverb" o2 V100 v127
-	[r1r4]16
+	TRACKNAME "Bass Drum" INSTRUMENTNAME "sfizz_vpo3_bassdrum_snare_cymbals;simple_reverb"
+	o2 V100 v127 P64
+A	[r1r4]16
 B	ASSERT_STEP_A 3840, "22.I"
 	[r1r4]23
 C	ASSERT_STEP_A 9360, "22.II"
@@ -905,17 +922,32 @@ G	ASSERT_STEP_A 23280, "22.VI"
 
 
 // ---- Gong -------------------------------------------------------------------
-#macro 23 GONG len:length { E96 E_96,127,0,2,16 n47,$len }
+
+// FIXME: use simpleReverb "Freeze" feature (currently not expanding the automation for some problem)
+// FIXME: those macros should be resolved from local config directory, not my specific file.
+//  needs to fix issue around #include.
+#macro AUDIO_PLUGIN_USE nameLen:number, ident:string {  __MIDI #F0, #7D, "augene-ng", $nameLen, $ident, #F7 }
+#macro AUDIO_PLUGIN_PARAMETER parameterID:number, val:number { \
+    __MIDI #F0, #7D, "augene-ng", 0, \
+    $parameterID % #80, $parameterID / #80, $val % #80, $val / #80 } 
+#macro SIMPLEREVERB { AUDIO_PLUGIN_USE 10, "1387874636" }
+#macro SIMPLEREVERB_FREEZE val { AUDIO_PLUGIN_PARAMETER 4, $val }
+
+//#macro 23 GONG len:length { E96 E_96,127,0,2,16 n47,$len }
+#macro 23 GONG len:length { n47,$len }
 _ 23	CH9 K2
-	TRACKNAME "Gong" INSTRUMENTNAME "sfizz_vpo3_percussion_misc;simple_reverb" o3 V100
+	TRACKNAME "Gong" INSTRUMENTNAME "sfizz_vpo3_percussion_misc;simple_reverb"
+	o3 V90 v90 P64
+A	E96 E_96,127,0,2,16
 	//[GONG2. GONG2 ]16
-	[GONG2.]26 GONG2
+	[GONG64]8 [GONG4.]53
+	//SIMPLEREVERB SIMPLEREVERB_FREEZE 1 [GONG32]8 r1  [r1r4]15
 B	ASSERT_STEP_A 3840, "23.I"
 	//[GONG2. GONG2 ]23
-	[GONG2.]37 GONG1
+	[GONG4.]76 [GONG32]8
 C	ASSERT_STEP_A 9360, "23.II"
-	GONG2. GONG2
-	[r1r4]17
+	//E_127,64,0,2,16 [GONG4]5 SIMPLEREVERB SIMPLEREVERB_FREEZE 0
+	GONG1^4  [r1r4]17 E127
 D	ASSERT_STEP_A 13680, "23.III"
 	[r1r4]10
 E	ASSERT_STEP_A 16080, "23.IV"
@@ -927,9 +959,12 @@ F	ASSERT_STEP_A 19920, "23.V"
 G	ASSERT_STEP_A 23280, "23.VI"
 
 
+// ==== Harps and Organs ======================================================
+
+
 // ---- Harp I -----------------------------------------------------------------
 _ 24	CH24
-	TRACKNAME "Harp I" INSTRUMENTNAME "sfizz_vpo3_harp_ks;simple_reverb" o5 V60
+	TRACKNAME "Harp I" INSTRUMENTNAME "sfizz_vpo3_harp_ks;simple_reverb" o5 V60 P52
 A	[ g12<g12>g12<g4>g4<g8>g8<g4> ]16
 B	ASSERT_STEP_A 3840, "24.I"
 	[ g12<g12>g12<g4>g4<g8>g8<g4> ]12  g4r1  r1r4
@@ -947,7 +982,7 @@ G	ASSERT_STEP_A 23280, "24.VI"
 
 // ---- Harp II ----------------------------------------------------------------
 _ 25	CH25
-	TRACKNAME "Harp II" INSTRUMENTNAME "sfizz_vpo3_harp_ks;simple_reverb" o4 V60
+	TRACKNAME "Harp II" INSTRUMENTNAME "sfizz_vpo3_harp_ks;simple_reverb" o4 V60 P52
 A	[ g12>g12<g12>g4<g4>g8<g8>g4< ]16
 B	ASSERT_STEP_A 3840, "25.I"
 	[ g12>g12<g12>g4<g4>g8<g8>g4< ]12  g4r1  r1r4
@@ -1010,7 +1045,8 @@ G	ASSERT_STEP_A 23280, "26.VI"
 
 // ---- 1st. Violin ------------------------------------------------------------
 _ 27	CH27 K12
-	TRACKNAME "1st. Violin" INSTRUMENTNAME "sfizz_vpo3_1st_violin_sec_ks;simple_reverb" o3 E127 v80
+	TRACKNAME "1st. Violin" INSTRUMENTNAME "sfizz_vpo3_1st_violin_sec_ks;simple_reverb"
+	o3 E127 v80 P40
 A	ACCENT V80-48 Q4 [ [g12]3g4g4g8g8g4 V+3]16
 B	ASSERT_STEP_A 3840, "27.I"
 	[ [g12]3g4g4g8g8g4 ]8
@@ -1051,7 +1087,8 @@ G	ASSERT_STEP_A 23280, "27.VI"
 
 // ---- 2nd. Violin ------------------------------------------------------------
 _ 28	CH28 K12
-	TRACKNAME "2nd Violins" INSTRUMENTNAME "sfizz_vpo3_2nd_violin_sec_ks;simple_reverb" o4 E127
+	TRACKNAME "2nd Violins" INSTRUMENTNAME "sfizz_vpo3_2nd_violin_sec_ks;simple_reverb"
+	o4 E127 P56
 A	ACCENT V95-48 Q4 [ [g12]3g4g4g8g8g4 V+3]16
 B	ASSERT_STEP_A 3840, "28.I"
 	[r1r4]8
@@ -1090,7 +1127,8 @@ G	ASSERT_STEP_A 23280, "28.VI"
 
 // ---- Violas -----------------------------------------------------------------
 _ 29	CH29 K12
-	TRACKNAME "Violas" INSTRUMENTNAME "sfizz_vpo3_viola_sec_ks;simple_reverb" o4 E127
+	TRACKNAME "Violas" INSTRUMENTNAME "sfizz_vpo3_viola_sec_ks;simple_reverb"
+	o4 E127 P72
 A	ACCENT V90-48 Q4 [ [g12]3g4g4g8g8g4 V+3 ]16
 B	ASSERT_STEP_A 3840, "29.I"
 	[r1r4]8
@@ -1126,7 +1164,8 @@ G	ASSERT_STEP_A 23280, "29.VI"
 
 // ---- Violoncellos -----------------------------------------------------------
 _ 30	CH30 K12
-	TRACKNAME "Violoncellos" INSTRUMENTNAME "sfizz_vpo3_cello_sec_ks;simple_reverb" o3 E127
+	TRACKNAME "Violoncellos" INSTRUMENTNAME "sfizz_vpo3_cello_sec_ks;simple_reverb"
+	o3 E127 P88
 A	ACCENT V90-48 Q4 [ [g12]3g4g4g8g8g4 V+3 ]16
 B	ASSERT_STEP_A 3840, "30.I"
 	Q4 [ [g12]3g4g4g8g8g4 ]23
@@ -1163,7 +1202,8 @@ G	ASSERT_STEP_A 23280, "30.VI"
 
 // ---- Doublebasses -----------------------------------------------------------
 _ 31	CH31 K12
-	TRACKNAME "Doublebasses" INSTRUMENTNAME "sfizz_vpo3_contrabass_sec_ks;simple_reverb" o2 E127
+	TRACKNAME "Doublebasses" INSTRUMENTNAME "sfizz_vpo3_contrabass_sec_ks;simple_reverb"
+	o2 E127 P84
 A	V100-48 Q6 [ [g12]3g4g4g8g8g4 V+3 ]16
 B	ASSERT_STEP_A 3840, "31.I"
 	Q6 [ [g12]3g4g4g8g8g4 ]23

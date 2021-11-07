@@ -25,6 +25,8 @@
     <AudioGraph Id="sfizz_vpo3_percussion_misc" Source="sfizz-vpo3-percussion-misc.filtergraph" />
     <AudioGraph Id="sfizz_vpo3_piccolo_ks" Source="sfizz-vpo3-piccolo-ks.filtergraph" />
     <AudioGraph Id="sfizz_vpo3_timpani_ks" Source="sfizz-vpo3-timpani-ks.filtergraph" />
+    <AudioGraph Id="sfizz_vpo3_trombone_ks" Source="sfizz-vpo3-trombone-ks.filtergraph" />
+    <AudioGraph Id="sfizz_vpo3_trombone_ks_dxf" Source="sfizz-vpo3-trombone-ks-dxf.filtergraph" />
     <AudioGraph Id="sfizz_vpo3_trombone_sec_ks" Source="sfizz-vpo3-trombone-sec-ks.filtergraph" />
     <AudioGraph Id="sfizz_vpo3_trumpet_sec_ks" Source="sfizz-vpo3-trumpet-sec-ks.filtergraph" />
     <AudioGraph Id="sfizz_vpo3_trumpet_sec_perf_ks" Source="sfizz-vpo3-trumpet-sec-perf-ks.filtergraph" />

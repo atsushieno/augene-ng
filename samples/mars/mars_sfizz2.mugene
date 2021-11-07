@@ -15,50 +15,50 @@
 // ---- Tempo Sequence ---------------------------------------------------------
 _ 0	BEAT5,2
 G	MARKER "VI"
-	t125
+	t130
 	[r1r4 r1r4 t+1]8
 H	MARKER "VII"
 	ASSERT_STEP_B 3840, "0.VII"
-	t135
-	[r1r4]4
-	t137
-	[r1r4]4
 	t140
+	[r1r4]4
+	t142
+	[r1r4]4
+	t145
 	[r1r4]3
 	r1[r32 t-8]8
 I	MARKER "VII-middle"
 	ASSERT_STEP_B 6720, "0.VII-middle"
 	BEAT5,4
-	t147
+	t152
 	[r1r4]23
 	r2[r8 t-5]6
 J	MARKER "VIII"
 	ASSERT_STEP_B 12480, "0.VIII"
-	t145
+	t150
 	[r1r4]12
 K	MARKER "IX"
 	ASSERT_STEP_B 15360, "0.IX"
 	[r1r4]13
 L	MARKER "X"
 	ASSERT_STEP_B 18480, "0.X"
-	[r1r4]7  r1 t_145,70,0,8.. r4
+	[r1r4]7  r1 t_150,75,0,8.. r4
 M	MARKER "X-middle"
 	BEAT5,2
 	ASSERT_STEP_B 20400, "0.X-middle"
-	t145
+	t150
 	[r1r4]2
-	[ r1r4  r2..[r32 t-8]8r8 t145 ]2
+	[ r1r4  r2..[r32 t-8]8r8 t150 ]2
 	[r1r4]4
 N	MARKER "XI"
-	t150
+	t155
 	BEAT3,4
 	ASSERT_STEP_B 22800, "0.XI"
 	[r2. t+2]3  [r2.]2
-	t135
+	t140
 	r2.
 O	MARKER "XII"
 	ASSERT_STEP_B 23664, "0.XII"
-	t110
+	t115
 	[r2.]4
 	t80 r2. t70 r2. t50 r2t30r4
 	t30
@@ -69,11 +69,6 @@ P	MARKER "End"
 
 
 // ==== Woodwinds section ======================================================
-
-#macro 1-2 SUSTAIN { n36,0,32 E127 }
-#macro 1-2 NORMAL { n38,0,32 E127 }
-#macro 1-2 ACCENT { n39,0,32 E100 }
-#macro 1-2 STACCATO { n40,0,32 E127}
 
 
 // ---- Piccolos ---------------------------------------------------------------
@@ -460,26 +455,6 @@ P	ASSERT_STEP_B 24816, "9.End"
 
 
 // ==== Brasses section ========================================================
-
-#macro 10-11 NORMAL { n72,0,32 E127 }
-#macro 10-11 STACCATO { n76,0,32 E127 }
-
-#macro 12 SUSTAIN { n36,0,32 E127 }
-#macro 12 NORMAL { n38,0,32 E127 }
-#macro 12 ACCENT { n39,0,32 E100 }
-#macro 12 STACCATO { n40,0,32 E127}
-#macro 13 NORMAL { n36,0,32 E127 }
-#macro 13 STACCATO { n40,0,32 E127}
-
-#macro 14-15 SUSTAIN { n72,0,32 E127 }
-#macro 14-15 NORMAL { n74,0,32 E127 }
-#macro 14-15 ACCENT { n75,0,32 E100 }
-#macro 14-15 STACCATO { n76,0,32 E127 }
-
-#macro 16-17 SUSTAIN { n84,0,32 E127 }
-#macro 16-17 NORMAL { n86,0,32 E127 }
-#macro 16-17 ACCENT { n87,0,32 E100 }
-#macro 16-17 STACCATO { n88,0,32 E127 }
 
 
 // ---- Horns High -------------------------------------------------------------
@@ -904,6 +879,8 @@ O	ASSERT_STEP_B 23664, "23.XII"
 P	ASSERT_STEP_B 24816, "23.End"
 
 
+// ==== Harps and Organs ======================================================
+
 // ---- Harp I -----------------------------------------------------------------
 //_ 24	CH24
 //	INSTRUMENTNAME "sf2_realistic;simple_reverb" @46 o5 V80
@@ -958,17 +935,6 @@ P	ASSERT_STEP_B 24816, "26.End"
 
 
 // ==== Strings Section ========================================================
-
-#macro 27-29 SUSTAIN { n36,0,32 E127 }
-#macro 27-29 TREMOLO { n37,0,32 E70 }
-#macro 27-29 ACCENT { n39,0,32 E100 }
-#macro 27-29 STACCATO { n40,0,32 E127 }
-#macro 27-29 PIZZICATO { n41,0,32 E127 }
-#macro 30 SUSTAIN { n84,0,32 }
-#macro 30 TREMOLO { n85,0,32 }
-#macro 30 ACCENT { n87,0,32 }
-#macro 30 STACCATO { n88,0,32 }
-#macro 30 PIZZICATO { n89,0,32 }
 
 
 // ---- 1st. Violin ------------------------------------------------------------
