@@ -11,34 +11,6 @@ package dev.atsushieno.kotractive
 * 
 */   
 
-enum class DataType
-{
-	Unknown,
-	String,
-	UnixTime,
-	Id,
-	Length,
-	Number,
-	Integer,
-	BooleanInt,
-	Color,
-	HexBinary,
-	Base64Binary
-}
-
-class ControlType
-{
-	companion object {
-		const val ProgramChange = 0x1000 + 1
-		const val PAf = 0x1000 + 4
-		const val PitchBend = 0x1000 + 5
-		const val CAf = 0x1000 + 7
-	}
-}
-
-@Target(AnnotationTarget.FIELD)
-annotation class DataTypes(val dataType: DataType)
-
 
 class EditElement
 {
