@@ -1000,7 +1000,7 @@ G	ASSERT_STEP_A 23280, "25.VI"
 
 // ---- Organ ------------------------------------------------------------------
 _ 26	CH26
-	TRACKNAME "Organ" INSTRUMENTNAME "sf2_realistic;simple_reverb" @16 o4 V60
+	TRACKNAME "Organ" INSTRUMENTNAME "freepats_drawbar_organ_emulation;simple_reverb" o4 V80
 A	[r1r4]16
 B	ASSERT_STEP_A 3840, "26.I"
 	[r1r4]23
@@ -1024,7 +1024,7 @@ E	ASSERT_STEP_A 16080, "26.IV"
 	[r1r4]16
 F	ASSERT_STEP_A 19920, "26.V"
 	[r1r4]12
-	g+1^4^  2.r2
+	E_127,32,1.,2.,32 g+1^4^  1r4 E127
 G	ASSERT_STEP_A 23280, "26.VI"
 
 

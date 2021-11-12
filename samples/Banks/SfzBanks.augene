@@ -11,5 +11,6 @@
     <AudioGraph Id="ui_standard_guitar_1" Source="sfizz-ui-standard-guitar1.filtergraph" />
     <AudioGraph Id="ui_metal_gtx_1" Source="sfizz-ui-metal-gtx-ksop-kpp.filtergraph" />
     <AudioGraph Id="harp1" Source="sfizz-harp1.filtergraph" />
+    <AudioGraph Id="freepats_drawbar_organ_emulation" Source="sfizz-freepats-drawbar-organ-emulation.filtergraph" />
   </AudioGraphs>
 </AugeneProject>

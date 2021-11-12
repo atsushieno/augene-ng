@@ -1,7 +1,8 @@
 <AugeneProject>
   <Includes>
-    <Include Bank="0" Source="../Banks/SF2Banks.augene" />
-    <Include Bank="1" Source="../Banks/SfzBanks-VPO3.augene" />
+    <Include Source="../Banks/SF2Banks.augene" />
+    <Include Source="../Banks/SfzBanks.augene" />
+    <Include Source="../Banks/SfzBanks-VPO3.augene" />
   </Includes>
   <AudioGraphs>
     <AudioGraph Id="simple_reverb" Source="../Banks/simple-reverb.filtergraph" />
