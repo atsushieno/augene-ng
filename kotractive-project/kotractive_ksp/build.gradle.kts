@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id ("org.jetbrains.kotlin.jvm") version "1.5.30"
+    id ("org.jetbrains.kotlin.jvm") version "1.5.31"
 }
 
 buildscript {
@@ -11,13 +11,13 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath(kotlin("gradle-plugin", version = "1.5.30"))
+        classpath(kotlin("gradle-plugin", version = "1.5.31"))
     }
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.5.30")
-    implementation("com.google.devtools.ksp:symbol-processing-api:1.5.30-1.0.0")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.5.31")
+    implementation("com.google.devtools.ksp:symbol-processing-api:1.5.31-1.0.1")
 }
 
 repositories {
