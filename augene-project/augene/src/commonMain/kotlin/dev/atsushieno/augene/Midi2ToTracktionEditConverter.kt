@@ -253,13 +253,13 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
                             seq.Events.add(ControlElement().apply {
                                 B = tTime
                                 Type = ControlType.CAf
-                                Val = msg.midi1Lsb * 128
+                                Val = msg.midi1Lsb * 256
                             })
                         MidiChannelStatus.CC ->
                             seq.Events.add(ControlElement().apply {
                                 B = tTime
                                 Type = msg.midi1Msb
-                                Val = msg.midi1Lsb * 128
+                                Val = msg.midi1Lsb * 256
                             })
                         MidiChannelStatus.PROGRAM ->
                             seq.Events.add(ControlElement().apply {
@@ -272,14 +272,14 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
                             seq.Events.add(ControlElement().apply {
                                 B = tTime
                                 Type = ControlType.PAf
-                                Val = msg.midi1Lsb * 128
+                                Val = msg.midi1Lsb * 256
                                 Metadata = msg.midi1Msb
                             })
                         MidiChannelStatus.PITCH_BEND ->
                             seq.Events.add(ControlElement().apply {
                                 B = tTime
                                 Type = ControlType.PitchBend
-                                Val = msg.midi1Msb * 128 + msg.midi1Lsb
+                                Val = msg.midi1Msb * 256 + msg.midi1Lsb
                             })
                     }
                 MidiMessageType.MIDI2 ->
@@ -328,13 +328,13 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
                             seq.Events.add(ControlElement().apply {
                                 B = tTime
                                 Type = ControlType.CAf
-                                Val = (msg.midi2CAf / 0x40000u).toInt() // downconverting value range from 32bit to 14bit
+                                Val = (msg.midi2CAf / 0x20000u).toInt() // downconverting value range from 32bit to 15bit
                             })
                         MidiChannelStatus.CC ->
                             seq.Events.add(ControlElement().apply {
                                 B = tTime
                                 Type = msg.midi2CCIndex
-                                Val = (msg.midi2CCData / 0x40000u).toInt() // downconverting value range from 32bit to 15bit
+                                Val = (msg.midi2CCData / 0x20000u).toInt() // downconverting value range from 32bit to 15bit
                             })
                         MidiChannelStatus.PROGRAM -> {
                             if (msg.midi2ProgramBankMsb != 0)
@@ -359,14 +359,14 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
                             seq.Events.add(ControlElement().apply {
                                 B = tTime
                                 Type = ControlType.PAf
-                                Val = (msg.midi2PAfData / 0x40000u).toInt() // downconverting value range from 32bit to 15bit
+                                Val = (msg.midi2PAfData / 0x20000u).toInt() // downconverting value range from 32bit to 15bit
                                 Metadata = msg.midi2Note
                             })
                         MidiChannelStatus.PITCH_BEND ->
                             seq.Events.add(ControlElement().apply {
                                 B = tTime
                                 Type = ControlType.PitchBend
-                                Val = (msg.midi2PitchBendData / 0x400u).toInt() // downconverting value range from 32bit to 15bit
+                                Val = (msg.midi2PitchBendData / 0x200u).toInt() // downconverting value range from 32bit to 15bit
                             })
                         MidiChannelStatus.PER_NOTE_PITCH_BEND -> {
                             // generate PITCHBEND element only if there is current note-on element.
