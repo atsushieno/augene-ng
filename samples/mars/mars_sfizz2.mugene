@@ -142,7 +142,7 @@ P	ASSERT_STEP_B 24816, "2.End"
 // ---- Oboes ------------------------------------------------------------------
 _ 3	CH3
 	// INSTRUMENTNAME "sf2_realistic;simple_reverb" @68 o5 V100
-	o5
+	o4
 G	[r1r4 r1r4]4
 	l8 >
 	[ d4.c+<b+4.>c+d4.d+ :1 e4.e+f+4.e+ :2 e4.ga4.g+ :3 f+4.e+e4.e+ ]3
@@ -150,13 +150,13 @@ G	[r1r4 r1r4]4
 H	ASSERT_STEP_B 3840, "3.VII"
 	< [ c4.<bb-4.b>c4.d :1 d+4.ef4.e :2 e4.f+g+4.g :3 f4.ed+4.e ]3
 	  a-4.gf+4.ga-4.a>c4.<ba+4.b  [REWIND-1-4]8 // high
-	< [ g4.f+f4.f+g4.a :1 a+4.b>c4.<b :2 b4.>c+d+4.d< :3 >e4.e-d4.e- ]3
+	< [ g4.f+f4.f+g4.a :1 a+4.b>c4.<b :2 b4.>c+d+4.d< :3 >c4.<ba+4.b> ]3
 	  e-4.dc+4.de-4.eg4.f+e+4.f+ // low
 	a4.a-g4.a-a4.g+a4.gf+4.g  a1g4.f8f2a2  [REWIND-1-4]4 // high
 	e4.e-d4.e-e4.d+f+4.ed4.e  f1r2d2e2 // low
 I	ASSERT_STEP_B 6720, "3.VII-middle"
-	V+10 Q4 [ [g12]3g4g4g8g8g4 ]3  [r1r4]8
-	V-10 Q8 r2.<d2  d-2.a-2  g2.a0>d2<  a-0>d-2.^2^  2.^2^  4r1  [r1r4]4
+	V+10 STACCATO [ [g12]3g4g4g8g8g4 ]3  [r1r4]8
+	V-10 SUSTAIN r2.<d2  d-2.a-2  g2.a0>d2<  a-0>d-2.^2^  2.^2^  4r1  [r1r4]4
 	r2.<f2  e-2.>c2<  b-2.>f0a-2
 J	ASSERT_STEP_B 12480, "3.VIII"
 	d0g4r1  r2.f0a-2  e-0g4r1  [r1r4]6
@@ -182,7 +182,7 @@ M	ASSERT_STEP_B 20400, "3.X-middle"
 	a1.^1^  1.^2d+0f+2  d-0a-1.^2d-0a-2  [r1r4]2  r1.r2<f0>d-2
 N	ASSERT_STEP_B 22800, "3.XI"
 	l16
-	<d+0b2.^  2.>  red+c+ <br>ba gf+ed  f+gac+ ef+<b>c+ d<f+ga
+	<d+0b2.^  2.>  STACCATO red+c+ <br>ba gf+ed  f+gac+ ef+<b>c+ d<f+ga
 	  gab>c+ d+ed+c+ <b>gf+e  d+ed+c+<b>gf+e d>c<ba	
 O	ASSERT_STEP_B 23664, "3.XII"
 	g8r8r2  [r2.]7
@@ -585,15 +585,15 @@ H	ASSERT_STEP_B 3840, "12.VII"
 	[r1r4 r1r4]4
 	NORMAL >c4.<ba+4.b>c4.<b>d4.c<b4.>c<  f0a1.>d0f2f0a2
 I	ASSERT_STEP_B 6720, "12.VII-middle"
-	V+15 [ STACCATO [<g0>g12]3 NORMALQ4 <g0>g4 Q6 <g0>g4 Q8 [<g0>g8]2 <g0>g4 ]3
-	V-15 [ STACCATO [<g0>g12]3 NORMALQ4 <g0>g4 Q6 <g0>g4 Q8 [<g0>g8]2 <g0>g4 ]11
+	V+15 [ STACCATO [<g0>g12]3 NORMALQ4 <g0>g4 Q6 <g0>g4 Q8 [<g0>g8]2 Q7 <g0>g4 Q8 ]3
+	V-15 [ STACCATO [<g0>g12]3 NORMALQ4 <g0>g4 Q6 <g0>g4 Q8 [<g0>g8]2 Q7 <g0>g4 Q8 ]11
 	<a-0>d-2.^2^  2.^2^  4r1  <<a-2.a0,4>d-2  <a-0>d-2.b-2  a2.a0>e2
 	[ STACCATO [<g0>g12]3 NORMALQ4 <g0>g4 Q6 <g0>g4 Q8 [<g0>g8]2 <g0>g4 ]4
 J	ASSERT_STEP_B 12480, "12.VIII"
 	l12
 	<g0>g4r1  r2.<d-0>d-2<  <b0>b4r1
 	V+15 // solo
-	STACCATO g4g4g4[LEGATO64gf+gLEGATO0]2  [ NORMAL b-2 STACCATO g8.g16 NORMAL b-4g4 ]2  b2 STACCATO g8.g16 NORMAL b4g4
+	NORMAL Q5 g4g4g4 STACCATO [LEGATO64gf+gLEGATO0]2  [ NORMAL b-2 STACCATO g8.g16 NORMAL b-4g4 ]2  b2 STACCATO g8.g16 NORMAL b4g4
 	[ >c2 STACCATO <g8.g16> NORMAL c4<g4 ]2  c0>c8r8r1  r1r4  c2< STACCATO g8.g16 NORMAL >c4<g4
 	V-15
 K	ASSERT_STEP_B 15360, "12.IX"
