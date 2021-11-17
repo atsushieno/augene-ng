@@ -63,17 +63,20 @@ G	MARKER "VI"
 
 // ==== Woodwinds section ======================================================
 
-#macro 1-2 SUSTAIN { n36,0,32 E127 }
-#macro 1-2 NORMAL { n38,0,32 E127 }
-#macro 1-2 ACCENT { n39,0,32 E100 }
-#macro 1-2 STACCATO { n40,0,32 E127}
+// FIXME: not sure if it should be like this, but keyswitches often fail to work
+// before the next note to it starts. So we insert r-%1 and r%1.
+
+#macro 1-2 SUSTAIN { r%-1 n36,0,32 E127 r%1 }
+#macro 1-2 NORMAL { r%-1 n38,0,32 E127 r%1 }
+#macro 1-2 ACCENT { r%-1 n39,0,32 E100 r%1 }
+#macro 1-2 STACCATO { r%-1 n40,0,32 E127 r%1 }
 
 
 // ---- Piccolos ---------------------------------------------------------------
 _ 1	CH1 K12
 	TRACKNAME "Piccolos" INSTRUMENTNAME "sfizz_vpo3_piccolo_ks;simple_reverb"
 	o5 V100 P48
-A	NORMAL [r1r4]16
+A	[r1r4]16 NORMAL
 B	ASSERT_STEP_A 3840, "1.I"
 	[r1r4]20
 	r1r8.[b0>d+16d+0f+4..<]5 >d+0f+16
@@ -427,20 +430,23 @@ G	ASSERT_STEP_A 23280, "9.VI"
 
 // ==== Brasses Section ========================================================
 
-#macro 10-11 NORMAL { n72,0,32 E127 }
-#macro 10-11 STACCATO { n76,0,32 E127 }
+// FIXME: not sure if it should be like this, but keyswitches often fail to work
+// before the next note to it starts. So we insert r-%1 and r%1.
 
-#macro 12 SUSTAIN { n36,0,32 E127 }
-#macro 12 NORMAL { n38,0,32 E127 }
-#macro 12 ACCENT { n39,0,32 E100 }
-#macro 12 STACCATO { n40,0,32 E127}
-#macro 13 NORMAL { n36,0,32 E127 }
-#macro 13 STACCATO { n40,0,32 E127}
+#macro 10-11 NORMAL { r%-1 n72,0,64 E127 r%1 }
+#macro 10-11 STACCATO { r%-1 n76,0,64 E127 r%1 }
 
-#macro 14-17 SUSTAIN { n84,0,32 E127 }
-#macro 14-17 NORMAL { n86,0,32 E127 }
-#macro 14-17 ACCENT { n87,0,32 E100 }
-#macro 14-17 STACCATO { n88,0,32 E127 }
+#macro 12 SUSTAIN { r%-1 n36,0,64 E127 r%1 }
+#macro 12 NORMAL { r%-1 n38,0,64 E127 r%1 }
+#macro 12 ACCENT { r%-1 n39,0,64 E100 r%1 }
+#macro 12 STACCATO { r%-1 n40,0,64 E127 r%1 }
+#macro 13 NORMAL { r%-1 n36,0,64 E127 r%1 }
+#macro 13 STACCATO { r%-1 n40,0,64 E127 r%1 }
+
+#macro 14-17 SUSTAIN { r%-1 n84,0,64 E127 r%1 }
+#macro 14-17 NORMAL { r%-1 n86,0,64 E127 r%1 }
+#macro 14-17 ACCENT { r%-1 n87,0,64 E100 r%1 }
+#macro 14-17 STACCATO { r%-1 n88,0,64 E127 r%1 }
 
 
 // ---- Horns High -------------------------------------------------------------
@@ -577,8 +583,8 @@ G	ASSERT_STEP_A 23280, "11.VI"
 _ 12	CH12 K12
 	TRACKNAME "Trumpets (High)" INSTRUMENTNAME "sfizz_vpo3_trumpet_sec_ks;simple_reverb"
 	o4 V100 P68
-A	NORMAL [r1r4]13
-	d-2.^2^  2.^2^  4r1
+A	[r1r4]13
+	NORMAL d-2.^2^  2.^2^  4r1
 B	ASSERT_STEP_A 3840, "12.I"
 	l16
 	[r1r4]6
@@ -636,9 +642,9 @@ G	ASSERT_STEP_A 23280, "12.VI"
 _ 13	CH13 K12
 	TRACKNAME "Trumpets (Low)" INSTRUMENTNAME "sfizz_vpo3_trumpet_sec_perf_ks;simple_reverb"
 	o4 V100 P72
-A	NORMAL [r1r4]16
+A	[r1r4]16
 B	ASSERT_STEP_A 3840, "13.I"
-	l16
+	NORMAL l16
 	[r1r4]7  r2.a2  a-1r4
 	[r1r4]2  r2.c+0>c+2<  <b0>b8r8r1  r2.c+0>c+2<  <b0>b8r8r1
 	r2.c+0>c+2<  <b0>b8r8r2c+0>c+2<  <b0>b8r8r2r4..f+
@@ -678,9 +684,9 @@ G	ASSERT_STEP_A 23280, "13.VI"
 _ 14	CH14 K12
 	TRACKNAME "Tenor Trombones" INSTRUMENTNAME "sfizz_vpo3_trombone_sec_ks;simple_reverb"
 	o3 V100 P76
-A	NORMAL [r1r4]16
+A	[r1r4]16
 B	ASSERT_STEP_A 3840, "14.I"
-	l16
+	NORMAL l16
 	V+10 // solo-ish
 	d-2.^2^  2.b-2  c+0a2.^2^  2.r2
 	<a-0.>d-2.f0b-2  e0a2.a0>e2  <a-0>d-2.d-0f2  c+0e2.c+0e2
@@ -723,9 +729,9 @@ G	ASSERT_STEP_A 23280, "14.VI"
 _ 15	CH15 K12
 	TRACKNAME "Bass Trombones" INSTRUMENTNAME "sfizz_vpo3_bass_trombone_ks;simple_reverb"
 	o2 V95 P80
-A	NORMAL [r1r4]16
+A	[r1r4]16
 B	ASSERT_STEP_A 3840, "15.I"
-	l16
+	NORMAL l16
 	d-2.^2^  2.b-2  a2.^2^  2.r2  f2.b-2>  c2.e2  f2.b-2  a2.a2
 	a-1r4  [r1r4]2  r2.f2  	e-8r8r1
 	[r1r4]8
@@ -754,9 +760,9 @@ G	ASSERT_STEP_A 23280, "15.VI"
 _ 16	CH16 K12-2
 	TRACKNAME "Tenor Tuba" INSTRUMENTNAME "sfizz_vpo3_tuba_ks;simple_reverb"
 	o2 V90 P76
-A	NORMAL [r1r4]16
+A	[r1r4]16
 B	ASSERT_STEP_A 3840, "16.I"
-	l16
+	NORMAL l16
 	[r1r4]8
 	f2.>d2  c2.g2  f2.d2  c2.e-2^  8r8r1
 	[r1r4]4
@@ -788,9 +794,9 @@ G	ASSERT_STEP_A 23280, "16.VI"
 _ 17	CH17 K12
 	TRACKNAME "Bass Tuba" INSTRUMENTNAME "sfizz_vpo3_tuba_ks;simple_reverb" 
 	o2 V90 P80
-A	NORMAL [r1r4]16
+A	[r1r4]16
 B	ASSERT_STEP_A 3840, "17.I"
-	l16
+	NORMAL l16
 	[r1r4]8
 	e-2.>c2  <b-2.>f2  e-2.>c2<  b-2.r2  [r1r4]8
 	r1r4<  g2.^2^  2.^2
@@ -930,24 +936,26 @@ G	ASSERT_STEP_A 23280, "22.VI"
 #macro AUDIO_PLUGIN_PARAMETER parameterID:number, val:number { \
     __MIDI #F0, #7D, "augene-ng", 0, \
     $parameterID % #80, $parameterID / #80, $val % #80, $val / #80 } 
-#macro SIMPLEREVERB { AUDIO_PLUGIN_USE 10, "1387874636" }
-#macro SIMPLEREVERB_FREEZE val { AUDIO_PLUGIN_PARAMETER 4, $val }
+#macro SIMPLEREVERB { AUDIO_PLUGIN_USE 8, "52b9494c" }
+#macro SIMPLEREVERB_FREEZE val { SIMPLEREVERB AUDIO_PLUGIN_PARAMETER 4, $val }
 
 //#macro 23 GONG len:length { E96 E_96,127,0,2,16 n47,$len }
 #macro 23 GONG len:length { n46,$len }
 _ 23	CH9 K2
 	TRACKNAME "Gong" INSTRUMENTNAME "sfizz_vpo3_percussion_misc;simple_reverb"
-	o3 V90 P64
+	o3 V80 P64
 A	E96 E_96,127,0,2,16
 	//[GONG2. GONG2 ]16
 	[GONG64]8 [GONG8]159
-	//SIMPLEREVERB SIMPLEREVERB_FREEZE 1 [GONG32]8 r1  [r1r4]15
+	//SIMPLEREVERB_FREEZE 1 [GONG32]8 SIMPLEREVERB_FREEZE 1 GONG1  [r1r4]15
 B	ASSERT_STEP_A 3840, "23.I"
 	//[GONG2. GONG2 ]23
 	[GONG8]228 [GONG32]8
+	//[r1r4]23
 C	ASSERT_STEP_A 9360, "23.II"
-	//E_127,64,0,2,16 [GONG4]5 SIMPLEREVERB SIMPLEREVERB_FREEZE 0
+	//E_127,64,0,2,16 [GONG4]5 SIMPLEREVERB_FREEZE 0
 	GONG1^4  [r1r4]17 E127
+	//SIMPLEREVERB_FREEZE 0 GONG1^4  [r1r4]17
 D	ASSERT_STEP_A 13680, "23.III"
 	[r1r4]10
 E	ASSERT_STEP_A 16080, "23.IV"
@@ -1031,16 +1039,19 @@ G	ASSERT_STEP_A 23280, "26.VI"
 
 // ==== Strings Section ========================================================
 
-#macro 27-29 SUSTAIN { n36,0,32 E127 }
-#macro 27-29 TREMOLO { n37,0,32 E70 }
-#macro 27-29 ACCENT { n39,0,32 E100 }
-#macro 27-29 STACCATO { n40,0,32 E127 }
-#macro 27-29 PIZZICATO { n41,0,32 E127 }
-#macro 30 SUSTAIN { n84,0,32 }
-#macro 30 TREMOLO { n85,0,32 }
-#macro 30 ACCENT { n87,0,32 }
-#macro 30 STACCATO { n88,0,32 }
-#macro 30 PIZZICATO { n89,0,32 }
+// FIXME: not sure if it should be like this, but keyswitches often fail to work
+// before the next note to it starts. So we insert r-%1 and r%1.
+
+#macro 27-29 SUSTAIN { r%-1 n36,0,64 E127 r%1 }
+#macro 27-29 TREMOLO { r%-1 n37,0,64 E70 r%1 }
+#macro 27-29 ACCENT { r%-1 n39,0,64 E100 r%1 }
+#macro 27-29 STACCATO { r%-1 n40,0,64 E127 r%1 }
+#macro 27-29 PIZZICATO { r%-1 n41,0,64 E127 r%1 }
+#macro 30 SUSTAIN { r%-1 n84,0,64 r%1 }
+#macro 30 TREMOLO { r%-1 n85,0,64 r%1 }
+#macro 30 ACCENT { r%-1 n87,0,64 r%1 }
+#macro 30 STACCATO { r%-1 n88,0,64 r%1 }
+#macro 30 PIZZICATO { r%-1 n89,0,64 r%1 }
 
 
 // ---- 1st. Violin ------------------------------------------------------------
