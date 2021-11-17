@@ -43,7 +43,7 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
             MarkerImportStrategy.Global, MarkerImportStrategy.Default -> {
                 val markers = mutableListOf<TimedMetaEvent>()
                 var t = 0
-                val messages = context.midi.mergeTracks().tracks[0].messages
+                val messages = context.midi.mergeTracks().tracks.firstOrNull()?.messages ?: listOf()
                 var inMetaEvents = false
                 for (m in messages) {
                     if (inMetaEvents && m.messageType != MidiMessageType.SYSEX8_MDS)
@@ -185,12 +185,12 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
         var currentAutomationTarget: String? = null
         var currentAutomationTargetAsNumber: Int? = null
 
-        for (msg in mtrack.messages) {
+        mtrack.messages.forEachIndexed { index, msg ->
             machine.processEvent(msg)
 
             if (msg.isJRTimestamp) {
                 currentTotalTime += msg.jrTimestamp
-                continue
+                return@forEachIndexed
             }
             // FIXME: maybe enable this with some compilation options?
             //  When clips are split, program changes and maybe other controls are not preserved to the next clip...
@@ -379,10 +379,10 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
                     }
                 MidiMessageType.SYSEX7, MidiMessageType.SYSEX8_MDS -> { // sysex or meta
                     val sysex =
-                        if (msg.messageType == MidiMessageType.SYSEX7)
-                            UmpRetriever.getSysex7Data(mtrack.messages.drop(mtrack.messages.indexOf(msg)).iterator())
+                        if (msg.messageType == MidiMessageType.SYSEX7 && (msg.eventType == Midi2BinaryChunkStatus.SYSEX_START || msg.eventType == Midi2BinaryChunkStatus.SYSEX_IN_ONE_UMP))
+                            UmpRetriever.getSysex7Data(mtrack.messages.drop(index).iterator())
                         else if (msg.messageType == MidiMessageType.SYSEX8_MDS && (msg.eventType == Midi2BinaryChunkStatus.SYSEX_START || msg.eventType == Midi2BinaryChunkStatus.SYSEX_IN_ONE_UMP))
-                            UmpRetriever.getSysex8Data(mtrack.messages.drop(mtrack.messages.indexOf(msg)).iterator())
+                            UmpRetriever.getSysex8Data(mtrack.messages.drop(index).iterator())
                         else null
                     // Check if it is augene-specific sysex
                     if (sysex != null) {
@@ -441,9 +441,11 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
                                             currentAutomationTargetAsNumber = inst.Id!!.toInt()
                                         }
                                     }
+                                    else
+                                        currentAutomationTargetAsNumber = target.Id!!.toInt()
                                 }
                                 else
-                                    context.report("INSUFFICIENT AUTOMATION TARGET PLUGIN SYSEX BUFFER")
+                                    context.report("INSUFFICIENT AUTOMATION TARGET PLUGIN SYSEX BUFFER: required ${1 + 9 + 1 + nameLen} byets, got ${sysex.size} bytes (\"${sysex.drop(1 + 9 + 1).toByteArray().decodeToString()}\" ?)")
                             }
                         }
                         else when (msg.metaEventType) {

@@ -1,5 +1,6 @@
 package dev.atsushieno.augene
 
+import dev.atsushieno.kotractive.MidiClipElement
 import dev.atsushieno.kotractive.MidiTrackerElement
 import dev.atsushieno.kotractive.TrackElement
 import kotlin.math.roundToInt
@@ -89,5 +90,26 @@ class AugeneCompilerJvmTest {
         assertEquals(250, ts[2].Bpm.roundToInt(), "2.bpm")
         assertEquals(125, ts[3].Bpm.roundToInt(), "3.bpm")
         assertEquals(140, ts[4].Bpm.roundToInt(), "4.bpm")
+    }
+
+    @Test
+    fun automationSetPlugin() {
+        val mml = """
+#macro AUDIO_PLUGIN_USE nameLen:number, ident:string {  __MIDI #F0, #7D, "augene-ng", ${'$'}nameLen, ${'$'}ident, #F7 }
+#macro AUDIO_PLUGIN_PARAMETER parameterID:number, val:number { \
+    __MIDI #F0, #7D, "augene-ng", 0, \
+    ${'$'}parameterID % #80, ${'$'}parameterID / #80, ${'$'}val % #80, ${'$'}val / #80 } 
+#macro SIMPLEREVERB { AUDIO_PLUGIN_USE 8, "52b9494c" }
+#macro SIMPLEREVERB_FREEZE val { SIMPLEREVERB AUDIO_PLUGIN_PARAMETER 4, ${'$'}val }
+1   SIMPLEREVERB_FREEZE 7 n64
+        """
+        val model = AugeneCompiler()
+        model.projectFileName = "../../samples/TestStub.augene"
+        model.project = AugeneProject()
+        model.dryRun = true
+        model.project.mmlStrings.add(mml)
+        model.compile()
+        val track = model.edit.Tracks.filterIsInstance<TrackElement>().first()
+        assertTrue(track.AutomationTracks.any(), "missing AutomationTrack")
     }
 }
