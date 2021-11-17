@@ -677,12 +677,12 @@ L	ASSERT_STEP_B 18480, "14.X"
 M	ASSERT_STEP_B 20400, "14.X-middle"
 	a-0>d-1.^1^  1^2r1  [r1r4]4  d-0g1.^2d-0f2
 N	ASSERT_STEP_B 22800, "14.XI"
-	<f+0b8r8r2  [r2.]5
+	<f+0b8,4r8r2  [r2.]5
 O	ASSERT_STEP_B 23664, "14.XII"
-	Q5 > [a-0>d-12<]3a-0>d-4<r4  r4[a-0>d-8<]2a-0>d-4<
+	V+15 Q5 > [a-0>d-12<]3a-0>d-4<r4  r4[a-0>d-8<]2a-0>d-4<
 	  r4[a-0>d-8<]2a-0>d-4<  [a-0>d-12<]3a-0>d-4<r4
 	Q8 r4[a-0>d-4<]2  r2a-0>d-4<  [a-0>d-4<]2r4
-	c2.
+	c2. V-15
 P	ASSERT_STEP_B 24816, "14.End"
 
 
@@ -712,9 +712,9 @@ M	ASSERT_STEP_B 20400, "15.X-middle"
 N	ASSERT_STEP_B 22800, "15.XI"
 	e-4r2  [r2.]5
 O	ASSERT_STEP_B 23664, "15.XII"
-	Q5 [c12]3c4r4  [ r4c8c8c4 ]2  [c12]3c4r4
+	V+15 Q5 [c12]3c4r4  [ r4c8c8c4 ]2  [c12]3c4r4
 	Q8 r4c4c4  r4r4c4  c4c4r4
-	<g2.
+	<g2. V-15
 P	ASSERT_STEP_B 24816, "15.End"
 
 
