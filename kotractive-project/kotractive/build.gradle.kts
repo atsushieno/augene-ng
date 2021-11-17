@@ -10,8 +10,8 @@ buildscript {
 
 plugins {
     id("com.android.library") version "4.1.3"
-    id("com.google.devtools.ksp") version "1.5.31-1.0.1"
-    id("org.jetbrains.kotlin.multiplatform") version "1.5.31"
+    id("com.google.devtools.ksp") version "1.5.30-1.0.0"
+    id("org.jetbrains.kotlin.multiplatform") version "1.5.30"
     id("org.jetbrains.dokka") version "1.5.0"
     id("maven-publish")
     id("signing")
@@ -96,6 +96,8 @@ kotlin {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.2.1")
                 implementation("dev.atsushieno:missingdot:0.1.4")
+                if (configurations.get("ksp").dependencies.all { p -> p.name != ":kotractive_ksp" })
+                    configurations.get("ksp").dependencies.add(project(":kotractive_ksp"))
             }
         }
         val commonTest by getting {
@@ -105,15 +107,11 @@ kotlin {
         }
         val jvmMain by getting {
             dependencies {
-                if (configurations.get("kspJvm").dependencies.all { p -> p.name != ":kotractive_ksp" })
-                    configurations.get("kspJvm").dependencies.add(project(":kotractive_ksp"))
             }
         }
         val jvmTest by getting
         val jsMain by getting {
             dependencies {
-                if (configurations.get("kspJs").dependencies.all { p -> p.name != ":kotractive_ksp" })
-                    configurations.get("kspJs").dependencies.add(project(":kotractive_ksp"))
             }
         }
         val jsTest by getting {
@@ -124,8 +122,6 @@ kotlin {
         /*
         val nativeMain by getting {
             dependencies {
-                if (configurations.get("kspNative").dependencies.all { p -> p.name != ":kotractive_ksp" })
-                    configurations.get("kspNative").dependencies.add(project(":kotractive_ksp"))
             }
         }
         val nativeTest by getting
