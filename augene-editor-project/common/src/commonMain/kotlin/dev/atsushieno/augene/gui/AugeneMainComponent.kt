@@ -1,10 +1,11 @@
 package dev.atsushieno.augene.gui
 
+/*
+
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.RouterState
 import com.arkivanov.decompose.value.Value
 
-/*
 interface MainUI {
     val routerState: Value<RouterState<*,Child>>
 
