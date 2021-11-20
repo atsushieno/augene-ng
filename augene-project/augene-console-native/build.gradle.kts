@@ -1,5 +1,5 @@
 plugins {
-    id("org.jetbrains.kotlin.multiplatform") //version "1.5.21"
+    kotlin("multiplatform")
 }
 
 repositories {
@@ -27,6 +27,7 @@ kotlin {
         }
         else -> {}
     }
+
     sourceSets {
         val nativeMain by getting {
             dependencies {
@@ -37,6 +38,6 @@ kotlin {
 }
 
 tasks.withType<Wrapper> {
-  gradleVersion = "7.1.1"
+  gradleVersion = "7.2"
   distributionType = Wrapper.DistributionType.BIN
 }

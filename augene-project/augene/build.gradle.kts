@@ -17,7 +17,7 @@ repositories {
 
 plugins {
     id("com.android.library")
-    id("org.jetbrains.kotlin.multiplatform")
+    kotlin("multiplatform")
     id("org.jetbrains.dokka") version "1.5.30"
     id("maven-publish")
     id("signing")
@@ -26,12 +26,12 @@ plugins {
 
 kotlin {
     android {
-        compilations.all { kotlinOptions.jvmTarget = "1.8" }
+        compilations.all { kotlinOptions.jvmTarget = "11" }
         publishLibraryVariantsGroupedByFlavor = true
         publishLibraryVariants("debug", "release")
     }
     jvm {
-        compilations.all { kotlinOptions.jvmTarget = "1.8" }
+        compilations.all { kotlinOptions.jvmTarget = "11" }
         testRuns["test"].executionTask.configure {
             useJUnit()
         }
@@ -51,7 +51,6 @@ kotlin {
         }
         //browser() - okio FileSystem.SYSTEM is not available on browsers yet.
     }
-    /*
     val hostOs = System.getProperty("os.name")
     val isMingwX64 = hostOs.startsWith("Windows")
     val nativeTarget = when {
@@ -60,7 +59,6 @@ kotlin {
         isMingwX64 -> mingwX64("native")
         else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
     }
-    */
 
     sourceSets {
         all {
@@ -71,7 +69,7 @@ kotlin {
         val androidMain by getting
         val androidTest by getting {
             dependencies {
-                implementation(kotlin("test-junit"))
+                //implementation(kotlin("test-junit"))
                 implementation("junit:junit:4.13.2")
             }
         }
@@ -103,8 +101,8 @@ kotlin {
                 implementation(kotlin("test-js"))
             }
         }
-        //val nativeMain by getting
-        //val nativeTest by getting
+        val nativeMain by getting
+        val nativeTest by getting
     }
 }
 

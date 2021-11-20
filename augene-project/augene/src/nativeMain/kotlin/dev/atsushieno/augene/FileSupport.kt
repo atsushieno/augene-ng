@@ -1,24 +1,29 @@
 package dev.atsushieno.augene
 
-internal actual fun pwd() : String =
-    TODO("Not implemented") // FileSystem.SYSTEM does not exist yet!
+import okio.FileSystem
+import okio.Path.Companion.toPath
 
-internal actual fun readStringFromFileSystem(fullPath: String) : String =
-    TODO("Not implemented") // FileSystem.SYSTEM does not exist yet!
+internal actual fun pwd() : String =
+    TODO("Not implemented")
+
+internal actual fun readStringFromFileSystem(fullPath: String) =
+    FileSystem.SYSTEM.read(fullPath.toPath()) { this.readUtf8() }
 
 internal actual fun writeStringToFileSystem(fullPath: String, text: String) {
-    TODO("Not implemented") // FileSystem.SYSTEM does not exist yet!
+    FileSystem.SYSTEM.write(fullPath.toPath()) { this.writeUtf8(text) }
 }
 
 internal actual fun writeBinaryToFileSystem(fullPath: String, binary: ByteArray) {
-    TODO("Not implemented") // FileSystem.SYSTEM does not exist yet!
+    FileSystem.SYSTEM.write(fullPath.toPath()) { this.write(binary) }
 }
 
-internal actual fun canonicalizeFilePath(path: String) : String =
-    TODO("Not implemented") // FileSystem.SYSTEM does not exist yet!
+internal actual fun canonicalizeFilePath(path: String) : String {
+    return FileSystem.SYSTEM.canonicalize(path.toPath()).toString()
+}
 
-internal actual fun resolveFilePath(basePath: String, targetPath: String) : String =
-    TODO("Not implemented") // FileSystem.SYSTEM does not exist yet!
+internal actual fun resolveFilePath(basePath: String, targetPath: String) : String {
+    TODO("Not implemented")
+}
 
 internal actual fun fileExists(fullPath: String): Boolean =
-    TODO("Not implemented") // FileSystem.SYSTEM does not exist yet!
+    FileSystem.SYSTEM.exists(fullPath.toPath())

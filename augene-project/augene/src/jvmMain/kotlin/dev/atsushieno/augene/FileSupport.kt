@@ -3,7 +3,7 @@ package dev.atsushieno.augene
 import okio.FileSystem
 import okio.Path.Companion.toPath
 
-internal actual fun pwd() =
+internal actual fun pwd() : String =
     System.getProperty("user.dir")
 
 internal actual fun readStringFromFileSystem(fullPath: String) =

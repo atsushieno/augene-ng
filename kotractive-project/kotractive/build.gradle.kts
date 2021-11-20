@@ -54,8 +54,7 @@ kotlin {
             useCommonJs()
         }
     }
-    // e: Could not find "/media/atsushi/extssd0/sources/ktmidi/augene-ng/kotractive-project/kotractive/build/generated/ksp/nativeMain/classes" in [/media/atsushi/extssd0/sources/ktmidi/augene-ng/kotractive-project, /home/atsushi/.konan/klib, /home/atsushi/.konan/kotlin-native-prebuilt-linux-1.5.21/klib/common, /home/atsushi/.konan/kotlin-native-prebuilt-linux-1.5.21/klib/platform/linux_x64]
-    /*
+
     val hostOs = System.getProperty("os.name")
     val isMingwX64 = hostOs.startsWith("Windows")
 
@@ -79,7 +78,7 @@ kotlin {
             }
         }
         else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
-    }*/
+    }
 
     sourceSets {
         val androidMain by getting {
@@ -96,8 +95,6 @@ kotlin {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.2.1")
                 implementation("dev.atsushieno:missingdot:0.1.5")
-                if (configurations.get("ksp").dependencies.all { p -> p.name != ":kotractive_ksp" })
-                    configurations.get("ksp").dependencies.add(project(":kotractive_ksp"))
             }
         }
         val commonTest by getting {
@@ -119,14 +116,40 @@ kotlin {
                 implementation(kotlin("test-js"))
             }
         }
-        /*
         val nativeMain by getting {
             dependencies {
             }
         }
         val nativeTest by getting
-        */
     }
+}
+
+dependencies {
+    add("kspMetadata", project(":kotractive_ksp"))
+    add("kspAndroid", project(":kotractive_ksp"))
+    add("kspJvm", project(":kotractive_ksp"))
+    add("kspJvmTest", project(":kotractive_ksp"))
+    add("kspJs", project(":kotractive_ksp"))
+    add("kspJsTest", project(":kotractive_ksp"))
+
+    /*
+    // This is annoying, but Google canceled `ksp` target and split targets in the name of "bad performance"...
+    add("kspAndroidNativeX64", project(":kotractive_ksp"))
+    add("kspAndroidNativeX64Test", project(":kotractive_ksp"))
+    add("kspAndroidNativeArm64", project(":kotractive_ksp"))
+    add("kspAndroidNativeArm64Test", project(":kotractive_ksp"))
+    add("kspLinuxX64", project(":kotractive_ksp"))
+    add("kspLinuxX64Test", project(":kotractive_ksp"))
+    add("kspMingwX64", project(":kotractive_ksp"))
+    add("kspMingwX64Test", project(":kotractive_ksp"))
+    */
+    // FIXME (LAMESPEC): gradle sync fails on IDEA unless we disable them. https://github.com/atsushieno/augene-ng/issues/10
+    // below *should* work but ksp Gradle plugin prevents Gradle Kotlin Multiplatform plugin from working here.
+    // If you want to hack this codebase, this will bite us so you will have to disable them.
+    //  That's likely why https://github.com/google/ksp/blob/main/examples/multiplatform/workload/build.gradle.kts does not
+    //  have appropriate project structure.
+    add("kspNative", project(":kotractive_ksp"))
+    add("kspNativeTest", project(":kotractive_ksp"))
 }
 
 android {
