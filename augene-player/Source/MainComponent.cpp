@@ -368,6 +368,7 @@ void MainComponent::exportPluginSettings(juce::AudioPluginFormatManager &formatM
 void MainComponent::startRendering() {
     const juce::File wavFile = juce::File(editFilePath).withFileExtension(".wav");
     const juce::String taskName{"augene-ng renderer"};
+    /*
     juce::Array<tracktion_engine::Clip*> allClips{};
     edit->visitAllTopLevelTracks([&](tracktion_engine::Track &track) {
         auto clipTrack = dynamic_cast<tracktion_engine::ClipTrack*>(&track);
@@ -375,11 +376,14 @@ void MainComponent::startRendering() {
             allClips.addArray(clipTrack->getClips());
         return true;
     });
+    */
 
-    // To run asynchronously we seem to need our own UI behavior implemented...
+    juce::BigInteger trackBits{0};
+    trackBits.setRange(0, edit->getTrackList().size(), true);
+
     tracktion_engine::Renderer::renderToFile(taskName, wavFile, *edit,
-                                             tracktion_engine::EditTimeRange(0, edit->getLength()),
-                                             edit->maxNumTracks, true, allClips, false);
+                                             tracktion_engine::EditTimeRange(edit->getFirstClipTime(), edit->getLength()),
+                                             trackBits, true, {}, false);
 }
 
 void MainComponent::startLoadEdit() {

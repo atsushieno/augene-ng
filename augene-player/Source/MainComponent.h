@@ -9,6 +9,12 @@
 
 using namespace juce;
 
+class AugeneUIBehaviour : public tracktion_engine::UIBehaviour {
+    void runTaskWithProgressBar (tracktion_engine::ThreadPoolJobWithProgress& progress) override {
+        progress.runJob();
+    }
+};
+
 class MainComponent
     : public Component, public ChangeListener
 {
@@ -53,7 +59,7 @@ private:
     };
 
     //==============================================================================
-    tracktion_engine::Engine engine { "augene-player" };
+    tracktion_engine::Engine engine{"augene-player", std::make_unique<AugeneUIBehaviour>(), nullptr};
     std::unique_ptr<tracktion_engine::Edit> edit;
     String editFilePath;
     std::unique_ptr<efsw::FileWatcher> fileWatcher;
