@@ -64,7 +64,7 @@ private:
 
     TextButton selectFileButton { "Open File" }, pluginsButton { "Plugins" },
         settingsButton { "Audio Settings" }, exportButton { "Export Plugin Metadata" },
-        playPauseButton { "Play" }, stopButton { "Stop" };
+        playPauseButton { "Play" }, stopButton { "Stop" }, renderButton { "Render" };
     ToggleButton watchFileToggleButton{"Watch File Changes"}, hotReloadToggleButton{"Enable Hot Reload"};
     Label editNameLabel { "No Edit Loaded" };
 
@@ -87,6 +87,12 @@ private:
     void tryHotReloadEdit();
 
     void startFileWatcher();
+
+    void exportPluginSettings(juce::AudioPluginFormatManager &formatManager);
+
+    void startRendering();
+
+    void startLoadEdit();
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };

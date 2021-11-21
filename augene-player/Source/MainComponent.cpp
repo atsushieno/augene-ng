@@ -53,38 +53,7 @@ MainComponent::MainComponent()
 
     editFilePath = JUCEApplication::getCommandLineParameters().replace ("-NSDocumentRevisionsDebugMode YES", "").unquoted().trim();
 
-    selectFileButton.onClick = [this] {
-#if ANDROID
-        ApplicationProperties applicationProperties;
-        PropertiesFile::Options options{};
-        options.applicationName = String{"AugenePlayer"};
-        applicationProperties.setStorageParameters(options);
-        auto settingsDir = applicationProperties.getUserSettings()->getFile().getParentDirectory().getParentDirectory();
-        auto editFile = settingsDir.getChildFile("AugeneDemo.tracktionedit");
-        if (true/*editFile.getFullPathName().isEmpty() || !editFile.existsAsFile()*/) { // always overwrite
-            if (editFile.existsAsFile())
-                editFile.deleteFile();
-            auto amgr = aap::get_android_asset_manager(juce::getEnv());
-            auto asset = AAssetManager_open(amgr, "AugeneDemo.tracktionedit", AASSET_MODE_BUFFER);
-            auto len = AAsset_getLength(asset);
-            {
-                void *buf = calloc(len, 1);
-                AAsset_read(asset, buf, len);
-                auto out = FileOutputStream{editFile};
-                out.write(buf, len);
-                free(buf);
-            }
-        }
-        editFilePath = editFile.getFullPathName();
-        loadEditFile();
-#else
-        FileChooser fc{"Open tracktionedit File", File{}, "*.tracktionedit"};
-        if (fc.browseForFileToOpen()) {
-            editFilePath = fc.getResult().getFullPathName();
-            loadEditFile();
-        }
-#endif
-    };
+    selectFileButton.onClick = [this] { startLoadEdit(); };
 
     playPauseButton.onClick = [this] {
         if (edit)
@@ -136,49 +105,8 @@ MainComponent::MainComponent()
     };
 
     settingsButton.onClick  = [this] { showAudioDeviceSettings (engine); };
-
-    exportButton.onClick = [this, &formatManager] {
-        auto& pluginManager = engine.getPluginManager();
-        auto& deviceManager = engine.getDeviceManager();
-        File configDir{File::getSpecialLocation(File::userHomeDirectory).getFullPathName() + "/.config/augene-ng/"};
-        if (!configDir.exists())
-            configDir.createDirectory();
-        File pluginDataXml{configDir.getFullPathName() + "/plugin-metadata.json"};
-        if (pluginDataXml.exists())
-            pluginDataXml.deleteFile();
-        auto outputStream = pluginDataXml.createOutputStream();
-
-        outputStream->writeText("[\n", false, false, nullptr);
-        bool subsequentPlugin{false};
-        for (auto& pluginInfo : pluginManager.knownPluginList.getTypes()) {
-            auto format = String::formatted(
-                    "Failed to instantiate " + pluginInfo.name + " (" + pluginInfo.fileOrIdentifier + ")");
-            auto pluginStartElement = String::formatted("%s  {\"type\": \"%s\", \"name\": \"%s\", \"unique-id\": \"%d\",\n   \"file\": \"%s\", \"parameters\": [",
-                                                        subsequentPlugin ? ",\n" : "",
-                                                        escapeJson(pluginInfo.pluginFormatName),
-                                                        escapeJson(pluginInfo.name), pluginInfo.uid,
-                                                        escapeJson(pluginInfo.fileOrIdentifier));
-            auto instance = formatManager.createPluginInstance(pluginInfo, deviceManager.getSampleRate(),
-                                                               deviceManager.getBlockSize(), format);
-            if (!instance)
-                continue;
-            subsequentPlugin = true;
-            outputStream->writeText(pluginStartElement, false, false, nullptr);
-
-            bool subsequentParameter{false};
-            for (auto &para: instance->getParameters()) {
-                auto msg = String::formatted("%s\n    {\"index\": \"%d\", \"name\": \"%s\"}",
-                                             subsequentParameter ? "," : "",
-                                             para->getParameterIndex(),
-                                             escapeJson(para->getName(4096)));
-                outputStream->writeText(msg, false, false, nullptr);
-                subsequentParameter = true;
-            }
-            outputStream->writeText("\n  ]}", false, false, nullptr);
-        }
-        outputStream->writeText("\n]\n", false, false, nullptr);
-        outputStream->flush();
-    };
+    exportButton.onClick = [this, &formatManager] { exportPluginSettings(formatManager); };
+    renderButton.onClick = [this] { startRendering(); };
 
     watchFileToggleButton.setToggleState(true, NotificationType::dontSendNotification);
     watchFileToggleButton.onClick = [&] { watchFileChanges = watchFileToggleButton.getToggleState(); };
@@ -192,6 +120,7 @@ MainComponent::MainComponent()
     addAndMakeVisible(&settingsButton);
     addAndMakeVisible(&playPauseButton);
     addAndMakeVisible(&stopButton);
+    addAndMakeVisible(&renderButton);
     addAndMakeVisible(&exportButton);
     addAndMakeVisible(&watchFileToggleButton);
     addAndMakeVisible(&hotReloadToggleButton);
@@ -228,7 +157,8 @@ void MainComponent::resized()
     playPauseButton.setBounds (secondRowR.removeFromLeft (secondRowR.getWidth() / 3).reduced (2));
     stopButton.setBounds (secondRowR.removeFromLeft (secondRowR.getWidth() / 2).reduced (2));
     exportButton.setBounds (secondRowR.reduced (2));
-    watchFileToggleButton.setBounds(thirdRowR.removeFromLeft(thirdRowR.getWidth() / 3).reduced (2));
+    renderButton.setBounds(thirdRowR.removeFromLeft(thirdRowR.getWidth() / 3).reduced (2));
+    watchFileToggleButton.setBounds(thirdRowR.removeFromLeft(thirdRowR.getWidth() / 2).reduced (2));
     hotReloadToggleButton.setBounds(thirdRowR.reduced (2));
     editNameLabel.setBounds (r);
 }
@@ -390,4 +320,95 @@ void MainComponent::tryHotReloadEdit()
     edit->tempoSequence.copyFrom(newEdit->tempoSequence);
 
     edit->flushState();
+}
+
+void MainComponent::exportPluginSettings(juce::AudioPluginFormatManager &formatManager) {
+    auto& pluginManager = engine.getPluginManager();
+    auto& deviceManager = engine.getDeviceManager();
+    File configDir{File::getSpecialLocation(File::userHomeDirectory).getFullPathName() + "/.config/augene-ng/"};
+    if (!configDir.exists())
+        configDir.createDirectory();
+    File pluginDataXml{configDir.getFullPathName() + "/plugin-metadata.json"};
+    if (pluginDataXml.exists())
+        pluginDataXml.deleteFile();
+    auto outputStream = pluginDataXml.createOutputStream();
+
+    outputStream->writeText("[\n", false, false, nullptr);
+    bool subsequentPlugin{false};
+    for (auto& pluginInfo : pluginManager.knownPluginList.getTypes()) {
+        auto format = String::formatted(
+                "Failed to instantiate " + pluginInfo.name + " (" + pluginInfo.fileOrIdentifier + ")");
+        auto pluginStartElement = String::formatted("%s  {\"type\": \"%s\", \"name\": \"%s\", \"unique-id\": \"%d\",\n   \"file\": \"%s\", \"parameters\": [",
+                                                    subsequentPlugin ? ",\n" : "",
+                                                    escapeJson(pluginInfo.pluginFormatName),
+                                                    escapeJson(pluginInfo.name), pluginInfo.uid,
+                                                    escapeJson(pluginInfo.fileOrIdentifier));
+        auto instance = formatManager.createPluginInstance(pluginInfo, deviceManager.getSampleRate(),
+                                                           deviceManager.getBlockSize(), format);
+        if (!instance)
+            continue;
+        subsequentPlugin = true;
+        outputStream->writeText(pluginStartElement, false, false, nullptr);
+
+        bool subsequentParameter{false};
+        for (auto &para: instance->getParameters()) {
+            auto msg = String::formatted("%s\n    {\"index\": \"%d\", \"name\": \"%s\"}",
+                                         subsequentParameter ? "," : "",
+                                         para->getParameterIndex(),
+                                         escapeJson(para->getName(4096)));
+            outputStream->writeText(msg, false, false, nullptr);
+            subsequentParameter = true;
+        }
+        outputStream->writeText("\n  ]}", false, false, nullptr);
+    }
+    outputStream->writeText("\n]\n", false, false, nullptr);
+    outputStream->flush();
+}
+
+void MainComponent::startRendering() {
+    const juce::File wavFile = juce::File(editFilePath).withFileExtension(".wav");
+    const juce::String taskName{"augene-ng renderer"};
+    juce::Array<tracktion_engine::Clip*> allClips{};
+    edit->visitAllTopLevelTracks([&](tracktion_engine::Track &track) {
+        auto clipTrack = dynamic_cast<tracktion_engine::ClipTrack*>(&track);
+        if (clipTrack)
+            allClips.addArray(clipTrack->getClips());
+        return true;
+    });
+
+    // To run asynchronously we seem to need our own UI behavior implemented...
+    tracktion_engine::Renderer::renderToFile(taskName, wavFile, *edit,
+                                             tracktion_engine::EditTimeRange(0, edit->getLength()),
+                                             edit->maxNumTracks, true, allClips, false);
+}
+
+void MainComponent::startLoadEdit() {
+#if ANDROID
+    ApplicationProperties applicationProperties;
+    PropertiesFile::Options options{};
+    options.applicationName = String{"AugenePlayer"};
+    applicationProperties.setStorageParameters(options);
+    auto settingsDir = applicationProperties.getUserSettings()->getFile().getParentDirectory().getParentDirectory();
+    auto editFile = settingsDir.getChildFile("AugeneDemo.tracktionedit");
+    if (editFile.existsAsFile())
+        editFile.deleteFile();
+    auto amgr = aap::get_android_asset_manager(juce::getEnv());
+    auto asset = AAssetManager_open(amgr, "AugeneDemo.tracktionedit", AASSET_MODE_BUFFER);
+    auto len = AAsset_getLength(asset);
+    {
+        void *buf = calloc(len, 1);
+        AAsset_read(asset, buf, len);
+        auto out = FileOutputStream{editFile};
+        out.write(buf, len);
+        free(buf);
+    }
+    editFilePath = editFile.getFullPathName();
+    loadEditFile();
+#else
+    FileChooser fc{"Open tracktionedit File", File{}, "*.tracktionedit"};
+    if (fc.browseForFileToOpen()) {
+        editFilePath = fc.getResult().getFullPathName();
+        loadEditFile();
+    }
+#endif
 }
