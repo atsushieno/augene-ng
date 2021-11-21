@@ -83,6 +83,7 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
 
         for (midiTrack in context.midi.tracks) {
             val ttrack = TrackElement().apply {
+                Id = context.generateNewID()
                 Name = populateTrackName(midiTrack)
                 Extension_InstrumentName = populateInstrumentName(midiTrack)
 
@@ -450,10 +451,8 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
                         }
                         else when (msg.metaEventType) {
                             MidiMetaType.TRACK_NAME ->
-                                // FIXME: verify this drop is correct...
-                                ttrack.Id = sysex.drop(8).toByteArray().decodeToString()
+                                ttrack.Name = sysex.drop(8).toByteArray().decodeToString()
                             MidiMetaType.INSTRUMENT_NAME -> // This does not exist in TracktionEdit; ntracktive extends this.
-                                // FIXME: verify this drop is correct...
                                 ttrack.Extension_InstrumentName = sysex.drop(8).toByteArray().decodeToString()
                             MidiMetaType.MARKER ->
                                 when (context.markerImportStrategy) {
@@ -461,7 +460,6 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
                                     else -> {}
                                 }
                             MidiMetaType.TEMPO -> {
-                                // FIXME: verify this drop is correct...
                                 currentBpm = toBpm(sysex.drop(8).toByteArray(), 0, sysex.size - 8)
                                 context.edit.TempoSequence!!.Tempos.add(TempoElement().apply {
                                     StartBeat = toTracktionBarSpec(currentTotalTime)
@@ -470,7 +468,6 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
                                 })
                             }
                             MidiMetaType.TIME_SIGNATURE -> {
-                                // FIXME: verify this drop is correct...
                                 timeSigNumerator = sysex[8].toInt()
                                 timeSigDenominator = 2.0.pow(sysex[9].toDouble()).toInt()
                                 context.edit.TempoSequence!!.TimeSignatures.add(

@@ -35,6 +35,16 @@ class AugeneCompilerJvmTest {
     }
 
     @Test
+    fun compile3() {
+        val model = AugeneCompiler()
+        model.loadProjectFile("../../samples/mars/mars_sfizz.augene")
+        model.compile()
+        model.edit.Tracks.filterIsInstance<TrackElement>().forEach {
+            assertTrue(it.Plugins.any { it.Type == "vst" }, "no vst in the track ${it.Id}")
+        }
+    }
+
+    @Test
     fun compileSpectra() {
         val model = AugeneCompiler()
         model.projectFileName = "../../samples/TestStub.augene"
