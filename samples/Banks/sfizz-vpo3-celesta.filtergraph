@@ -12,7 +12,7 @@
         <BUS index="0" layout="disabled"/>
       </INPUTS>
       <OUTPUTS>
-        <BUS index="0" layout="L R"/>
+        <BUS index="0" layout="disabled"/>
       </OUTPUTS>
     </LAYOUT>
   </FILTER>
@@ -34,7 +34,7 @@
   <FILTER uid="12" x="0.5" y="0.9">
     <PLUGIN name="Audio Output" descriptiveName="" format="Internal" category="I/O devices"
             manufacturer="JUCE" version="1.0" file="" uniqueId="724248cb"
-            isInstrument="0" fileTime="0" infoUpdateTime="0" numInputs="2"
+            isInstrument="0" fileTime="0" infoUpdateTime="0" numInputs="0"
             numOutputs="0" isShell="0" uid="724248cb"/>
     <STATE>0.</STATE>
     <LAYOUT>
@@ -62,12 +62,12 @@
     </LAYOUT>
   </FILTER>
   <FILTER uid="14" x="0.34625" y="0.3044354838709677" uiLastX_Normal="366"
-          uiLastY_Normal="265" uiopen_Normal="1">
+          uiLastY_Normal="265" uiopen_Normal="0">
     <PLUGIN name="sfizz" format="VST3" category="Instrument|Synth" manufacturer="Paul Ferrand"
-            version="1.0.0" file="/usr/local/lib/vst3/sfizz.vst3" uniqueId="5da1643a"
-            isInstrument="1" fileTime="177e3a90180" infoUpdateTime="17ccaadfc90"
+            version="1.1.1" file="/usr/local/lib/vst3/sfizz.vst3" uniqueId="5da1643a"
+            isInstrument="1" fileTime="17d4dc8d860" infoUpdateTime="17d55ea6132"
             numInputs="0" numOutputs="2" isShell="0" uid="5de91fbd"/>
-    <STATE>322.VMjLgjS....O+fWarAhckI2bo8la8HRLt.iHfTlai8FYo41Y8HRUTYTK3HxO9.BOVMEUy.Ea0cVZtMEcgQWY9vSRC8Vav8lak4Fc9DSM23xPt3hKt3hKt3hKlQkKt3hK0YVLgMWUwrzYQIiXvzzQZ8FNnsjb3DCVmcWLKk2YVgEdUEyR4giUiQWTwHVcL0VV0fCZU8VRGMFLEYTXy4RQgc1ZWoEciY0ROkjLX4VUwHldIcEV4cCdRs1ZxHVcLYUVxUULhoWQrsTdYwFYt3hKt3hKt.kKt3hKt3hKt3hKtfjKt.kKt3hKt3hcC4hKt3hKtXGNP4hKt3hKH4hKt3BTt3hKt3xPt3hKtHlKtvFSYI0Jt4hKt3hKtrhbt3hKt3hYq3BOujzPu0Fbu4VYtQmO77hUSQ0LPwVcmklaSQWXzUlO..</STATE>
+    <STATE>323.VMjLgnS....O+fWarAhckI2bo8la8HRLt.iHfTlai8FYo41Y8HRUTYTK3HxO9.BOVMEUy.Ea0cVZtMEcgQWY9vSRC8Vav8lak4Fc9DSM33RQt3hKt3hKt3hKPEkKt3hK0YVLgMWUwrzYQIiXvzzQZ8FN3IVcU0VXp0jLKkWVrQVcXUkV3E0Uic1cVsDT2YEVzrFag0FL3MEdMYjVq0zQigWQwvTcxQUVzzjLKkVUFE1ZMczXmQCdhw1aG4hKt3hKt3BQt3hKt3hKt3hKt3hPt3BQt3hKt3hK23hKt3hKt3hXOQjKt3hKtHjKt3hKD4hKt3hYB4hKt3xPt3hKt3hKtrxJqrxJO4hKt3hcA4BV3oVR3jlPt3hKt3xM4IjKt3hKtjyP77RRC8Vav8lak4Fc9vyKVMEUy.Ea0cVZtMEcgQWY9..</STATE>
     <LAYOUT>
       <INPUTS/>
       <OUTPUTS>

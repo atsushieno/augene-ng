@@ -47,12 +47,12 @@
     </LAYOUT>
   </FILTER>
   <FILTER uid="9" x="0.5575" y="0.4838709677419355" uiLastX_Normal="351"
-          uiLastY_Normal="61" uiopen_Normal="1">
+          uiLastY_Normal="61" uiopen_Normal="0">
     <PLUGIN name="sfizz" format="VST3" category="Instrument|Synth" manufacturer="Paul Ferrand"
-            version="1.0.0" file="/usr/local/lib/vst3/sfizz.vst3" uniqueId="5da1643a"
-            isInstrument="1" fileTime="177e3a90180" infoUpdateTime="17c122ad77c"
+            version="1.1.1" file="/usr/local/lib/vst3/sfizz.vst3" uniqueId="5da1643a"
+            isInstrument="1" fileTime="17d4dc8d860" infoUpdateTime="17d53add0ef"
             numInputs="0" numOutputs="2" isShell="0" uid="5de91fbd"/>
-    <STATE>308.VMjLgrR....O+fWarAhckI2bo8la8HRLt.iHfTlai8FYo41Y8HRUTYTK3HxO9.BOVMEUy.Ea0cVZtMEcgQWY9vSRC8Vav8lak4Fc9DCM23xPt3hKt3hKt3hKlAkKt3hK0YVLgMWUwrzYQIiXvzzQZ8FNnsjb3DCVmcWLKk2YVgEdUEyR4giUiQWTwHVcL0VV0fiTPQUSTwzbHQEV40jLKETTv.0bDk2UBUTLhkGNEwzcyfmXr81Qt3hKt3hKtPjKt3hKt3hKt3hKtHjKtPjKt3hKt3xMt3hKt3hKtH1SD4hKt3hKB4hKt3BQt3hKt3RPt3hKtDjKt3hKt3hKG4hYIMEa58jRt3hKt3hcOsjKt3hKtLyS77RRC8Vav8lak4Fc9vyKVMEUy.Ea0cVZtMEcgQWY9..</STATE>
+    <STATE>310.VMjLgzR....O+fWarAhckI2bo8la8HRLt.iHfTlai8FYo41Y8HRUTYTK3HxO9.BOVMEUy.Ea0cVZtMEcgQWY9vSRC8Vav8lak4Fc9DCM33RQt3hKt3hKt3hKP0jKt3hK0YVLgMWUwrzYQIiXvzzQZ8FN3IVcU0VXp0jLKkWVrQVcDQTUCUzTKITQwHVd3HETT0DUKc2MqA0YMIiXkEzTLQGSskUMA4hKt3hKt3RPt3hKt3hKt3hKtXlKt3RPt3hKt3hKO4hKt3hKt3hLCEjKt3hKl4hKt3hKA4hKt3hat3hKtXmKt3hKt3hK1sxJqrxJD4hKt3BQt3hKt3hKtHlKtvFSYI0Jt4hKt3hKtrhbt3hKt3hYq3BOujzPu0Fbu4VYtQmO77hUSQ0LPwVcmklaSQWXzUlO..</STATE>
     <LAYOUT>
       <INPUTS/>
       <OUTPUTS>
@@ -60,24 +60,7 @@
       </OUTPUTS>
     </LAYOUT>
   </FILTER>
-  <FILTER uid="10" x="0.665" y="0.7258064516129032">
-    <PLUGIN name="Reverb" format="Internal" category="Effect" manufacturer="JUCE"
-            version="1.0.0" file="Reverb" uniqueId="91b3d5f2" isInstrument="0"
-            fileTime="0" infoUpdateTime="0" numInputs="2" numOutputs="2"
-            isShell="0" uid="91b3d5f2"/>
-    <STATE>0.</STATE>
-    <LAYOUT>
-      <INPUTS>
-        <BUS index="0" layout="L R"/>
-      </INPUTS>
-      <OUTPUTS>
-        <BUS index="0" layout="L R"/>
-      </OUTPUTS>
-    </LAYOUT>
-  </FILTER>
   <CONNECTION srcFilter="8" srcChannel="4096" dstFilter="9" dstChannel="4096"/>
-  <CONNECTION srcFilter="9" srcChannel="0" dstFilter="10" dstChannel="0"/>
-  <CONNECTION srcFilter="9" srcChannel="1" dstFilter="10" dstChannel="1"/>
-  <CONNECTION srcFilter="10" srcChannel="0" dstFilter="7" dstChannel="0"/>
-  <CONNECTION srcFilter="10" srcChannel="1" dstFilter="7" dstChannel="1"/>
+  <CONNECTION srcFilter="9" srcChannel="0" dstFilter="7" dstChannel="0"/>
+  <CONNECTION srcFilter="9" srcChannel="1" dstFilter="7" dstChannel="1"/>
 </FILTERGRAPH>

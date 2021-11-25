@@ -47,12 +47,12 @@
     </LAYOUT>
   </FILTER>
   <FILTER uid="9" x="0.5575" y="0.4838709677419355" uiLastX_Normal="351"
-          uiLastY_Normal="61" uiopen_Normal="0">
+          uiLastY_Normal="61" uiopen_Normal="1">
     <PLUGIN name="sfizz" format="VST3" category="Instrument|Synth" manufacturer="Paul Ferrand"
             version="1.1.1" file="/usr/local/lib/vst3/sfizz.vst3" uniqueId="5da1643a"
-            isInstrument="1" fileTime="17d4dc8d860" infoUpdateTime="17d53afd74d"
+            isInstrument="1" fileTime="17d4dc8d860" infoUpdateTime="17d553b1459"
             numInputs="0" numOutputs="2" isShell="0" uid="5de91fbd"/>
-    <STATE>344.VMjLg7T....O+fWarAhckI2bo8la8HRLt.iHfTlai8FYo41Y8HRUTYTK3HxO9.BOVMEUy.Ea0cVZtMEcgQWY9vSRC8Vav8lak4Fc9DyMz3RQt3hKt3hKt3hKPUkKt3hK0YVLgMWUwrzYQIiXvzzQZ8FN3IVcU0VXp0jLKkWVrQVcLcEYzE0QZQmZrElY5IDRDUjQHIUUVgkbAIES24xPHMUVpYUcPQEVlgTUYc1cFgzcDMDSlomPHEzcFElY5IDR5AUZKcmK3oERu01R4kEaj4hKt3hKt3BTt3hKt3hKt3hKt3BRt3BTt3hKt3hK1MjKt3hKt3hc3.kKt3hKtfjKt3hKP4hKt3hKJ4hKt3BSt3hKt3hKtbyJqrxJq3hKt3hKG4hYIMEa58jRt3hKt3hcOsjKt3hKtLyS77RRC8Vav8lak4Fc9vyKVMEUy.Ea0cVZtMEcgQWY9..</STATE>
+    <STATE>483.VMjLgnc....O+fWarAhckI2bo8la8HRLt.iHfTlai8FYo41Y8HRUTYTK3HxO9.BOVMEUy.Ea0cVZtMEcgQWY9vSRC8Vav8lak4Fc9HyM33RQt3hKt3hKt3hKPQkKt3hK0YVLgMWUwrzYQIiXvzzQZ8FN3IVcU0VXp0jLKkWVrQVcTUkTk0TQicFMFk0YIcTVkMFUi8VTWgEd3HDU3gSLYgWQVEVd3HDS2oGdToWQrElZEwlXpEDdQAyZFM1YIcDRK0DLSAEM3IFaucjKt3hKt3hKD4hKt3hKt3hKt3hKB4hKD4hKt3hKtbiKt3hKt3hKh8DQt3hKt3hPt3hKtPjKt3hKlIjKt3hKC4hKt3hKt3BVt3hKtPUPt3hK1EjKXgmZIgSZB4hKt3hK2jmPt3hKt3RNCUjKt3hKt3BTE4xL0U1J2jVQt3hKt3RN4UjKt3hKt3hKF4hX54VTxLkQtHVLxkENoYjKTwFSYMSdF4BUuI0Z2LzQtfkbXcWMScjKXIGV2USZG4hdqszU2j2Qt.kYtDzMCgjKt3hKt3hKL4BTl4RP2LTSt3hKt3hKP0jKt3hKt3hcg4hKt3hKt3hXt3hKt3hKtvyKIMzasA2atUlaz4COuX0TTMCTrU2Yo41TzEFck4C.</STATE>
     <LAYOUT>
       <INPUTS/>
       <OUTPUTS>
