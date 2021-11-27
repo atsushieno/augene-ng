@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <FILTERGRAPH>
-  <FILTER uid="10" x="0.5" y="0.1">
+  <FILTER uid="10" x="0.47625" y="0.1310483870967742">
     <PLUGIN name="Audio Input" descriptiveName="" format="Internal" category="I/O devices"
             manufacturer="JUCE" version="1.0" file="" uniqueId="246006c0"
             isInstrument="0" fileTime="0" infoUpdateTime="0" numInputs="0"
@@ -61,11 +61,11 @@
       </OUTPUTS>
     </LAYOUT>
   </FILTER>
-  <FILTER uid="14" x="0.51" y="0.5134099616858238">
+  <FILTER uid="14" x="0.4525" y="0.4133064516129032">
     <PLUGIN name="SimpleReverb" format="VST3" category="Fx" manufacturer="Suzuki Kengo"
-            version="0.0.1" file="/home/atsushi/.vst3/SimpleReverb.vst3"
-            uniqueId="bd0b5325" isInstrument="0" fileTime="17b2001d848" infoUpdateTime="17cc85e9bf7"
-            numInputs="2" numOutputs="2" isShell="0" uid="52b9494c"/>
+            version="1.0.0" file="/usr/local/lib/vst3/SimpleReverb.vst3"
+            uniqueId="bdad8a3e" isInstrument="0" fileTime="17cd467a230" infoUpdateTime="17cd469f452"
+            numInputs="2" numOutputs="2" isShell="0" uid="413d3e8b"/>
     <STATE>191.VMjLgXK....O+fWarAhckI2bo8la8HRLt.iHfTlai8FYo41Y8HRUTYTK3HxO9.BOVMEUy.Ea0cVZtMEcgQWY9vSRC8Vav8lak4Fc9XCLt3hKt3hKt3hKt3hYRUUSTEETIckVwTjQisVTTgkdEYjKAQjYPQSPWgUdMcjKAQjct3hdA4hKt3hKt3hKtnTUv.UQAslXuk0UXoWUFE0YQcEV77RRC8Vav8lak4Fc9vyKVMEUy.Ea0cVZtMEcgQWY9..</STATE>
     <LAYOUT>
       <INPUTS>
