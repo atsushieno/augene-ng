@@ -23,7 +23,7 @@ jobs:
           libjack-jackd2-dev ladspa-sdk \
           doxygen libgrpc++-dev libgrpc-dev \
           libprotobuf-dev protobuf-compiler protobuf-compiler-grpc \
-          graphviz cmake ninja-build
+          graphviz cmake ninja-build lv2-dev
     - name: set up JDK 11
       uses: actions/setup-java@v1
       with:
