@@ -16,10 +16,13 @@ jobs:
     - name: apt update
       run: |
         sudo apt-get update
+        sudo apt-get install ninja-build
     - name: set up JDK 11
       uses: actions/setup-java@v1
       with:
         java-version: 11
+    - name: build augene-player
+      run: bash build-augene-player.sh
     - name: build kotractive
       run: cd kotractive-project && ./gradlew --warning-mode all build publishToMavenLocal
     - name: build augene
