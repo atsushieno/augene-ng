@@ -5,6 +5,7 @@
     <Include Source="../Banks/SfzBanks-VPO3.augene" />
   </Includes>
   <AudioGraphs>
+    <AudioGraph Id="sfizz_nbo_tuba_full" Source="../Banks/sfizz-nbo-tuba-full.filtergraph" />
     <AudioGraph Id="simple_reverb" Source="../Banks/simple-reverb.filtergraph" />
   </AudioGraphs>
   <MasterPlugins />

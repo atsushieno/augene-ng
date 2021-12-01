@@ -443,10 +443,15 @@ G	ASSERT_STEP_A 23280, "9.VI"
 #macro 13 NORMAL { r%-1 n36,0,64 E127 r%1 }
 #macro 13 STACCATO { r%-1 n40,0,64 E127 r%1 }
 
-#macro 14-17 SUSTAIN { r%-1 n84,0,64 E127 r%1 }
-#macro 14-17 NORMAL { r%-1 n86,0,64 E127 r%1 }
-#macro 14-17 ACCENT { r%-1 n87,0,64 E100 r%1 }
-#macro 14-17 STACCATO { r%-1 n88,0,64 E127 r%1 }
+#macro 14,15,17 SUSTAIN { r%-1 n84,0,64 E127 r%1 }
+#macro 14,15,17 NORMAL { r%-1 n86,0,64 E127 r%1 }
+#macro 14,15,17 ACCENT { r%-1 n87,0,64 E100 r%1 }
+#macro 14,15,17 STACCATO { r%-1 n88,0,64 E127 r%1 }
+
+#macro 16 SUSTAIN { Q8 }
+#macro 16 NORMAL { Q8 }
+#macro 16 ACCENT { Q4 }
+#macro 16 STACCATO { Q4 }
 
 
 // ---- Horns High -------------------------------------------------------------
@@ -758,8 +763,8 @@ G	ASSERT_STEP_A 23280, "15.VI"
 
 // ---- Tenor Tuba -------------------------------------------------------------
 _ 16	CH16 K12-2
-	TRACKNAME "Tenor Tuba" INSTRUMENTNAME "sfizz_vpo3_tuba_ks;simple_reverb"
-	o2 V90 P76
+	TRACKNAME "Tenor Tuba" INSTRUMENTNAME "sfizz_nbo_tuba_full;simple_reverb"
+	o3 V42 P76
 A	[r1r4]16
 B	ASSERT_STEP_A 3840, "16.I"
 	NORMAL l16
@@ -777,13 +782,13 @@ D	ASSERT_STEP_A 13680, "16.III"
 	[r1r4]10
 E	ASSERT_STEP_A 16080, "16.IV"
 	l16 >
-	V+15 // solo
-	Q6 [ [e4]3 STACCATO [e12d+12e12]2  NORMAL g2e8.eg4e4^  2.^8r4. ]2
-	V-15 r1r4
+	V+10 // solo
+	[ Q6 [e4]3 STACCATO [e12d+12e12]2  NORMAL Q7 g2e8.eg4e4^  2.^8r4. ]2
+	V-10 r1r4
 	[r1r4]9
 F	ASSERT_STEP_A 19920, "16.V"
-	Q6 [d4]3 STACCATO [d12c+12d12]2  NORMAL f2d8.df2
-	d8.df2d8.df4  d8.df+2d8.df+4
+	Q6 [d4]3 STACCATO [d12c+12d12]2  NORMAL Q7 f2d8.df2
+	Q6 d8.df2d8.df4  d8.df+2d8.df+4
 	  d8.dg2d8.dg4  [d8.da-2d8.da-4]2
 	[d8.db1]2  [r1r4]3
 	Q8 [r1r4]2
