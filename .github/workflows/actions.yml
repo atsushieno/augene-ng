@@ -59,4 +59,5 @@ jobs:
           augene-editor-project/desktop/build/compose/binaries/main/deb/*.msi
           augene-editor-project/desktop/build/compose/binaries/main/deb/*.dmg
           augene-editor-project/desktop/build/compose/binaries/main/deb/*.deb
+          augene-player/build/AugenePlayer_artefacts/AugenePlayer
 
