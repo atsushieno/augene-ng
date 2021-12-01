@@ -73,7 +73,7 @@ actual fun initializeModelCatalog() {
 
         logger.info("Generating MetaType${name}")
 
-        val writer = codeGenerator.createNewFile(Dependencies(false), "dev.atsushieno.kotractive", "MetaType${name}").writer()
+        val writer = codeGenerator.createNewFile(Dependencies(true, classDeclaration.containingFile!!), "dev.atsushieno.kotractive", "MetaType${name}").writer()
         writer.write("""
 package dev.atsushieno.kotractive
 
