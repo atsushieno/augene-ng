@@ -374,7 +374,7 @@ G	o4 l8
 	[a4.g+g4.g+a4.b :1 b+4.>c+d4.c+< :2 >c+4.d+e+4.e< :3 >d4.c+<b+4.>c+ ]3
 	  e+4.ed+4.ee+4.f+a4.g+g4.g+
 	d4.c+<b+4.>c+d4.d+e4.e+f+4.e+  d+4.c+<b+4.>c+d4.d+e4.ga4.g+
-	  d+4.c+<b4.>c+d4.d+f+4.e+e4.e+  a4.g+f4.g+a4.b>d4.c+<b4.>c+<
+	  d+4.c+<b+4.>c+d4.d+f+4.e+e4.e+  a4.g+f4.g+a4.b>d4.c+<b4.>c+<
 H	ASSERT_STEP_B 3840, "8.VII"
 	e0g0>c4.<d+0f+0b8 d0f0b-4.d+0f+0b8 e0g0>c4.<f+0a0>d8<
 	  f+0a+0>d+4.< g+0b0>e8< a0>c0f4.<g+0b0>e8<
@@ -427,7 +427,7 @@ G	o4 l8 // copy of track 8
 	[a4.g+g4.g+a4.b :1 b+4.>c+d4.c+< :2 >c+4.d+e+4.e< :3 >d4.c+<b+4.>c+ ]3
 	e+4.ed+4.ee+4.f+a4.g+g4.g+
 	d4.c+<b+4.>c+d4.d+e4.e+f+4.e+  d+4.c+<b+4.>cd4.d+e4.ga4.g+
-	d+4.c+<b4.>c+d4.d+f+4.e+e4.e+  a4.g+g4.g+a4.b>d4.c+<b4.>c+
+	d+4.c+<b+4.>c+d4.d+f+4.e+e4.e+  a4.g+g4.g+a4.b>d4.c+<b4.>c+
 H	ASSERT_STEP_B 3840, "9.VII"
 	l8
 	<c4.<ba-4.a>c4.dd+4.ef4.e  c4.<bb-4.b>c4.de4.f+g+4.g
@@ -654,7 +654,7 @@ P	ASSERT_STEP_B 24816, "13.End"
 // ---- Tenor Trombones --------------------------------------------------------
 _ 14	CH14 K12
 G	o3 l8
-	[r1r4 r1r4]4
+	[r1r4 r1r4]4	
 	Q6 [ [f+12]3f+4r2r2f+8f+8f+4r2 ]4
 H	ASSERT_STEP_B 3840, "14.VII"
 	[ [a12]3a4r2r2a4a4a8a8a4 ]5  Q8 f0a1.>d0f2f0a2<
