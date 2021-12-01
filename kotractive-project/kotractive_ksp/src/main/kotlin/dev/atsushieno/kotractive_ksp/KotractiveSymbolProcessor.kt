@@ -6,14 +6,7 @@ import com.google.devtools.ksp.processing.Dependencies
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.processing.SymbolProcessorEnvironment
-import com.google.devtools.ksp.symbol.KSAnnotated
-import com.google.devtools.ksp.symbol.KSClassDeclaration
-import com.google.devtools.ksp.symbol.KSDeclaration
-import com.google.devtools.ksp.symbol.KSFile
-import com.google.devtools.ksp.symbol.KSName
-import com.google.devtools.ksp.symbol.KSPropertyDeclaration
-import com.google.devtools.ksp.symbol.KSVisitorVoid
-import com.google.devtools.ksp.symbol.Nullability
+import com.google.devtools.ksp.symbol.*
 import com.google.devtools.ksp.validate
 import java.io.Writer
 
@@ -33,14 +26,11 @@ class KotractiveSymbolProcessor(environment: SymbolProcessorEnvironment) : Symbo
             return listOf()
         iteration++
 
-        val actualFiles = resolver.getNewFiles().filter { f -> !f.filePath.contains("build/generated/ksp" )}.toList()
+        logger.info("starting KotractiveSymbolProcessor...")
 
-        // It should run only against non-generated non-test code.
-        if (actualFiles.isEmpty())
-            return listOf()
+        val editModelFile = resolver.getNewFiles().firstOrNull { it.fileName == "EditModel.kt" } ?: return listOf()
 
         // process EditModel and generate all the relevant MetaType code.
-        val editModelFile = actualFiles.first { it.fileName == "EditModel.kt" }
         editModelFile.accept(visitor, Unit)
 
         val writer = codeGenerator.createNewFile(Dependencies(false), "dev.atsushieno.kotractive", "EditModelMetadataGenerated").writer()
@@ -59,6 +49,7 @@ actual fun initializeModelCatalog() {
 
         writer.close()
 
+        logger.info("KotractiveSymbolProcessor done")
         return listOf()
     }
 
@@ -69,13 +60,18 @@ actual fun initializeModelCatalog() {
             return
 
         val fullName = classDeclaration.qualifiedName?.asString() ?: return
+        if (fullName.startsWith("kotlin.")) // primitive types (we only care about our own types)
+            return
         if (allTypes.any { fullName == it.qualifiedName?.asString() })
             return
+
         allTypes.add(classDeclaration)
 
         val name = classDeclaration.qualifiedName?.getShortName()
         val baseType = classDeclaration.superTypes.firstOrNull()?.resolve()?.declaration
         val baseTypeSpec = if (baseType == null) "null" else "type${baseType.qualifiedName!!.getShortName()}"
+
+        logger.info("Generating MetaType${name}")
 
         val writer = codeGenerator.createNewFile(Dependencies(false), "dev.atsushieno.kotractive", "MetaType${name}").writer()
         writer.write("""
@@ -95,7 +91,8 @@ internal class MetaType$name : MetaType("$name", "$fullName", $baseTypeSpec) {
         writer.write("    init {")
         classDeclaration.declarations.filterIsInstance<KSPropertyDeclaration>().forEach { property ->
             val propertyName = property.simpleName.asString()
-            val propertyTypeDecl = property.type.resolve()
+            val propertyType = property.type.resolve()
+            val propertyTypeDecl = propertyType.declaration
             if (propertyTypeDecl is KSClassDeclaration)
                 registerType(propertyTypeDecl)
 
@@ -103,8 +100,8 @@ internal class MetaType$name : MetaType("$name", "$fullName", $baseTypeSpec) {
             val dataTypeAnnotation = property.annotations.firstOrNull { it.annotationType.toString() == "DataTypes" }
             val dataTypeSpec = if (dataTypeAnnotation != null) dataTypeAnnotation.arguments.first().value!!.toString() else "Unknown"
 
-            val optNullableAssignment = if (propertyTypeDecl.nullability == Nullability.NULLABLE) "if (value == null) null else" else ""
-            val propertyTypeGenericArgs = if (propertyTypeDecl.arguments.any()) "<${propertyTypeDecl.arguments.map { a -> a.type.toString() }.joinToString(", ")}>" else ""
+            val optNullableAssignment = if (propertyType.nullability == Nullability.NULLABLE) "if (value == null) null else" else ""
+            val propertyTypeGenericArgs = if (propertyType.arguments.any()) "<${propertyType.arguments.map { a -> a.type.toString() }.joinToString(", ")}>" else ""
             writer.write("""
         declaredProperties.add(object: PropertyInfo("$propertyName", type${property.type}, DataType.$dataTypeSpec) {
             override val ownerType
@@ -120,12 +117,12 @@ internal class MetaType$name : MetaType("$name", "$fullName", $baseTypeSpec) {
 """)
             // add `addLustItem` override if property type is MutableList
             if (property.type.toString().contains("MutableList")) {
-                val listItemType = propertyTypeDecl.arguments.first().type
+                val listItemType = propertyType.arguments.first().type
                 writer.write("""
             override val listItemType
                 get() = type${listItemType}
-            override fun addListItem(target: Any, value: Any?) {
-                (target as MutableList${propertyTypeGenericArgs}).add(value as $listItemType)
+            override fun addListItem(target: Any, itemObj: Any?) {
+                (target as MutableList${propertyTypeGenericArgs}).add(itemObj as $listItemType)
             }
 """)
             }

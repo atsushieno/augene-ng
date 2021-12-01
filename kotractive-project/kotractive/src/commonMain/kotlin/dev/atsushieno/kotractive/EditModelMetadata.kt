@@ -33,7 +33,7 @@ annotation class DataTypes(val dataType: DataType)
 //  generate compilable code.
 expect fun initializeModelCatalog()
 
-val typeBoolean = MetaType("Boolean", "kotlin.String", null, TypeCode.Boolean)
+val typeBoolean = MetaType("Boolean", "kotlin.Boolean", null, TypeCode.Boolean)
 val typeInt = MetaType("Int", "kotlin.Int", null, TypeCode.Int32)
 val typeLong = MetaType("Long", "kotlin.Long", null, TypeCode.Int64)
 val typeDouble = MetaType("Double", "kotlin.Double", null, TypeCode.Double)
