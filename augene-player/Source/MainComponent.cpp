@@ -45,13 +45,18 @@ void showAudioDeviceSettings (tracktion_engine::Engine& engine)
 
 const char* escapeJson(const juce::String src) { return src.replace("\"", "\\\"").toRawUTF8(); }
 
+enum PseudoHeadlessCommand {
+    NONE = 0,
+    SCAN = 1,
+    EXPORT_MML = 2,
+    RENDER_WAV = 3
+};
+
 MainComponent::MainComponent()
 {
     setSize (600, 400);
 
     engine.getDeviceManager().deviceManager.initialise(0, 2, nullptr, true);
-
-    editFilePath = JUCEApplication::getCommandLineParameters().replace ("-NSDocumentRevisionsDebugMode YES", "").unquoted().trim();
 
     selectFileButton.onClick = [this] { startLoadEdit(); };
 
@@ -75,6 +80,22 @@ MainComponent::MainComponent()
 #else
     formatManager.addFormat (new jlv2::LV2PluginFormat());
 #endif
+
+    PseudoHeadlessCommand pseudoHeadlessCommand{NONE};
+
+    for (auto &cmdarg : JUCEApplication::getCommandLineParameterArray()) {
+        if (cmdarg.startsWith("-NSDocumentRevisionsDebugMode"))
+            continue;
+        if (cmdarg == "--scan-plugins")
+            pseudoHeadlessCommand = SCAN;
+        else if (cmdarg == "--export-mml")
+            pseudoHeadlessCommand = EXPORT_MML;
+        else if (cmdarg == "--render-wav")
+            pseudoHeadlessCommand = RENDER_WAV;
+        else
+            editFilePath = cmdarg;
+    }
+
     // Show the plugin scan dialog
     // If you're loading an Edit with plugins in, you'll need to perform a scan first
     pluginsButton.onClick = [this]
@@ -128,6 +149,27 @@ MainComponent::MainComponent()
     const File editFile (editFilePath);
     if (editFile.existsAsFile())
         loadEditFile();
+
+    if (pseudoHeadlessCommand == SCAN) {
+        auto v = std::make_unique<PluginListComponent>(engine.getPluginManager().pluginFormatManager,
+                                                       engine.getPluginManager().knownPluginList,
+                                                       engine.getTemporaryFileManager().getTempFile ("PluginScanDeadMansPedal"),
+                                                       tracktion_engine::getApplicationSettings());
+        for (auto format : formatManager.getFormats())
+            v->scanFor(*format);
+        JUCEApplication::getInstance()->invokeDirectly(StandardApplicationCommandIDs::quit, true);
+    }
+    else if (pseudoHeadlessCommand == EXPORT_MML) {
+        exportPluginSettings(formatManager);
+        JUCEApplication::getInstance()->invokeDirectly(StandardApplicationCommandIDs::quit, true);
+    }
+    else if (pseudoHeadlessCommand == RENDER_WAV) {
+        if (editFile.exists())
+            startRendering();
+        else
+            puts("--render-wav command requires file argument to render.");
+        JUCEApplication::getInstance()->invokeDirectly(StandardApplicationCommandIDs::quit, true);
+    }
 }
 
 MainComponent::~MainComponent()
