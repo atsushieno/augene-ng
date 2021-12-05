@@ -7,5 +7,5 @@ mkdir build-pluginhost
 cd build-pluginhost
 pwd
 cmake -DCMAKE_BUILD_TYPE=Debug -DJUCE_BUILD_EXTRAS=ON ../external/tracktion_engine/modules/juce/
-make
+make AudioPluginHost
 cd ..
