@@ -16,7 +16,7 @@ class AugeneUIBehaviour : public tracktion_engine::UIBehaviour {
 };
 
 class MainComponent
-    : public Component, public ChangeListener
+    : public Component, public ChangeListener, public Timer
 {
 public:
     //==============================================================================
@@ -39,6 +39,8 @@ public:
     }
 
     void processFileWatcherDetectedUpdate(String fullPath);
+
+    void timerCallback() override;
 
 private:
     class AugeneWatchListener : public efsw::FileWatchListener {
@@ -73,6 +75,8 @@ private:
         playPauseButton { "Play" }, stopButton { "Stop" }, renderButton { "Render" };
     ToggleButton watchFileToggleButton{"Watch File Changes"}, hotReloadToggleButton{"Enable Hot Reload"};
     Label editNameLabel { "No Edit Loaded" };
+    std::shared_ptr<PluginListComponent> activePluginListComponent{nullptr};
+    int32_t nextFormatForPseudoHeadlessScanning{0};
 
     //==============================================================================
     void updatePlayButtonText()

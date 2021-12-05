@@ -116,6 +116,7 @@ MainComponent::MainComponent()
                                           engine.getPluginManager().knownPluginList,
                                           engine.getTemporaryFileManager().getTempFile ("PluginScanDeadMansPedal"),
                                           tracktion_engine::getApplicationSettings());
+        activePluginListComponent.reset(v);
         v->setSize (800, 600);
         o.content.setOwned (v);
 #if ANDROID
@@ -151,13 +152,14 @@ MainComponent::MainComponent()
         loadEditFile();
 
     if (pseudoHeadlessCommand == SCAN) {
-        auto v = std::make_unique<PluginListComponent>(engine.getPluginManager().pluginFormatManager,
+        auto v = new PluginListComponent(engine.getPluginManager().pluginFormatManager,
                                                        engine.getPluginManager().knownPluginList,
                                                        engine.getTemporaryFileManager().getTempFile ("PluginScanDeadMansPedal"),
                                                        tracktion_engine::getApplicationSettings());
-        for (auto format : formatManager.getFormats())
-            v->scanFor(*format);
-        JUCEApplication::getInstance()->invokeDirectly(StandardApplicationCommandIDs::quit, true);
+        v->setHeadlessScanning(true);
+        activePluginListComponent.reset(v);
+        nextFormatForPseudoHeadlessScanning = 0;
+        startTimer(100);
     }
     else if (pseudoHeadlessCommand == EXPORT_MML) {
         exportPluginSettings(formatManager);
@@ -457,4 +459,31 @@ void MainComponent::startLoadEdit() {
         loadEditFile();
     }
 #endif
+}
+
+class ConsoleLogger : public Logger {
+    void logMessage (const String &message) override {
+        puts(message.toRawUTF8());
+    }
+};
+
+static Logger* getLogger() {
+    if (Logger::getCurrentLogger() == nullptr)
+        Logger::setCurrentLogger(new ConsoleLogger());
+    return Logger::getCurrentLogger();
+}
+
+void MainComponent::timerCallback()
+{
+    if (!activePluginListComponent->isScanning()) {
+        auto &formatManager = engine.getPluginManager().pluginFormatManager;
+        auto formats = formatManager.getFormats();
+        if (nextFormatForPseudoHeadlessScanning == formats.size())
+            JUCEApplication::getInstance()->invokeDirectly(StandardApplicationCommandIDs::quit, true);
+        else {
+            auto format = formats[nextFormatForPseudoHeadlessScanning++];
+            getLogger()->outputDebugString("Scanning next plugin" + format->getName());
+            activePluginListComponent->scanFor(*format);
+        }
+    }
 }
