@@ -156,7 +156,6 @@ MainComponent::MainComponent()
                                                        engine.getPluginManager().knownPluginList,
                                                        engine.getTemporaryFileManager().getTempFile ("PluginScanDeadMansPedal"),
                                                        tracktion_engine::getApplicationSettings());
-        v->setHeadlessScanning(true);
         activePluginListComponent.reset(v);
         nextFormatForPseudoHeadlessScanning = 0;
         startTimer(100);
