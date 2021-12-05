@@ -18,6 +18,7 @@ class KotractiveSymbolProcessor(environment: SymbolProcessorEnvironment) : Symbo
 
     private val allTypes = mutableListOf<KSClassDeclaration>()
     private val elements = mutableListOf<KSName>()
+    private val invalidsPerProcess = mutableListOf<KSAnnotated>()
 
     private var iteration = 0
 
@@ -25,6 +26,7 @@ class KotractiveSymbolProcessor(environment: SymbolProcessorEnvironment) : Symbo
         if (resolver.getAllFiles().any { it.filePath.contains("commonTest") })
             return listOf()
         iteration++
+        invalidsPerProcess.clear()
 
         logger.info("starting KotractiveSymbolProcessor...")
 
@@ -50,7 +52,7 @@ actual fun initializeModelCatalog() {
         writer.close()
 
         logger.info("KotractiveSymbolProcessor done")
-        return listOf()
+        return invalidsPerProcess
     }
 
     fun registerType(classDeclaration: KSClassDeclaration) {
@@ -91,6 +93,10 @@ internal class MetaType$name : MetaType("$name", "$fullName", $baseTypeSpec) {
         writer.write("    init {")
         classDeclaration.declarations.filterIsInstance<KSPropertyDeclaration>().forEach { property ->
             val propertyName = property.simpleName.asString()
+            if (!property.type.validate()) {
+                invalidsPerProcess.add(property.type)
+                return@forEach
+            }
             val propertyType = property.type.resolve()
             val propertyTypeDecl = propertyType.declaration
             if (propertyTypeDecl is KSClassDeclaration)
@@ -141,8 +147,10 @@ internal val type$name = MetaType$name()
     inner class KotractiveVisitor(private val owner: KotractiveSymbolProcessor) : KSVisitorVoid() {
         override fun visitFile(file: KSFile, data: Unit) {
             file.declarations.forEach {
-                if (it.validate()) // seealso https://github.com/google/ksp/issues/574
+                if (it.validate())
                     it.accept(this, Unit)
+                else
+                    owner.invalidsPerProcess.add(it)
             }
         }
 
