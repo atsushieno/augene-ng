@@ -1,16 +1,16 @@
 
 # augene-ng: MML compiler for audio plugins sequencer engine
 
-[![augene-ng demo 2021-10-30](http://img.youtube.com/vi/NElCHu7wT4s/0.jpg)](http://www.youtube.com/watch?v=NElCHu7wT4s "augene-ng demo 2021-10-30") (links to youtube video)
+[![augene-ng demo 2021-11-18](http://img.youtube.com/vi/GZWBkxWjDfM/0.jpg)](https://www.youtube.com/watch?v=GZWBkxWjDfM "augene-ng demo 2021-11-18") (links to youtube video)
 
-augene(-ng, next gen) is an experimental compound music authoring toolchain that brings old-fashion MML (music macro language) compiler integrated into modern sequencer that is also used in Tracktion Waveform DAW (so far). It is nothing but a proof of concept so far, whilst I (@atsushieno) plan to use it for own production. Check out the youtube video linked from the sshot above to find out what I have achieved with this tool, as well as the actual project files under [`samples/mars`](./samples/mars) directory.
+augene(-ng, next gen) is an experimental compound music authoring toolchain that brings old-fashion MML (music macro language) compiler integrated into modern sequencer that is also used in Tracktion Waveform DAW (so far). It is the tool I (@atsushieno) use it for own music production in 2021 and onwards. Check out the youtube video linked from the sshot above to find out what I have achieved with this tool, as well as the actual project files under [`samples/mars`](./samples/mars) directory.
 
-You can also have a quick glance at the project by [my slides for lightening talk at ADC 2019](https://speakerdeck.com/atsushieno/create-music-in-199x-language-for-2019-sequencer) for a bit more details.
+You can also have a quick glance at the project by [my slides for lightening talk at ADC 2019](https://speakerdeck.com/atsushieno/create-music-in-199x-language-for-2019-sequencer) for a bit more details, though I went far beyond from there.
 
 The application consists of the following software and libraries behind:
 
-- The project model implemented in this repository which contains a set of MML sources and associated audio plugin filter graphs, converts SMF to audio plugin based songs (.tracktionedit)
-- MML compiler [mugene-ng](https://github.com/atsushieno/mugene-ng) - compiles MML into SMF.
+- The project model implemented in this repository which contains a set of MML sources and associated audio plugin filter graphs, converts MIDI 2.0 UMPs to audio plugin based songs (.tracktionedit)
+- MML compiler [mugene-ng](https://github.com/atsushieno/mugene-ng) - compiles MML into MIDI 2.0 UMPs.
 - [JUCE](https://github.com/juce-framework/JUCE) AudioPluginHost for editing audio graph.
 - [tracktion_engine](https://github.com/Tracktion/tracktion_engine/) - music playback engine.
 - [Compose for Desktop](https://github.com/JetBrains/compose-jb), cross-platform desktop port of Jetpack Compose. (The application itself is desktop-only, so far, as it depends on a lot of desktop filesystem idioms.)
@@ -20,7 +20,10 @@ The application consists of the following software and libraries behind:
 
 NOTE: before using augene, you most likely have to build things (explained in the next section).
 
-launch `augene-editor` application. It is a cross-platform Kotlin/JVM Compose for Desktop GUI application.
+There are two ways to use augene tools: (1) use GUI editor to create a project, compile it to `*.tracktionedit` on the UI, and play the outcome it with GUI player, or (2) run project compiler and pass an augene project as an argument to generate `*.tracktionedit`, and play it with GUI player.
+
+
+For GUI editor, launch `augene(-editor)` application. It is a cross-platform Kotlin/JVM Compose for Desktop GUI application.
 
 ![augene editor: configuration tab](docs/images/augene-config.png)
 
@@ -28,7 +31,7 @@ By default those lists are actually empty. It's a screenshot of the app that has
 
 To use this app, there are couple of things to do - Configure the app. Namely paths to two external tools are needed:
 
-- augene-player (JUCE app in this repository, which is mostly based on PlaybackDemo in tracktion_engine repository)
+- augene-player (JUCE app in this repository, which is mostly based on PlaybackDemo in `tracktion_engine` repository)
 - AudioPluginHost (can be found in JUCE extras)
 
 The next step is to build a list of locally installed audio plugins. Begin with "Plugins" button to start the process.
@@ -37,6 +40,8 @@ The next step is to build a list of locally installed audio plugins. Begin with 
 Once you are done with above, then you're ready to use the app. You can open a `*.tracktionedit` file and play it. Note that if you don't have the audio plugins specified in the edit file, you are unable to play it.
 
 To compose your own music, create new audiograph and new MML for each list, which can be performed via the buttons on each tab. Then use "Compile" command from the FAB (floating action button).
+
+For console compiler, run `java -jar path/to/augene-console.jar path/to/your/project.augene` and `AugenePlayer` respectively.
 
 
 # Building
@@ -56,11 +61,11 @@ make
 
 ### Enabling VST2
 
-It is not confirmed in augene-ng era, but if you have VST2 SDK and would like to add support for VST2, open AugenePlayer.jucer in Projucer (and probably AudioPluginHost.jucer if you once tried to build it from build.sh) on Projucer and select `juce_audio_processors` module and enable VST(2) there, then save project.
+It is not confirmed in augene-ng era, but if you have VST2 SDK and would like to add support for VST2, edit `CMakeLists.txt` which follows JUCE convention that I don't explain by myself. And probably `CMakeLists.txt` for AudioPluginHost too, especially if you try to build it from build-lv2-pluginhost.sh.
 
 ## kotractive, augene, and augene-editor
 
-Another chunk of the application is the augene project builder (or "editor") which builds Compose for Desktop based GUI app/tool.
+Another chunk of the application is the augene project builder (or "editor") which is a Compose for Desktop based GUI app/tool.
 
 Due to current limitation of Kotlin Multiplatform project structure, there are 3 projects to just build one single app... :
 
