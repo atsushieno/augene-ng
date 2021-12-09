@@ -8,4 +8,4 @@ build
 .cxx
 local.properties
 .idea
-
+build-pluginhost

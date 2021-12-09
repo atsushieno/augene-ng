@@ -1,5 +1,5 @@
 plugins {
-    id("org.jetbrains.compose") version "1.0.0-beta6-dev464"
+    id("org.jetbrains.compose")
     id("com.android.application")
     kotlin("android")
 }
@@ -14,11 +14,11 @@ dependencies {
 }
 
 android {
-    compileSdkVersion(31)
+    compileSdk = 31
     defaultConfig {
         applicationId = "dev.atsushieno.augene.gui"
-        minSdkVersion(24)
-        targetSdkVersion(31)
+        minSdk = 24
+        targetSdk = 31
         versionCode = 1
         versionName = "0.1"
     }

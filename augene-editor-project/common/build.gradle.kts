@@ -2,7 +2,7 @@ import org.jetbrains.compose.compose
 
 plugins {
     kotlin("multiplatform")
-    id("org.jetbrains.compose") version "1.0.0-beta6-dev464"
+    id("org.jetbrains.compose")
     id("com.android.library")
     id("maven-publish")
 }
@@ -24,11 +24,11 @@ kotlin {
                 implementation("com.squareup.okio:okio-multiplatform:3.0.0-alpha.9")
 
                 implementation("dev.atsushieno:ktmidi:0.3.15")
-                implementation("dev.atsushieno:mugene:0.2.23")
+                implementation("dev.atsushieno:mugene:0.2.24")
                 implementation("dev.atsushieno:kotractive:0.1")
                 implementation("dev.atsushieno:augene:0.1")
                 implementation("dev.atsushieno:missingdot:0.1.5")
-                implementation("dev.atsushieno:compose-mpp:0.1.2")
+                implementation("dev.atsushieno:compose-mpp:0.1.3")
 
                 implementation("com.arkivanov.decompose:decompose:0.4.0")
             }
@@ -53,7 +53,7 @@ kotlin {
         val desktopMain by getting {
             dependencies {
                 implementation("com.arkivanov.decompose:extensions-compose-jetpack:0.4.0")
-                implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.5.31")
+                implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.6.0")
                 implementation("org.slf4j:slf4j-api:1.7.32")
                 implementation("org.slf4j:slf4j-simple:1.7.32")
             }
@@ -63,10 +63,10 @@ kotlin {
 }
 
 android {
-    compileSdkVersion(31)
+    compileSdk = 31
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     defaultConfig {
-        minSdkVersion(24)
-        targetSdkVersion(31)
+        minSdk = 24
+        targetSdk = 31
     }
 }
