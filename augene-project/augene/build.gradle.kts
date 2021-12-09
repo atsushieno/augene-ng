@@ -17,11 +17,11 @@ repositories {
 
 plugins {
     id("com.android.library")
-    id("org.jetbrains.kotlin.multiplatform")
+    kotlin("multiplatform")
     id("org.jetbrains.dokka") version "1.5.30"
     id("maven-publish")
     id("signing")
-    kotlin("plugin.serialization") version "1.5.20"
+    kotlin("plugin.serialization") version "1.6.0"
 }
 
 kotlin {

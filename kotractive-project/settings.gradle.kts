@@ -16,4 +16,4 @@ pluginManagement {
 
 rootProject.name = "kotractive-project"
 
-include("kotractive_ksp", "kotractive")
+include("kotractive")

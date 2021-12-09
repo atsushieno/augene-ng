@@ -82,10 +82,7 @@ kotlin {
     }*/
 
     sourceSets {
-        val androidMain by getting {
-            dependencies {
-            }
-        }
+        val androidMain by getting
         val androidTest by getting {
             dependencies {
                 implementation(kotlin("test-junit"))
@@ -94,10 +91,8 @@ kotlin {
         }
         val commonMain by getting {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.2.1")
+                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.3.1")
                 implementation("dev.atsushieno:missingdot:0.1.5")
-                if (configurations.get("ksp").dependencies.all { p -> p.name != ":kotractive_ksp" })
-                    configurations.get("ksp").dependencies.add(project(":kotractive_ksp"))
             }
         }
         val commonTest by getting {
@@ -105,15 +100,9 @@ kotlin {
                 implementation(kotlin("test"))
             }
         }
-        val jvmMain by getting {
-            dependencies {
-            }
-        }
+        val jvmMain by getting
         val jvmTest by getting
-        val jsMain by getting {
-            dependencies {
-            }
-        }
+        val jsMain by getting
         val jsTest by getting {
             dependencies {
                 implementation(kotlin("test-js"))
@@ -130,12 +119,12 @@ kotlin {
 }
 
 android {
-    compileSdkVersion(30)
+    compileSdk = 30
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     sourceSets["main"].assets.srcDir("src/commonMain/resources") // kind of hack...
     defaultConfig {
-        minSdkVersion(24)
-        targetSdkVersion(30)
+        minSdk = 24
+        targetSdk = 31
     }
     buildTypes {
         val debug by getting {
@@ -145,4 +134,15 @@ android {
             minifyEnabled(false)
         }
     }
+}
+
+dependencies {
+    if (configurations.get("kspJvm").dependencies.all { p -> p.name != "dev.atsushieno:kotractive_ksp:0.1" })
+        configurations.get("kspJvm").dependencies.add(implementation("dev.atsushieno:kotractive_ksp:0.1"))
+    if (configurations.get("kspJs").dependencies.all { p -> p.name != "dev.atsushieno:kotractive_ksp:0.1" })
+        configurations.get("kspJs").dependencies.add(implementation("dev.atsushieno:kotractive_ksp:0.1"))
+//    if (configurations.get("kspNative").dependencies.all { p -> p.name != "dev.atsushieno:kotractive_ksp:0.1" })
+//        configurations.get("kspNative").dependencies.add(implementation("dev.atsushieno:kotractive_ksp:0.1"))
+    if (configurations.get("kspAndroid").dependencies.all { p -> p.name != "dev.atsushieno:kotractive_ksp:0.1" })
+        configurations.get("kspAndroid").dependencies.add(implementation("dev.atsushieno:kotractive_ksp:0.1"))
 }

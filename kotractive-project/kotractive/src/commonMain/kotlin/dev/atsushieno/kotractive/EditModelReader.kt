@@ -26,6 +26,8 @@ class EditModelReader {
     fun GetTypedValue(pi: PropertyInfo, value: String, li: IXmlLineInfo?): Any? {
         val type = pi.dataType
 
+        println("!!!!!! " + pi.name)
+        println("!!!!!! " + pi.propertyMetaType)
         if (pi.propertyMetaType.simpleName == "ByteArray") {
             // Actually JUCE base64 serialization is weird, it fails to deserialize their base64 String.
             return when (type) {
@@ -79,6 +81,7 @@ class EditModelReader {
     }
 
     fun doRead(reader: XmlReader): Any {
+        println("!!!!!! " + reader.nodeType)
         val li = reader as IXmlLineInfo?
         reader.moveToContent()
         if (reader.nodeType == XmlNodeType.Element) {
@@ -105,6 +108,7 @@ class EditModelReader {
             }
             reader.moveToElement()
 
+            println("!!!!!! " + reader.isEmptyElement)
             if (reader.isEmptyElement) {
                 reader.read()
                 return obj
@@ -112,6 +116,7 @@ class EditModelReader {
             reader.read()
             reader.moveToContent()
             while (reader.nodeType != XmlNodeType.EndElement) {
+                println("!!!!!! EE")
                 val propTypeName = reader.localName + "Element"
                 var prop = type.properties.firstOrNull { p -> p.propertyMetaType.simpleName.equals(propTypeName, true) }
                 if (prop != null)
@@ -145,6 +150,7 @@ class EditModelReader {
                 }
                 reader.moveToContent()
             }
+            println("!!!!!!~ " + reader.nodeType)
             reader.readEndElement()
             return obj
         }

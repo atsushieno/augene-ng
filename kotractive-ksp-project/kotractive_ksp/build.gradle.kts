@@ -2,6 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id ("org.jetbrains.kotlin.jvm") version "1.6.0"
+    id("maven-publish")
 }
 
 buildscript {
@@ -30,4 +31,11 @@ compileKotlin.kotlinOptions {
 val compileTestKotlin: KotlinCompile by tasks
 compileTestKotlin.kotlinOptions {
     jvmTarget = "1.8"
+}
+
+publishing {
+    publications.register<MavenPublication>("kotractive_ksp") {
+        val java by components
+        from(java)
+    }
 }

@@ -30,6 +30,8 @@ jobs:
         java-version: 11
     - name: build augene-player
       run: bash build-augene-player.sh
+    - name: build kotractive_ksp
+      run: cd kotractive-ksp-project && ./gradlew --warning-mode all build publishToMavenLocal
     - name: build kotractive
       run: cd kotractive-project && ./gradlew --warning-mode all build publishToMavenLocal
     - name: build augene
@@ -42,6 +44,7 @@ jobs:
       with:
         name: test-failure-logs
         path: |
+          kotractive-ksp-project/kotractive/build/reports/
           kotractive-project/kotractive/build/reports/
           augene-project/augene/build/reports/
           augene-editor-project/common/build/reports/
