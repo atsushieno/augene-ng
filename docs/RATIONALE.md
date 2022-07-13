@@ -24,7 +24,7 @@ Regardless of whether it is generic programming language or not, we would need t
 
 ## Modernizing MML production
 
-MML was invented in 1080s and there are bunch of differences from modern music production. Most notably, there had never been a MML processor that was tailored for audio plugins. At best the target audio plugins had to be configured as a virtual MIDI device. General availability of those plugins is essential and that would mostly work, but then the potential is limited to whatever MIDI 1.0 messages can express.
+MML was invented in 1980s and there are bunch of differences from modern music production. Most notably, there had never been a MML processor that was tailored for audio plugins. At best the target audio plugins had to be configured as a virtual MIDI device. General availability of those plugins is essential and that would mostly work, but then the potential is limited to whatever MIDI 1.0 messages can express.
 
 augene-ng is built on top of mugene-ng, which used to provide only MIDI 1.0 outputs. Now it supports MIDI 2.0 UMPs, it can generate more refined control change values, velocity in high precision, per-note control changes (also pitchbend). mugene-ng is basically a binary generation tool that is tailored for track list with metadata (i.e. SMF-alike) with a bunch of macros that wrap primitive binary output operations (like `__MIDI {90, 0, 60, 120 }`), transforming it for MIDI 2.0 UMPs was a minor issue. Data precision wise, MIDI 2.0 in general provides whatever we edit on MIDI tracks (or "instrument tracks") on DAWs (unless you really think you need 64-bit precision).
 
