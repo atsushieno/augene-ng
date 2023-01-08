@@ -45,7 +45,7 @@ It is kind of a concern that augene-ng currently depends totally on Tracktion En
 - available as open source software
 - runnable on Linux, Mac, Windows, Android and potentially other platforms.
 
-Typical Linux DAWs do not meet the second requirements. I have been developing [Android audio plugin framework](https://github.com/atsushieno/android-audio-plugin-framework) and Tracktion Engine is one of the closest choice. (Note that it's not "working" yet, as we need some PoC song files that can be played there. `*.tracktionedit` files created by Tracktion Waveform definitely does not work).
+Typical Linux DAWs do not meet the second requirements. I have been developing [Audio Plugins For Android](https://github.com/atsushieno/aap-core) and Tracktion Engine is one of the closest choice. (Note that it's not "working" yet, as we need some PoC song files that can be played there. `*.tracktionedit` files created by Tracktion Waveform definitely does not work).
 
 ## towards generative music production across platforms
 
