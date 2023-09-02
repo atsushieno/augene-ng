@@ -12,7 +12,7 @@ version = "1.0"
 kotlin {
     jvm {
         compilations.all {
-            kotlinOptions.jvmTarget = "11"
+            kotlinOptions.jvmTarget = "17"
         }
     }
     sourceSets {
@@ -20,7 +20,7 @@ kotlin {
             dependencies {
                 implementation(project(":common"))
                 implementation(compose.desktop.currentOs)
-                implementation("dev.atsushieno:augene:0.1")
+                implementation("dev.atsushieno:augene:0.2")
             }
         }
         val jvmTest by getting

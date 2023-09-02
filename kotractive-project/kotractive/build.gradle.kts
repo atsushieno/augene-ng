@@ -9,19 +9,19 @@ buildscript {
 }
 
 plugins {
-    id("com.android.library") version "4.1.3"
-    id("com.google.devtools.ksp") version "1.6.0-1.0.1"
-    id("org.jetbrains.kotlin.multiplatform") version "1.6.0"
-    id("org.jetbrains.dokka") version "1.5.30"
+    id("com.android.library") version "8.0.0"
+    id("com.google.devtools.ksp") version "1.9.0-1.0.13"
+    id("org.jetbrains.kotlin.multiplatform") version "1.9.0"
+    id("org.jetbrains.dokka") version "1.8.20"
     id("maven-publish")
     id("signing")
 }
 
 kotlin {
-    android {
+    androidTarget {
         compilations.all { kotlinOptions.jvmTarget = "1.8" }
         publishLibraryVariantsGroupedByFlavor = true
-        publishLibraryVariants("debug", "release")
+        //publishLibraryVariants("debug", "release")
     }
     jvm {
         compilations.all { kotlinOptions.jvmTarget = "1.8" }
@@ -29,28 +29,25 @@ kotlin {
             useJUnit()
         }
     }
-    // FIXME: we want to enable BOTH, but can't until this error gets fixed.
-    // > Failed to calculate the value of task ':kotractive:compileTestDevelopmentExecutableKotlinJsIr' property 'entryModule$kotlin_gradle_plugin'.
-    //   > Collection has more than one element.
-    js(LEGACY) {
+    js(IR) {
         nodejs {
-            testTask {
+            testTask(Action {
                 // FIXME: we want to enable tests, but can't until this error gets fixed.
                 //   :kotractive:jsNodeTest: java.lang.IllegalStateException: command '/home/atsushi/.gradle/nodejs/node-v14.15.4-linux-x64/bin/node' exited with errors (exit code: 1)
                 enabled = false
                 useKarma {
                     useChromeHeadless()
-                    webpackConfig.cssSupport.enabled = true
+                    //webpackConfig.cssSupport.enabled = true
                 }
-            }
+            })
             useCommonJs()
         }
         browser {
-            testTask {
+            testTask(Action {
                 // FIXME: we want to enable tests, but can't until this error gets fixed.
                 //   :kotractive:jsNodeTest: java.lang.IllegalStateException: command '/home/atsushi/.gradle/nodejs/node-v14.15.4-linux-x64/bin/node' exited with errors (exit code: 1)
                 enabled = false
-            }
+            })
             useCommonJs()
         }
     }
@@ -82,17 +79,10 @@ kotlin {
     }*/
 
     sourceSets {
-        val androidMain by getting
-        val androidTest by getting {
-            dependencies {
-                implementation(kotlin("test-junit"))
-                implementation("junit:junit:4.13.2")
-            }
-        }
         val commonMain by getting {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.3.1")
-                implementation("dev.atsushieno:missingdot:0.1.5")
+                implementation(libs.kotlinx.datetime)
+                implementation(libs.missingdot)
             }
         }
         val commonTest by getting {
@@ -102,6 +92,14 @@ kotlin {
         }
         val jvmMain by getting
         val jvmTest by getting
+        val androidMain by getting
+        /*
+        val androidTest by getting {
+            dependencies {
+                implementation(kotlin("test-junit"))
+                implementation("junit:junit:4.13.2")
+            }
+        }*/
         val jsMain by getting
         val jsTest by getting {
             dependencies {
@@ -119,30 +117,31 @@ kotlin {
 }
 
 android {
-    compileSdk = 30
+    namespace = "dev.atsushieno.kotractive"
+    compileSdk = 34
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     sourceSets["main"].assets.srcDir("src/commonMain/resources") // kind of hack...
     defaultConfig {
+        targetSdk = 34
         minSdk = 24
-        targetSdk = 31
     }
     buildTypes {
         val debug by getting {
-            minifyEnabled(false)
+            //minifyEnabled(false)
         }
         val release by getting {
-            minifyEnabled(false)
+            //minifyEnabled(false)
         }
     }
 }
 
 dependencies {
-    if (configurations.get("kspJvm").dependencies.all { p -> p.name != "dev.atsushieno:kotractive_ksp:0.1" })
-        configurations.get("kspJvm").dependencies.add(implementation("dev.atsushieno:kotractive_ksp:0.1"))
-    if (configurations.get("kspJs").dependencies.all { p -> p.name != "dev.atsushieno:kotractive_ksp:0.1" })
-        configurations.get("kspJs").dependencies.add(implementation("dev.atsushieno:kotractive_ksp:0.1"))
-//    if (configurations.get("kspNative").dependencies.all { p -> p.name != "dev.atsushieno:kotractive_ksp:0.1" })
-//        configurations.get("kspNative").dependencies.add(implementation("dev.atsushieno:kotractive_ksp:0.1"))
-    if (configurations.get("kspAndroid").dependencies.all { p -> p.name != "dev.atsushieno:kotractive_ksp:0.1" })
-        configurations.get("kspAndroid").dependencies.add(implementation("dev.atsushieno:kotractive_ksp:0.1"))
+    if (configurations.get("kspJvm").dependencies.all { p -> p.name != "dev.atsushieno:kotractive_ksp:0.2" })
+        configurations.get("kspJvm").dependencies.add(implementation("dev.atsushieno:kotractive_ksp:0.2"))
+    if (configurations.get("kspJs").dependencies.all { p -> p.name != "dev.atsushieno:kotractive_ksp:0.2" })
+        configurations.get("kspJs").dependencies.add(implementation("dev.atsushieno:kotractive_ksp:0.2"))
+//    if (configurations.get("kspNative").dependencies.all { p -> p.name != "dev.atsushieno:kotractive_ksp:0.2" })
+//        configurations.get("kspNative").dependencies.add(implementation("dev.atsushieno:kotractive_ksp:0.2"))
+    if (configurations.get("kspAndroid").dependencies.all { p -> p.name != "dev.atsushieno:kotractive_ksp:0.2" })
+        configurations.get("kspAndroid").dependencies.add(implementation("dev.atsushieno:kotractive_ksp:0.2"))
 }

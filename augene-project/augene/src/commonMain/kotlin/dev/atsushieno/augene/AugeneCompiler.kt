@@ -378,12 +378,14 @@ open class AugeneCompiler
 		}
 	}
 
+	@OptIn(ExperimentalFileSystem::class)
 	private fun getFileNameWithoutExtension(fileName: String) : String {
 		val name = fileName.toPath().name
 		val lastIndex = name.lastIndexOf('.')
 		return if (lastIndex < 0) name else name.substring(0, lastIndex)
 	}
 
+	@OptIn(ExperimentalFileSystem::class)
 	private fun createTracktionProjectBinary(editFile: String, projectId: Int, projectName: String) {
 		val tracktionFile = editFile.substring(0, editFile.lastIndexOf('.')) + ".tracktion"
 		if (FileSupport(tracktionFile).exists(tracktionFile))

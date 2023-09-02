@@ -8,11 +8,11 @@ plugins {
 }
 
 kotlin {
-    android {
+    androidTarget {
         compilations.all { kotlinOptions.jvmTarget = "1.8" }
     }
     jvm("desktop") {
-        compilations.all { kotlinOptions.jvmTarget = "11" }
+        compilations.all { kotlinOptions.jvmTarget = "17" }
     }
     sourceSets {
         val commonMain by getting {
@@ -23,10 +23,10 @@ kotlin {
 
                 implementation("com.squareup.okio:okio-multiplatform:3.0.0-alpha.9")
 
-                implementation("dev.atsushieno:ktmidi:0.3.15")
-                implementation("dev.atsushieno:mugene:0.2.24")
-                implementation("dev.atsushieno:kotractive:0.1")
-                implementation("dev.atsushieno:augene:0.1")
+                implementation("dev.atsushieno:ktmidi:0.6.0-preview3")
+                implementation("dev.atsushieno:mugene:0.4.3")
+                implementation("dev.atsushieno:kotractive:0.2")
+                implementation("dev.atsushieno:augene:0.2")
                 implementation("dev.atsushieno:missingdot:0.1.5")
                 implementation("dev.atsushieno:compose-mpp:0.1.3")
 
@@ -45,15 +45,16 @@ kotlin {
                 implementation("com.arkivanov.decompose:extensions-compose-jetpack:0.4.0")
             }
         }
+        /*
         val androidTest by getting {
             dependencies {
                 implementation("junit:junit:4.13.2")
             }
-        }
+        }*/
         val desktopMain by getting {
             dependencies {
                 implementation("com.arkivanov.decompose:extensions-compose-jetpack:0.4.0")
-                implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.6.0")
+                implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.0")
                 implementation("org.slf4j:slf4j-api:1.7.32")
                 implementation("org.slf4j:slf4j-simple:1.7.32")
             }
@@ -63,6 +64,7 @@ kotlin {
 }
 
 android {
+    namespace = "dev.atsushieno.augene.gui"
     compileSdk = 31
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     defaultConfig {

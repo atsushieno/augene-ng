@@ -5,15 +5,15 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.0")
-        classpath("com.android.tools.build:gradle:4.2.2")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.0")
+        classpath("com.android.tools.build:gradle:8.0.2")
     }
 }
 
 subprojects {
 
     group = "dev.atsushieno"
-    version = "0.1"
+    version = "0.2"
 
     repositories {
         mavenLocal()

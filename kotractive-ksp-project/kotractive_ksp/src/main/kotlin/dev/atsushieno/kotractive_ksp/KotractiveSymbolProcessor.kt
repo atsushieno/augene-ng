@@ -67,12 +67,14 @@ actual fun initializeModelCatalog() {
         if (allTypes.any { fullName == it.qualifiedName?.asString() })
             return
 
-        allTypes.add(classDeclaration)
-
         val name = classDeclaration.qualifiedName?.getShortName()
         val baseType = classDeclaration.superTypes.firstOrNull()?.resolve()?.declaration
-        val baseTypeSpec = if (baseType == null) "null" else "type${baseType.qualifiedName!!.getShortName()}"
+        val baseTypeSpec =
+            if (baseType == null) "null"
+            else if (baseType.qualifiedName!!.getShortName() == "Any") "null"
+            else "type${baseType.qualifiedName!!.getShortName()}"
 
+        allTypes.add(classDeclaration)
         logger.info("Generating MetaType${name}")
 
         val writer = codeGenerator.createNewFile(Dependencies(true, classDeclaration.containingFile!!), "dev.atsushieno.kotractive", "MetaType${name}").writer()

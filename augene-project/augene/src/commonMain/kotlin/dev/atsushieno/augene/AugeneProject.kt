@@ -166,8 +166,10 @@ object AugeneProjectSaver {
 		writer.close()
 	}
 
+	@OptIn(ExperimentalFileSystem::class)
 	private fun canBeRelative(basePath: String, candidatePath: String) =
 		candidatePath.startsWith(basePath.toPath().parent.toString())
+	@OptIn(ExperimentalFileSystem::class)
 	private fun relativize(basePath: String, candidatePath: String) =
 		candidatePath.substring(basePath.toPath().parent.toString().length + 1)
 

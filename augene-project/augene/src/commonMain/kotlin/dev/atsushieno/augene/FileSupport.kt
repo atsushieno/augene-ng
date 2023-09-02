@@ -13,6 +13,7 @@ internal expect fun fileExists(fullPath: String): Boolean
 
 class FileSupport(baseFileName: String) {
 
+    @OptIn(ExperimentalFileSystem::class)
     private val baseDir = canonicalizeFilePath(resolveFilePath(pwd(), baseFileName.toPath().parent.toString()))
 
     companion object {

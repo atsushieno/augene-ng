@@ -58,6 +58,7 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
 
                 globalMarkers = markers.toTypedArray()
             }
+            else -> {}
         }
 
         val markerTrack = MarkerTrackElement()
@@ -189,8 +190,8 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
         mtrack.messages.forEachIndexed { index, msg ->
             machine.processEvent(msg)
 
-            if (msg.isJRTimestamp) {
-                currentTotalTime += msg.jrTimestamp
+            if (msg.isDeltaClockstamp) {
+                currentTotalTime += msg.deltaClockstamp
                 return@forEachIndexed
             }
             // FIXME: maybe enable this with some compilation options?
@@ -205,7 +206,7 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
             */
 
             val tTime = toTracktionBarSpec(currentTotalTime) - currentClipStart
-            var eventType = msg.eventType
+            var eventType = msg.statusCode
             if (msg.messageType == MidiMessageType.MIDI1 && eventType == MidiChannelStatus.NOTE_ON && msg.midi1Lsb == 0)
                 eventType = MidiChannelStatus.NOTE_OFF
 
@@ -329,7 +330,7 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
                             seq.Events.add(ControlElement().apply {
                                 B = tTime
                                 Type = ControlType.CAf
-                                Val = (msg.midi2CAf / 0x20000u).toInt() // downconverting value range from 32bit to 15bit
+                                Val = (msg.midi2CAfData / 0x20000u).toInt() // downconverting value range from 32bit to 15bit
                             })
                         MidiChannelStatus.CC ->
                             seq.Events.add(ControlElement().apply {
@@ -380,15 +381,16 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
                     }
                 MidiMessageType.SYSEX7, MidiMessageType.SYSEX8_MDS -> { // sysex or meta
                     val sysex =
-                        if (msg.messageType == MidiMessageType.SYSEX7 && (msg.eventType == Midi2BinaryChunkStatus.SYSEX_START || msg.eventType == Midi2BinaryChunkStatus.SYSEX_IN_ONE_UMP))
+                        if (msg.messageType == MidiMessageType.SYSEX7 && (msg.statusCode == Midi2BinaryChunkStatus.START || msg.statusCode == Midi2BinaryChunkStatus.COMPLETE_PACKET))
                             UmpRetriever.getSysex7Data(mtrack.messages.drop(index).iterator())
-                        else if (msg.messageType == MidiMessageType.SYSEX8_MDS && (msg.eventType == Midi2BinaryChunkStatus.SYSEX_START || msg.eventType == Midi2BinaryChunkStatus.SYSEX_IN_ONE_UMP))
+                        else if (msg.messageType == MidiMessageType.SYSEX8_MDS && (msg.statusCode == Midi2BinaryChunkStatus.START || msg.statusCode == Midi2BinaryChunkStatus.COMPLETE_PACKET))
                             UmpRetriever.getSysex8Data(mtrack.messages.drop(index).iterator())
                         else null
                     // Check if it is augene-specific sysex
                     if (sysex != null) {
                         if (sysex[0] == 0x7D.toByte() && sysex.size > 10 &&
-                                sysex.drop(1).take(9).toByteArray().decodeToString() == "augene-ng") {
+                            sysex.drop(1).take(9).toByteArray().decodeToString() == "augene-ng"
+                        ) {
                             if (sysex[10] == 0.toByte()) {
                                 if (sysex.size > 14) {
                                     // send automation parameter
@@ -400,14 +402,16 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
                                             Id = context.generateNewID()
                                             CurrentAutoParamPluginID = currentAutomationTargetAsNumber
                                             CurrentAutoParamTag = targetParameter
-                                            MacroParameters = MacroParametersElement().apply { Id = context.generateNewID() }
+                                            MacroParameters =
+                                                MacroParametersElement().apply { Id = context.generateNewID() }
                                             Modifiers = ModifiersElement()
                                         }
                                         ttrack.AutomationTracks.add(aTrack)
                                     }
                                     val plugin = ttrack.Plugins.firstOrNull { it.Uid == currentAutomationTarget }
                                     if (plugin != null) {
-                                        var aCurve = plugin.AutomationCurves.firstOrNull { it.ParamID == targetParameter }
+                                        var aCurve =
+                                            plugin.AutomationCurves.firstOrNull { it.ParamID == targetParameter }
                                         if (aCurve == null) {
                                             aCurve = AutomationCurveElement().apply { ParamID = targetParameter }
                                             plugin.AutomationCurves.add(aCurve)
@@ -417,11 +421,9 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
                                             v = value.toDouble()
                                             c = 0.0 // FIXME: what is this?
                                         })
-                                    }
-                                    else
+                                    } else
                                         context.report("AUTOMATION TARGET PLUGIN NOT FOUND in the track: $currentAutomationTarget")
-                                }
-                                else
+                                } else
                                     context.report("INSUFFICIENT AUTOMATION SEND SYSEX BUFFER")
                             } else {
                                 // set automation target parameter by name
@@ -441,24 +443,30 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
                                             ttrack.Plugins.add(inst)
                                             currentAutomationTargetAsNumber = inst.Id!!.toInt()
                                         }
-                                    }
-                                    else
+                                    } else
                                         currentAutomationTargetAsNumber = target.Id!!.toInt()
-                                }
-                                else
-                                    context.report("INSUFFICIENT AUTOMATION TARGET PLUGIN SYSEX BUFFER: required ${1 + 9 + 1 + nameLen} byets, got ${sysex.size} bytes (\"${sysex.drop(1 + 9 + 1).toByteArray().decodeToString()}\" ?)")
+                                } else
+                                    context.report(
+                                        "INSUFFICIENT AUTOMATION TARGET PLUGIN SYSEX BUFFER: required ${1 + 9 + 1 + nameLen} byets, got ${sysex.size} bytes (\"${
+                                            sysex.drop(
+                                                1 + 9 + 1
+                                            ).toByteArray().decodeToString()
+                                        }\" ?)"
+                                    )
                             }
-                        }
-                        else when (msg.metaEventType) {
+                        } else when (msg.metaEventType) {
                             MidiMetaType.TRACK_NAME ->
                                 ttrack.Name = sysex.drop(8).toByteArray().decodeToString()
+
                             MidiMetaType.INSTRUMENT_NAME -> // This does not exist in TracktionEdit; ntracktive extends this.
                                 ttrack.Extension_InstrumentName = sysex.drop(8).toByteArray().decodeToString()
+
                             MidiMetaType.MARKER ->
                                 when (context.markerImportStrategy) {
                                     MarkerImportStrategy.PerTrack -> TODO("implement")
                                     else -> {}
                                 }
+
                             MidiMetaType.TEMPO -> {
                                 currentBpm = toBpm(sysex.drop(8).toByteArray(), 0, sysex.size - 8)
                                 context.edit.TempoSequence!!.Tempos.add(TempoElement().apply {
@@ -467,6 +475,7 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
                                     Bpm = currentBpm / (timeSigDenominator.toDouble() / 4)
                                 })
                             }
+
                             MidiMetaType.TIME_SIGNATURE -> {
                                 timeSigNumerator = sysex[8].toInt()
                                 timeSigDenominator = 2.0.pow(sysex[9].toDouble()).toInt()
@@ -486,6 +495,31 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
                         }
                     }
                 }
+                else -> {
+                    if (msg.isTempo) {
+                        currentBpm = toBpm(msg.tempo)
+                        context.edit.TempoSequence!!.Tempos.add(TempoElement().apply {
+                            StartBeat = toTracktionBarSpec(currentTotalTime)
+                            Curve = 1.0
+                            Bpm = currentBpm / (timeSigDenominator.toDouble() / 4)
+                        })
+                    } else if (msg.isTimeSignature) {
+                        timeSigNumerator = msg.timeSignatureNumerator
+                        timeSigDenominator = 2.0.pow(msg.timeSignatureDenominator).toInt()
+                        context.edit.TempoSequence!!.TimeSignatures.add(
+                            TimeSigElement().apply {
+                                StartBeat = toTracktionBarSpec(currentTotalTime)
+                                Numerator = timeSigNumerator
+                                Denominator = timeSigDenominator
+                            })
+                        // Tracktion engine has a problem that its tempo calculation goes fubar when timesig denomitator becomes non-4 value.
+                        context.edit.TempoSequence!!.Tempos.add(TempoElement().apply {
+                            StartBeat = toTracktionBarSpec(currentTotalTime)
+                            Curve = 1.0
+                            Bpm = currentBpm / (timeSigDenominator.toDouble() / 4)
+                        })
+                    }
+                }
             }
         }
 
@@ -496,6 +530,8 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
         val t = if (length < 2) 500000 else (data[offset].toUnsigned() shl 16) + (data[offset + 1].toUnsigned() shl 8) + data[offset + 2].toUnsigned()
         return 60000000.0 / t
     }
+    // FlexData-based tempo, note that the precision is different.
+    private fun toBpm(t: Int): Double = 6000000000.0 / t
 
     private fun populateTrackName(track: Midi2Track): String? {
         val tnEv = track.messages.firstOrNull { m -> Midi2Music.isMetaEventMessageStarter(m) && m.metaEventType == MidiMetaType.TRACK_NAME }
@@ -504,7 +540,7 @@ class MidiToTracktionEditConverter(private var context: Midi2ToTracktionImportCo
                 .toByteArray().decodeToString()
         if (trackName == null) {
             var firstProgramChangeValue = -1
-            val programChanges = track.messages.filter { e -> e.eventType == MidiChannelStatus.PROGRAM }.toTypedArray()
+            val programChanges = track.messages.filter { e -> e.statusCode == MidiChannelStatus.PROGRAM }.toTypedArray()
             if (programChanges.isNotEmpty()) {
                 val m = programChanges[0]
                 firstProgramChangeValue = if (m.messageType == MidiMessageType.MIDI1) m.midi1Program else m.midi2ProgramProgram
