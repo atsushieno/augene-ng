@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
     - name: checkout
-      uses: actions/checkout@v1
+      uses: actions/checkout@v3
       with:
         submodules: recursive
     - name: apt update
@@ -24,10 +24,11 @@ jobs:
           doxygen libgrpc++-dev libgrpc-dev \
           libprotobuf-dev protobuf-compiler protobuf-compiler-grpc \
           graphviz cmake ninja-build lv2-dev liblilv-dev libsuil-dev
-    - name: set up JDK 11
-      uses: actions/setup-java@v1
+    - name: set up JDK 17
+      uses: actions/setup-java@v3
       with:
-        java-version: 11
+        java-version: 17
+        distribution: temurin
     - name: build augene-player
       run: bash build-augene-player.sh
     - name: build kotractive_ksp
@@ -40,7 +41,7 @@ jobs:
       run: cd augene-editor-project && ./gradlew --warning-mode all check
     - name: upload build failure logs
       if: failure()
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: test-failure-logs
         path: |
@@ -52,7 +53,7 @@ jobs:
           augene-editor-project/desktop/build/reports/
     - name: upload artifact
       if: success()
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: augene-ng-artifacts
         path: |
