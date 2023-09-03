@@ -4,23 +4,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.Text
-import androidx.compose.material.Button
-import androidx.compose.material.Card
-import androidx.compose.material.Checkbox
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Tab
-import androidx.compose.material.TextField
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import dev.atsushieno.composempp.material.AlertDialog
+//import dev.atsushieno.composempp.material.AlertDialog
 
 val model : AugeneAppModel
     get() = AugeneAppModel.instance
@@ -92,7 +82,7 @@ fun App() {
 
         if (warningDialogMessage.isNotEmpty()) {
             val closeDialog = { model.warningDialogMessage.value = "" }
-            dev.atsushieno.composempp.material.AlertDialog(onDismissRequest = closeDialog,
+            AlertDialog(onDismissRequest = closeDialog,
                 confirmButton = { Button(onClick = closeDialog) { Text("OK") } },
                 text = { Text(warningDialogMessage) }
             )
