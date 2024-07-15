@@ -1,0 +1,29 @@
+plugins {
+    alias(libs.plugins.kotlinJvm)
+}
+
+group 'dev.atsushieno'
+version '0.1.0-SNAPSHOT'
+
+dependencies {
+    implementation project(':augene')
+    implementation libs.kotlin.stdlib
+}
+
+test {
+    useJUnitPlatform()
+}
+
+jar {
+    manifest {
+        attributes(
+                'Class-Path': configurations.first().collect { it.getName() }.join(' '),
+                'Main-Class': 'dev.atsushieno.augene.MainKt'
+        )
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+        //configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    duplicatesStrategy 'exclude'
+}

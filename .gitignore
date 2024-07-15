@@ -9,3 +9,4 @@ build
 local.properties
 .idea
 build-pluginhost
+.kotlin
