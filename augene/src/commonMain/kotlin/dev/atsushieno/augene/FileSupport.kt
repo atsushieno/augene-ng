@@ -11,7 +11,7 @@ internal expect fun canonicalizeFilePath(path: String) : String
 internal expect fun resolveFilePath(basePath: String, targetPath: String) : String
 internal expect fun fileExists(fullPath: String): Boolean
 
-class FileSupport(baseFileName: String) {
+class FileSupport(baseFileName: String = "dummy") {
 
     @OptIn(ExperimentalFileSystem::class)
     private val baseDir = canonicalizeFilePath(resolveFilePath(pwd(), baseFileName.toPath().parent.toString()))

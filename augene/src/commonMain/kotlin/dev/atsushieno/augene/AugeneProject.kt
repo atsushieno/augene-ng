@@ -110,7 +110,7 @@ object AugeneProjectLoader {
 	}
 
 	fun load(fileName: String): AugeneProject =
-		load(XmlTextReader(FileSupport(fileName).readString(fileName)))
+		load(XmlTextReader(FileSupport().readString(fileName)))
 
 	fun loadJson(jsonText: String): AugeneProject = Json.decodeFromString(jsonText)
 }

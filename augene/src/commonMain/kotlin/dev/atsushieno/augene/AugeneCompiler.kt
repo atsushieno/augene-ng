@@ -175,14 +175,14 @@ open class AugeneCompiler
 			yieldAll(results)
 		}
 
-	@OptIn(ExperimentalFileSystem::class)
 	fun compile () {
 		edit = EditElement()
 
 		if (projectFileName == null)
 			throw IllegalStateException ("To compile the project, ProjectFileName must be specified in prior")
 
-		val fileSupport = FileSupport(projectFileName!!)
+		val projectFileAbs = FileSupport.canonicalizePath(FileSupport().resolvePathRelativeToProject(projectFileName!!))
+		val fileSupport = FileSupport(projectFileAbs)
 		val absPath = { s:String? -> fileSupport.resolvePathRelativeToProject(s!!) }
 
 		// compile into MidiMusic.
@@ -191,7 +191,7 @@ open class AugeneCompiler
 		val mmls = (mmlFilesAbs.map { f -> MmlInputSource (f, fileSupport.readString(f)) } +
 					getMmlStringsRecursively(absPath, project).map { s -> MmlInputSource ("(no file)", s) })
 				.toList().toTypedArray()
-		val music = compiler.compile2 (true, mmls)
+		val music = compiler.compile2 (false, mmls)
 		if (fileSupport.exists(projectDirectory!!)) {
 			val umpxFile = outputEditFileName ?: changeExtension(absPath(projectFileName!!), ".umpx")
 			val umpxBytes = mutableListOf<Byte>()
@@ -296,7 +296,7 @@ open class AugeneCompiler
 		val projectId = Random.nextInt() and 0xFFFFFF
 		edit.ProjectID = edit.ProjectID ?: "${projectId}/${Random.nextInt()}" // not sure if it is correct format
 
-		val outfile = outputEditFileName ?: changeExtension(absPath (projectFileName!!), ".tracktionedit")
+		val outfile = outputEditFileName ?: changeExtension(projectFileAbs, ".tracktionedit")
 		val sb = StringBuilder()
 		EditModelWriter().write(sb, edit)
 
