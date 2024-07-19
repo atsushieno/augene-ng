@@ -8,7 +8,6 @@ import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.processing.SymbolProcessorEnvironment
 import com.google.devtools.ksp.symbol.*
 import com.google.devtools.ksp.validate
-import java.io.Writer
 
 class KotractiveSymbolProcessor(environment: SymbolProcessorEnvironment) : SymbolProcessor {
     private val codeGenerator = environment.codeGenerator
@@ -39,7 +38,7 @@ class KotractiveSymbolProcessor(environment: SymbolProcessorEnvironment) : Symbo
         writer.write("package dev.atsushieno.kotractive\n")
 
         writer.write("""
-actual fun initializeModelCatalog() {
+fun initializeModelCatalog() {
 """)
         elements.forEach {
             writer.write("""    ModelCatalog.allTypes.add(type${it.getShortName()})

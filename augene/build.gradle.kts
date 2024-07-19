@@ -51,16 +51,17 @@ kotlin {
         }
         //browser() - okio FileSystem.SYSTEM is not available on browsers yet.
     }
+
     /*
     val hostOs = System.getProperty("os.name")
-    val isMingwX64 = hostOs.startsWith("Windows")
-    val nativeTarget = when {
-        hostOs == "Mac OS X" -> macosX64("native")
-        hostOs == "Linux" -> linuxX64("native")
-        isMingwX64 -> mingwX64("native")
-        else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
+    if (hostOs == "Mac OS X") {
+        macosArm64()
+        macosX64()
     }
-    */
+    //linuxArm64()
+    //linuxX64()
+    mingwX64()
+     */
 
     sourceSets {
         /*
@@ -79,7 +80,7 @@ kotlin {
         }*/
         val commonMain by getting {
             dependencies {
-                implementation(libs.okio.multiplatform)
+                implementation(libs.okio)
                 implementation(libs.kotlinx.serialization.json)
 
                 implementation(libs.ktmidi)
@@ -97,7 +98,7 @@ kotlin {
         val jvmTest by getting
         val jsMain by getting {
             dependencies {
-                implementation(libs.okio.nodefilesystem.js)
+                implementation(libs.okio.nodefilesystem)
             }
         }
         val jsTest by getting {

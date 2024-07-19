@@ -6,7 +6,6 @@ import dev.atsushieno.ktmidi.write
 import dev.atsushieno.missingdot.xml.XmlReader
 import dev.atsushieno.mugene.MmlCompiler
 import dev.atsushieno.mugene.MmlInputSource
-import okio.ExperimentalFileSystem
 import okio.Path.Companion.toPath
 import kotlin.random.Random
 
@@ -39,7 +38,6 @@ open class AugeneCompiler
 
 	var lastProjectFile: String? = null
 
-	@OptIn(ExperimentalFileSystem::class)
 	val projectDirectory : String?
 		get() = if (projectFileName == null) null else projectFileName!!.toPath().parent.toString()
 
@@ -49,7 +47,6 @@ open class AugeneCompiler
 		reporter(errorId, message)
 	}
 
-	@OptIn(ExperimentalFileSystem::class)
 	fun getItemFileRelativePath (itemFilename: String) : String {
 		var filenameRelative = itemFilename
 		if (projectFileName != null)
@@ -57,7 +54,6 @@ open class AugeneCompiler
 		return filenameRelative
 	}
 
-	@OptIn(ExperimentalFileSystem::class)
 	fun getItemFileAbsolutePath (itemFilename: String) =
 		(projectFileName!!.toPath().parent!! / itemFilename.toPath()).toString()
 
@@ -346,7 +342,6 @@ open class AugeneCompiler
 	}
 
 	// FIXME: rewrite with forEachIncludedProjectRecursive().
-	@OptIn(ExperimentalFileSystem::class)
 	private fun AugeneProject.expandedAudioGraphsFullPath(
 		resolveAbsPath: (String) -> String,
 		bankMsb: String?,
@@ -378,14 +373,12 @@ open class AugeneCompiler
 		}
 	}
 
-	@OptIn(ExperimentalFileSystem::class)
 	private fun getFileNameWithoutExtension(fileName: String) : String {
 		val name = fileName.toPath().name
 		val lastIndex = name.lastIndexOf('.')
 		return if (lastIndex < 0) name else name.substring(0, lastIndex)
 	}
 
-	@OptIn(ExperimentalFileSystem::class)
 	private fun createTracktionProjectBinary(editFile: String, projectId: Int, projectName: String) {
 		val tracktionFile = editFile.substring(0, editFile.lastIndexOf('.')) + ".tracktion"
 		if (FileSupport(tracktionFile).exists(tracktionFile))

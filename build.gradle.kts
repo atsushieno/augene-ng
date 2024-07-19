@@ -1,11 +1,3 @@
-buildscript {
-    repositories {
-        google()
-        mavenLocal()
-        mavenCentral()
-    }
-}
-
 plugins {
     alias(libs.plugins.androidApplication) apply false
     alias(libs.plugins.androidLibrary) apply false
@@ -18,7 +10,7 @@ plugins {
     alias(libs.plugins.kotlinAndroid) apply false
 }
 
-subprojects {
+allprojects {
     group = "dev.atsushieno"
     version = "0.2"
 

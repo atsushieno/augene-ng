@@ -10,7 +10,6 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import okio.ExperimentalFileSystem
 import okio.Path.Companion.toPath
 
 @Serializable
@@ -166,14 +165,11 @@ object AugeneProjectSaver {
 		writer.close()
 	}
 
-	@OptIn(ExperimentalFileSystem::class)
 	private fun canBeRelative(basePath: String, candidatePath: String) =
 		candidatePath.startsWith(basePath.toPath().parent.toString())
-	@OptIn(ExperimentalFileSystem::class)
 	private fun relativize(basePath: String, candidatePath: String) =
 		candidatePath.substring(basePath.toPath().parent.toString().length + 1)
 
-	@OptIn(ExperimentalFileSystem::class)
 	fun save(project: AugeneProject, filename: String) {
 		// sanitize absolute paths
 

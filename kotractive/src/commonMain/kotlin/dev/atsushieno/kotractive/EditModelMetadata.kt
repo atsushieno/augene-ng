@@ -31,7 +31,7 @@ annotation class DataTypes(val dataType: DataType)
 
 // LAMESPEC: this use of expect/actual is weird and stupid, but with KSP on MPP this seems to be the only way to
 //  generate compilable code.
-expect fun initializeModelCatalog()
+//expect fun initializeModelCatalog()
 
 val typeBoolean = MetaType("Boolean", "kotlin.Boolean", null, TypeCode.Boolean)
 val typeInt = MetaType("Int", "kotlin.Int", null, TypeCode.Int32)

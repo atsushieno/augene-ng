@@ -31,12 +31,8 @@ jobs:
         distribution: temurin
     - name: build augene-player
       run: bash build-augene-player.sh
-    - name: build kotractive_ksp
-      run: cd kotractive-ksp-project && ./gradlew --warning-mode all build publishToMavenLocal
-    - name: build kotractive
-      run: cd kotractive-project && ./gradlew --warning-mode all build publishToMavenLocal
     - name: build augene
-      run: cd augene-project && ./gradlew --warning-mode all build publishToMavenLocal
+      run: ./gradlew --warning-mode all build publishToMavenLocal
     - name: build augene-editor
       run: cd augene-editor-project && ./gradlew --warning-mode all check
     - name: upload build failure logs

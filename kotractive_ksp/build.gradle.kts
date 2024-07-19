@@ -12,13 +12,17 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath(kotlin("gradle-plugin", version = "1.9.0"))
+        classpath(kotlin("gradle-plugin", version = "2.0.0"))
     }
+}
+
+kotlin {
+    jvmToolchain(17)
 }
 
 dependencies {
     implementation(libs.kotlin.stdlib)
-    implementation("com.google.devtools.ksp:symbol-processing-api:1.9.0-1.0.11")
+    implementation(libs.ksp)
 }
 
 repositories {

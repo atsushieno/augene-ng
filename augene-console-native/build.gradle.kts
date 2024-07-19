@@ -1,41 +1,62 @@
+buildscript {
+    repositories {
+        maven("https://plugins.gradle.org/m2/")
+    }
+}
+
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
 }
 
-repositories {
-    mavenCentral()
-}
-
 kotlin {
-    val hostOs = System.getProperty("os.name")
-    val isMingwX64 = hostOs.startsWith("Windows")
-    val nativeTarget = when {
-        hostOs == "Mac OS X" -> macosX64("native") { // on macOS
-            binaries.executable {
-                freeCompilerArgs += "-Xdisable-phases=EscapeAnalysis"
-            }
+    jvm {
+        compilations.all {
+            kotlinOptions.jvmTarget = "11"
         }
-        hostOs == "Linux" ->  linuxX64("native") { // on Linux
-            binaries.executable {
-                freeCompilerArgs += "-Xdisable-phases=EscapeAnalysis"
-            }
+        testRuns["test"].executionTask.configure {
+            useJUnit()
         }
-        isMingwX64 -> mingwX64("native") { // on Windows
-            binaries.executable {
-                freeCompilerArgs += "-Xdisable-phases=EscapeAnalysis"
-            }
+        java {
+            sourceCompatibility = JavaVersion.VERSION_17
+            targetCompatibility = JavaVersion.VERSION_17
         }
-        else -> {}
     }
+    /* TODO
+    js(BOTH) {
+        browser {
+            testTask {
+                useKarma {
+                    useChromeHeadless()
+                    webpackConfig.cssSupport.enabled = true
+                }
+            }
+        }
+        nodejs {
+        }
+    }*/
+    /*
+    val hostOs = System.getProperty("os.name")
+    val isArm64 = System.getProperty("os.arch") == "aarch64"
+    val isMingwX64 = hostOs.startsWith("Windows")
+    if (hostOs == "Mac OS X") {
+        macosArm64("macosArm64") { binaries { executable { entryPoint = "main" } } }
+        macosX64("macosX64") { binaries { executable { entryPoint = "main" } } }
+    }
+    // I figured Kotlin-Native is not ready enough for linking third-party libraries.
+    // FIXME: revisit it when this issue got resolved https://youtrack.jetbrains.com/issue/KT-47061/Cant-compile-project-with-OpenAL-dependecy-Kotlin-Native#focus=Comments-27-4947040.0-0
+    //linuxArm64("linuxX64") { binaries.executable.entryPoint = "main" }
+    //linuxX64("linuxArm64") { binaries.executable.entryPoint = "main" }
+    mingwX64("native") { binaries { executable { entryPoint = "main" } } }
+     */
+
     sourceSets {
-        val nativeMain by getting {
+        val commonMain by getting {
             dependencies {
                 implementation(project(":augene"))
             }
         }
     }
 }
-
 /*
 tasks.withType<Wrapper> {
   gradleVersion = "7.1.1"

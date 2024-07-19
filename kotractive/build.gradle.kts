@@ -1,13 +1,3 @@
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTargetWithTests
-
-buildscript {
-    repositories {
-        mavenLocal()
-        google()
-        mavenCentral()
-    }
-}
-
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.kotlinMultiplatform)
@@ -18,10 +8,11 @@ plugins {
 }
 
 kotlin {
+    jvmToolchain(8)
     androidTarget {
         compilations.all { kotlinOptions.jvmTarget = "1.8" }
         publishLibraryVariantsGroupedByFlavor = true
-        //publishLibraryVariants("debug", "release")
+        publishLibraryVariants("debug", "release")
     }
     jvm {
         compilations.all { kotlinOptions.jvmTarget = "1.8" }
@@ -51,32 +42,17 @@ kotlin {
             useCommonJs()
         }
     }
-    // e: Could not find "/media/atsushi/extssd0/sources/ktmidi/augene-ng/kotractive-project/kotractive/build/generated/ksp/nativeMain/classes" in [/media/atsushi/extssd0/sources/ktmidi/augene-ng/kotractive-project, /home/atsushi/.konan/klib, /home/atsushi/.konan/kotlin-native-prebuilt-linux-1.5.21/klib/common, /home/atsushi/.konan/kotlin-native-prebuilt-linux-1.5.21/klib/platform/linux_x64]
+
     /*
     val hostOs = System.getProperty("os.name")
-    val isMingwX64 = hostOs.startsWith("Windows")
-
-    val nativeTarget = when {
-        hostOs == "Mac OS X" -> macosX64("native") {
-            binaries {
-                staticLib()
-                sharedLib()
-            }
-        }
-        hostOs == "Linux" -> linuxX64("native") {
-            binaries {
-                staticLib()
-                sharedLib()
-            }
-        }
-        isMingwX64 -> mingwX64("native") {
-            binaries {
-                staticLib()
-                sharedLib()
-            }
-        }
-        else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
-    }*/
+    if (hostOs == "Mac OS X") {
+        macosArm64()
+        macosX64()
+    }
+    linuxArm64()
+    linuxX64()
+    mingwX64()
+     */
 
     sourceSets {
         val commonMain by getting {
@@ -84,6 +60,7 @@ kotlin {
                 implementation(libs.kotlinx.datetime)
                 implementation(libs.missingdot)
             }
+//kotlin.srcDir(project.layout.buildDirectory.dir("generated/ksp/metadata/commonMain/kotlin"))
         }
         val commonTest by getting {
             dependencies {
@@ -135,19 +112,48 @@ android {
     }
 }
 
+/*
+tasks.all {
+    if (name.startsWith("ksp") && name != "ksp" && name != "kspCommonMainKotlinMetadata")
+        mustRunAfter("kspCommonMainKotlinMetadata")
+    if (name.startsWith("compile")) {
+        mustRunAfter("kspCommonMainKotlinMetadata")
+        /*
+        val kspName = "ksp" + name.substring("compile".length)
+        if (tasks.any { it.name == kspName })
+            this.dependsOn(tasks[kspName])*/
+    }
+}*/
+
 dependencies {
-    configurations.get("kspJvm").dependencies.add(implementation(project(":kotractive_ksp")))
-    configurations.get("kspJs").dependencies.add(implementation(project(":kotractive_ksp")))
-    configurations.get("kspAndroid").dependencies.add(implementation(project(":kotractive_ksp")))
+    arrayOf("kspCommonMainMetadata", "kspJvm", "kspJs", "kspAndroid").forEach {
+        add(it, project(":kotractive_ksp"))
+    }
+    /*
+    val deps = this
+    configurations.all {
+        //if (name == "kspCommonMainKotlinMetadata") {
+        if (name.startsWith("ksp") && name != "ksp" && !name.endsWith("Classpath")) {
+            println("KSP: $name")
+            deps.add(name, project(":kotractive_ksp"))
+        }
+        else if (name.endsWith("MainImplementation")) {
+            println("MainImplementation: $name")
+            //dependencies.add(ksp(project(":kotractive_ksp")))
+        }
+        //else println(name)
+    }*/
 
     /*
+    if (configurations.get("kspCommonMainMetadata").dependencies.all { p -> p.name != "dev.atsushieno:kotractive_ksp:0.2" })
+        configurations.get("kspCommonMainMetadata").dependencies.add(implementation(project(":kotractive_ksp")))
     if (configurations.get("kspJvm").dependencies.all { p -> p.name != "dev.atsushieno:kotractive_ksp:0.2" })
-        configurations.get("kspJvm").dependencies.add(implementation("dev.atsushieno:kotractive_ksp:0.2"))
+        configurations.get("kspJvm").dependencies.add(implementation(project(":kotractive_ksp")))
     if (configurations.get("kspJs").dependencies.all { p -> p.name != "dev.atsushieno:kotractive_ksp:0.2" })
-        configurations.get("kspJs").dependencies.add(implementation("dev.atsushieno:kotractive_ksp:0.2"))
+        configurations.get("kspJs").dependencies.add(implementation(project(":kotractive_ksp")))
 //    if (configurations.get("kspNative").dependencies.all { p -> p.name != "dev.atsushieno:kotractive_ksp:0.2" })
 //        configurations.get("kspNative").dependencies.add(implementation("dev.atsushieno:kotractive_ksp:0.2"))
     if (configurations.get("kspAndroid").dependencies.all { p -> p.name != "dev.atsushieno:kotractive_ksp:0.2" })
-        configurations.get("kspAndroid").dependencies.add(implementation("dev.atsushieno:kotractive_ksp:0.2"))
+        configurations.get("kspAndroid").dependencies.add(implementation(project(":kotractive_ksp")))
     */
 }
