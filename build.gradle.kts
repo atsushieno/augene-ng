@@ -8,11 +8,12 @@ plugins {
     alias(libs.plugins.dokka) apply false
     alias(libs.plugins.gradleJavacppPlatform) apply false
     alias(libs.plugins.kotlinAndroid) apply false
+    alias(libs.plugins.ksp) apply false
 }
 
 allprojects {
     group = "dev.atsushieno"
-    version = "0.2"
+    version = "0.3"
 
     repositories {
         mavenLocal()

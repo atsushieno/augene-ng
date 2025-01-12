@@ -40,9 +40,9 @@ class EditElement
 	// old
 	var RackFilters : RackFiltersElement? = null
 	// new
-	var MasterPlugins : MutableList<PluginElement> = mutableListOf<PluginElement>()
+	var MasterPlugins : MutableList<PluginElement> = mutableListOf()
 	// old
-	var MasterFilters : MutableList<FilterElement> = mutableListOf<FilterElement>()
+	var MasterFilters : MutableList<FilterElement> = mutableListOf()
 	var AuxBusNames : AuxBusNamesElement? = null
 	// new
 	var InputDevices : InputDevicesElement? = null
@@ -297,11 +297,11 @@ abstract class AbstractTrackElement : AbstractViewElement()
 
 abstract class AbstractContentTrackElement : AbstractTrackElement()
 {
-	var AutomationTracks : MutableList<AutomationTrackElement> = mutableListOf<AutomationTrackElement>()
+	var AutomationTracks : MutableList<AutomationTrackElement> = mutableListOf()
 	// new
-	var Plugins : MutableList<PluginElement> = mutableListOf<PluginElement>()
+	var Plugins : MutableList<PluginElement> = mutableListOf()
 	// old
-	var Filters : MutableList<FilterElement> = mutableListOf<FilterElement>()
+	var Filters : MutableList<FilterElement> = mutableListOf()
 }
 
 class AutomationTrackElement : AbstractTrackElement()

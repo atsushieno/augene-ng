@@ -4,7 +4,8 @@ import dev.atsushieno.missingdot.xml.IXmlLineInfo
 import dev.atsushieno.missingdot.xml.XmlException
 import dev.atsushieno.missingdot.xml.XmlNodeType
 import dev.atsushieno.missingdot.xml.XmlReader
-import dev.atsushieno.missingdot.xml.XmlTextReader
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 
 class EditModelReader {
     companion object {
@@ -23,6 +24,7 @@ class EditModelReader {
         }
     }
 
+    @OptIn(ExperimentalEncodingApi::class)
     fun GetTypedValue(pi: PropertyInfo, value: String, li: IXmlLineInfo?): Any? {
         val type = pi.dataType
 
@@ -31,7 +33,7 @@ class EditModelReader {
         if (pi.propertyMetaType.simpleName == "ByteArray") {
             // Actually JUCE base64 serialization is weird, it fails to deserialize their base64 String.
             return when (type) {
-                DataType.Base64Binary -> Base64.decode(value, 0)
+                DataType.Base64Binary -> Base64.Default.decode(value, 0)
                 DataType.HexBinary -> toHexBinary(value).asIterable().toList().toByteArray()
                 else -> throw XmlException(
                     "Missing DataType attribute on byte array.",

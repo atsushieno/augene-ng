@@ -1,6 +1,6 @@
 plugins {
-    alias(libs.plugins.androidLibrary)
     alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.androidLibrary)
     alias(libs.plugins.dokka)
     alias(libs.plugins.ksp)
     id("maven-publish")
@@ -8,19 +8,21 @@ plugins {
 }
 
 kotlin {
-    jvmToolchain(8)
+    jvmToolchain(17)
     androidTarget {
-        compilations.all { kotlinOptions.jvmTarget = "1.8" }
+        compilations.all { kotlinOptions.jvmTarget = "17" }
         publishLibraryVariantsGroupedByFlavor = true
         publishLibraryVariants("debug", "release")
     }
     jvm {
-        compilations.all { kotlinOptions.jvmTarget = "1.8" }
+        compilations.all { kotlinOptions.jvmTarget = "17" }
         testRuns["test"].executionTask.configure {
             useJUnit()
         }
     }
-    js(IR) {
+    // FIXME: we want to bring it back, but KMP fails to resolve very basic stdlib APIs such as mutableListOf().
+    /*
+    js {
         nodejs {
             testTask(Action {
                 // FIXME: we want to enable tests, but can't until this error gets fixed.
@@ -41,7 +43,7 @@ kotlin {
             })
             useCommonJs()
         }
-    }
+    }*/
 
     /*
     val hostOs = System.getProperty("os.name")
@@ -57,10 +59,14 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
+                implementation(libs.kotlin.stdlib)
                 implementation(libs.kotlinx.datetime)
+                implementation(libs.kotlinx.io.core)
                 implementation(libs.missingdot)
             }
-//kotlin.srcDir(project.layout.buildDirectory.dir("generated/ksp/metadata/commonMain/kotlin"))
+            // In the latest build, we only generate ksp outputs for commonMain and add the sources here.
+            // Nothing else for the actual targets.
+            kotlin.srcDir(project.layout.buildDirectory.dir("generated/ksp/metadata/commonMain/kotlin"))
         }
         val commonTest by getting {
             dependencies {
@@ -74,15 +80,21 @@ kotlin {
         val androidTest by getting {
             dependencies {
                 implementation(kotlin("test-junit"))
-                implementation("junit:junit:4.13.2")
+                implementation(libs.junit)
             }
         }*/
-        val jsMain by getting
+        /*
+        val jsMain by getting {
+            /*
+            dependencies {
+                implementation(project(":kotractive_ksp"))
+            }*/
+        }
         val jsTest by getting {
             dependencies {
                 implementation(kotlin("test-js"))
             }
-        }
+        }*/
         /*
         val nativeMain by getting {
             dependencies {
@@ -95,12 +107,11 @@ kotlin {
 
 android {
     namespace = "dev.atsushieno.kotractive"
-    compileSdk = 34
+    compileSdk = libs.versions.android.compileSdk.get().toInt()
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     sourceSets["main"].assets.srcDir("src/commonMain/resources") // kind of hack...
     defaultConfig {
-        targetSdk = 34
-        minSdk = 24
+        minSdk = libs.versions.android.minSdk.get().toInt()
     }
     buildTypes {
         val debug by getting {
@@ -112,48 +123,15 @@ android {
     }
 }
 
-/*
+// Hush Gradle's dependency resolution nonsense.
+// It is silly because Gradle still fails to resolve task dependencies and
+// runs compileDebugKotlinAndroid before kspCommonMainKotlinMetadata completes.
+// If it fails at that level, what's the point of requiring deps?
 tasks.all {
     if (name.startsWith("ksp") && name != "ksp" && name != "kspCommonMainKotlinMetadata")
         mustRunAfter("kspCommonMainKotlinMetadata")
-    if (name.startsWith("compile")) {
+    if (name.startsWith("compile"))
         mustRunAfter("kspCommonMainKotlinMetadata")
-        /*
-        val kspName = "ksp" + name.substring("compile".length)
-        if (tasks.any { it.name == kspName })
-            this.dependsOn(tasks[kspName])*/
-    }
-}*/
-
-dependencies {
-    arrayOf("kspCommonMainMetadata", "kspJvm", "kspJs", "kspAndroid").forEach {
-        add(it, project(":kotractive_ksp"))
-    }
-    /*
-    val deps = this
-    configurations.all {
-        //if (name == "kspCommonMainKotlinMetadata") {
-        if (name.startsWith("ksp") && name != "ksp" && !name.endsWith("Classpath")) {
-            println("KSP: $name")
-            deps.add(name, project(":kotractive_ksp"))
-        }
-        else if (name.endsWith("MainImplementation")) {
-            println("MainImplementation: $name")
-            //dependencies.add(ksp(project(":kotractive_ksp")))
-        }
-        //else println(name)
-    }*/
-
-    /*
-    if (configurations.get("kspCommonMainMetadata").dependencies.all { p -> p.name != "dev.atsushieno:kotractive_ksp:0.2" })
-        configurations.get("kspCommonMainMetadata").dependencies.add(implementation(project(":kotractive_ksp")))
-    if (configurations.get("kspJvm").dependencies.all { p -> p.name != "dev.atsushieno:kotractive_ksp:0.2" })
-        configurations.get("kspJvm").dependencies.add(implementation(project(":kotractive_ksp")))
-    if (configurations.get("kspJs").dependencies.all { p -> p.name != "dev.atsushieno:kotractive_ksp:0.2" })
-        configurations.get("kspJs").dependencies.add(implementation(project(":kotractive_ksp")))
-//    if (configurations.get("kspNative").dependencies.all { p -> p.name != "dev.atsushieno:kotractive_ksp:0.2" })
-//        configurations.get("kspNative").dependencies.add(implementation("dev.atsushieno:kotractive_ksp:0.2"))
-    if (configurations.get("kspAndroid").dependencies.all { p -> p.name != "dev.atsushieno:kotractive_ksp:0.2" })
-        configurations.get("kspAndroid").dependencies.add(implementation(project(":kotractive_ksp")))
-    */
 }
+
+dependencies.add("kspCommonMainMetadata", project(":kotractive_ksp"))

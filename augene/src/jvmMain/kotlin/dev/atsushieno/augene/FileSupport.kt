@@ -1,8 +1,6 @@
-@file:OptIn(ExperimentalFileSystem::class)
 
 package dev.atsushieno.augene
 
-import okio.ExperimentalFileSystem
 import okio.FileSystem
 import okio.Path.Companion.toPath
 

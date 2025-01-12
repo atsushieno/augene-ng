@@ -105,12 +105,14 @@ internal class MetaType$name : MetaType("$name", "$fullName", $baseTypeSpec) {
 
             // interpret @DataType annotation on each property
             val dataTypeAnnotation = property.annotations.firstOrNull { it.annotationType.toString() == "DataTypes" }
-            val dataTypeSpec = if (dataTypeAnnotation != null) dataTypeAnnotation.arguments.first().value!!.toString() else "Unknown"
+            val dataTypeSpec = if (dataTypeAnnotation != null) dataTypeAnnotation.arguments.first().value!!.toString() else "DataType.Unknown"
 
             val optNullableAssignment = if (propertyType.nullability == Nullability.NULLABLE) "if (value == null) null else" else ""
             val propertyTypeGenericArgs = if (propertyType.arguments.any()) "<${propertyType.arguments.map { a -> a.type.toString() }.joinToString(", ")}>" else ""
+            val propertyTypeNameBase = propertyType.declaration.qualifiedName?.getShortName()
+            val propertyTypeName = propertyTypeNameBase + propertyTypeGenericArgs
             writer.write("""
-        declaredProperties.add(object: PropertyInfo("$propertyName", type${property.type}, DataType.$dataTypeSpec) {
+        declaredProperties.add(object: PropertyInfo("$propertyName", type${propertyTypeNameBase}, $dataTypeSpec) {
             override val ownerType
                 get() = type$name
             override fun toString() = "${property.qualifiedName!!.asString()}"
@@ -119,7 +121,7 @@ internal class MetaType$name : MetaType("$name", "$fullName", $baseTypeSpec) {
             if (property.isMutable)
                 writer.write("""        
             override fun setValue(target: Any, value: Any?) {
-                (target as ${classDeclaration.simpleName.asString()}).$propertyName = $optNullableAssignment value as ${property.type}$propertyTypeGenericArgs
+                (target as ${classDeclaration.simpleName.asString()}).$propertyName = $optNullableAssignment value as $propertyTypeName
             }
 """)
             // add `addLustItem` override if property type is MutableList

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 // package android.util
+/*
 package dev.atsushieno.kotractive
 
 import kotlin.experimental.and
@@ -796,3 +797,4 @@ object Base64 {
 }
 
 private infix fun Byte.shl(i: Int): Int = this.toInt() shl i
+*/

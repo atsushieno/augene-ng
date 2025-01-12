@@ -36,6 +36,7 @@ kotlin {
             useJUnit()
         }
     }
+    /*
     js(IR) { // it depends on mugene which does not support BOTH
         nodejs {
             testTask(Action {
@@ -50,7 +51,7 @@ kotlin {
             useCommonJs()
         }
         //browser() - okio FileSystem.SYSTEM is not available on browsers yet.
-    }
+    }*/
 
     /*
     val hostOs = System.getProperty("os.name")
@@ -96,6 +97,7 @@ kotlin {
         }
         val jvmMain by getting
         val jvmTest by getting
+        /*
         val jsMain by getting {
             dependencies {
                 implementation(libs.okio.nodefilesystem)
@@ -106,6 +108,7 @@ kotlin {
                 implementation(kotlin("test-js"))
             }
         }
+         */
         //val nativeMain by getting
         //val nativeTest by getting
     }

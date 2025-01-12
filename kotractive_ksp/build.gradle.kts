@@ -12,7 +12,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath(kotlin("gradle-plugin", version = "2.0.0"))
+        classpath(kotlin("gradle-plugin", version = libs.versions.kotlin.asProvider().get()))
     }
 }
 
