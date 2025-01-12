@@ -7,10 +7,10 @@ on:
 jobs:
   linux-build:
     name: build on linux
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:
     - name: checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         submodules: recursive
     - name: apt update
@@ -18,14 +18,14 @@ jobs:
         sudo apt-get update
         sudo apt-get install xvfb wget unzip libc6 \
           libcurl3-gnutls-dev  libfreetype6-dev libgcc1 libjpeg-dev \
-          libpng-dev libstdc++6 libwebkit2gtk-4.0-dev libx11-6 \
+          libpng-dev libstdc++6 libwebkit2gtk-4.1-dev libx11-6 \
           libxext6 zlib1g  make g++ mesa-common-dev libasound2-dev \
           libjack-jackd2-dev ladspa-sdk \
           doxygen libgrpc++-dev libgrpc-dev \
           libprotobuf-dev protobuf-compiler protobuf-compiler-grpc \
           graphviz cmake ninja-build lv2-dev liblilv-dev libsuil-dev
     - name: set up JDK 17
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4
       with:
         java-version: 17
         distribution: temurin
@@ -33,31 +33,27 @@ jobs:
       run: bash build-augene-player.sh
     - name: build augene
       run: ./gradlew --warning-mode all build publishToMavenLocal
-    - name: build augene-editor
-      run: cd augene-editor-project && ./gradlew --warning-mode all check
     - name: upload build failure logs
       if: failure()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: test-failure-logs
         path: |
-          kotractive-ksp-project/kotractive/build/reports/
-          kotractive-project/kotractive/build/reports/
-          augene-project/augene/build/reports/
-          augene-editor-project/common/build/reports/
-          augene-editor-project/android/build/reports/
-          augene-editor-project/desktop/build/reports/
+          kotractive_ksp/build/reports/
+          kotractive/build/reports/
+          augene/build/reports/
+          augene-editor/build/reports/
     - name: upload artifact
       if: success()
       uses: actions/upload-artifact@v3
       with:
         name: augene-ng-artifacts
         path: |
-          kotractive-project/kotractive/build/libs/*.jar
-          augene-project/augene/build/outputs/aar/*.aar
-          augene-project/augene-console/build/libs/*.jar
-          augene-editor-project/desktop/build/compose/binaries/main/deb/*.msi
-          augene-editor-project/desktop/build/compose/binaries/main/deb/*.dmg
-          augene-editor-project/desktop/build/compose/binaries/main/deb/*.deb
+          kotractive_ksp/build/libs/*.jar
+          kotractive/build/libs/*.jar
+          augene/build/outputs/aar/*.aar
+          augene-console/build/libs/*.jar
+          augene-editor/build/compose/binaries/main/deb/*.msi
+          augene-editor/build/compose/binaries/main/deb/*.dmg
+          augene-editor/build/compose/binaries/main/deb/*.deb
           augene-player/build/AugenePlayer_artefacts/AugenePlayer
-
