@@ -135,3 +135,7 @@ tasks.all {
 }
 
 dependencies.add("kspCommonMainMetadata", project(":kotractive_ksp"))
+
+afterEvaluate {
+    tasks.named("androidDependencies").configure { dependsOn(":kotractive:kspCommonMainKotlinMetadata") }
+}
