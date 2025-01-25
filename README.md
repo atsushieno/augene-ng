@@ -202,7 +202,7 @@ Wherever you have the same set of audio plugins installed on your system, you ca
 
 # License
 
-The augene-player part (JUCE application) is released under the GPLv3 license.
+The augene-player part (JUCE application) is released under the AGPLv3 license.
 
 The kotlin projects are released under the MIT license.
 
@@ -211,9 +211,8 @@ The kotlin projects are released under the MIT license.
 
 There are couple of dependencies in this application:
 
-- [JUCE](https://juce.com/) - GPLv3 (or commercial).
-- [Tracktion/tracktion_engine](https://github.com/Tracktion/tracktion_engine/) - ditto.
-- [lvtk/jlv2](https://github.com/lvtk/jlv2) - ditto (in jlv2_host).
+- [JUCE](https://juce.com/) - AGPLv3 (or commercial).
+- [Tracktion/tracktion_engine](https://github.com/Tracktion/tracktion_engine/) - should be the same.
 - [SpartanJ/efsw](https://github.com/SpartanJ/efsw) - MIT.
 - [dogla/filesystem-watcher](https://github.com/dogla/filesystem-watcher) - Apache 2.0. The sources are converted from Java to Kotlin and directly embedded in augene-editor-project.
 

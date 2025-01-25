@@ -1,16 +1,20 @@
 
 cmake_minimum_required(VERSION 3.12)
 
-project(AUGENE_PLAYER VERSION 0.1.0)
+set(CMAKE_CXX_STANDARD 20)
 
+project(AUGENE_PLAYER VERSION 0.2.0)
+
+if(UNIX AND NOT APPLE)
 find_package(PkgConfig REQUIRED)
-
 pkg_check_modules(GTK3 gtk+-x11-3.0)
-if(NOT ANDROID)
-pkg_check_modules(LILV lilv-0)
-pkg_check_modules(SUIL suil-0)
 endif()
 
+file(CREATE_LINK
+		"${CMAKE_CURRENT_LIST_DIR}/../external/tracktion_engine/modules/juce"
+		"${CMAKE_CURRENT_LIST_DIR}/juce-symlink"
+		SYMBOLIC
+)
 add_subdirectory(juce-symlink)
 
 juce_add_gui_app(AugenePlayer
@@ -31,20 +35,21 @@ target_compile_definitions(AugenePlayer PRIVATE
     JUCE_USE_FLAC=1
     JUCE_USE_OGGVORBIS=1
     JUCE_WASAPI=1
-    JUCE_WEB_BROWSER=0)
+    JUCE_WEB_BROWSER=0
+)
 
-juce_add_module(../external/tracktion_engine/modules/tracktion_engine)
-if(NOT ANDROID)
-juce_add_module(../external/jlv2/modules/jlv2_host)
-target_include_directories(AugenePlayer PRIVATE
-	${LILV_INCLUDE_DIRS}
-	${SUIL_INCLUDE_DIRS}
+if(NOT Android)
+	# tracktion_engine does not really compile without this :/
+	target_compile_definitions(AugenePlayer PRIVATE
+			JUCE_MODAL_LOOPS_PERMITTED=1
 	)
 endif()
 
+juce_add_module(../external/tracktion_engine/modules/tracktion_graph)
+juce_add_module(../external/tracktion_engine/modules/tracktion_engine)
+
 target_include_directories(AugenePlayer PRIVATE
 	${GTK3_INCLUDEDIR}
-        ../external/jlv2/modules
 	../external/tracktion_engine/modules/
 	../external/efsw/include/
 	../external/efsw/src/)
@@ -88,13 +93,4 @@ target_sources(AugenePlayer PRIVATE
 
 target_link_libraries(AugenePlayer PRIVATE
 	juce::juce_gui_extra
-	tracktion_engine
-	jlv2_host)
-
-if(NOT ANDROID)
-target_link_libraries(AugenePlayer PRIVATE
-	${LILV_LIBRARIES}
-	${SUIL_LIBRARIES}
-	)
-endif()
-
+	tracktion_engine)

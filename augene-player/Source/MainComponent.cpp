@@ -16,13 +16,11 @@
 namespace juce {
     extern JNIEnv *getEnv() noexcept;
 }
-#else
-#include "jlv2_host/jlv2_host.h"
 #endif
 
 //==============================================================================
 
-void showAudioDeviceSettings (tracktion_engine::Engine& engine)
+void showAudioDeviceSettings (tracktion::engine::Engine& engine)
 {
     DialogWindow::LaunchOptions o;
 #if ANDROID
@@ -69,7 +67,7 @@ MainComponent::MainComponent()
             return;
         auto & t = edit->getTransport();
         t.stop(false, false);
-        t.setCurrentPosition(0);
+        // FIXME: should we reset position here?
     };
 
     auto &formatManager = engine.getPluginManager().pluginFormatManager;
@@ -77,8 +75,6 @@ MainComponent::MainComponent()
     aap::getPluginHostPAL()->setPluginListCache(aap::getPluginHostPAL()->getInstalledPlugins());
     auto format = new juceaap::AndroidAudioPluginFormat();
     formatManager.addFormat (format);
-#else
-    formatManager.addFormat (new jlv2::LV2PluginFormat());
 #endif
 
     PseudoHeadlessCommand pseudoHeadlessCommand{NONE};
@@ -115,7 +111,7 @@ MainComponent::MainComponent()
         auto v = new PluginListComponent (engine.getPluginManager().pluginFormatManager,
                                           engine.getPluginManager().knownPluginList,
                                           engine.getTemporaryFileManager().getTempFile ("PluginScanDeadMansPedal"),
-                                          tracktion_engine::getApplicationSettings());
+                                          nullptr);
         activePluginListComponent.reset(v);
         v->setSize (800, 600);
         o.content.setOwned (v);
@@ -155,7 +151,7 @@ MainComponent::MainComponent()
         auto v = new PluginListComponent(engine.getPluginManager().pluginFormatManager,
                                                        engine.getPluginManager().knownPluginList,
                                                        engine.getTemporaryFileManager().getTempFile ("PluginScanDeadMansPedal"),
-                                                       tracktion_engine::getApplicationSettings());
+                                                       nullptr);
         activePluginListComponent.reset(v);
         nextFormatForPseudoHeadlessScanning = 0;
         startTimer(100);
@@ -225,9 +221,15 @@ void MainComponent::loadEditFile()
     File editFile{editFilePath};
     if (projectItemIDSource == 0)
         projectItemIDSource = editFilePath.hashCode();
-    auto itemId = tracktion_engine::ProjectItemID::createNewID(projectItemIDSource);
-    edit = std::make_unique<tracktion_engine::Edit> (engine, tracktion_engine::loadEditFromFile (engine, editFile, itemId), tracktion_engine::Edit::forEditing, nullptr, 0);
-    edit->state.setProperty(tracktion_engine::IDs::appVersion, String{"0.1.0"}, nullptr);
+    auto itemId = tracktion::engine::ProjectItemID::createNewID(projectItemIDSource);
+    auto editState = tracktion::engine::loadEditFromFile (engine, editFile, itemId);
+    tracktion::Edit::Options opts{
+        .engine = engine,
+        .editState = editState,
+        .role = tracktion::engine::Edit::EditRole::forEditing,
+    };
+    edit = std::make_unique<tracktion::engine::Edit> (opts);
+    edit->state.setProperty(tracktion::engine::IDs::appVersion, String{"0.1.0"}, nullptr);
     auto& transport = edit->getTransport();
     transport.addChangeListener (this);
 
@@ -239,13 +241,13 @@ void MainComponent::loadEditFile()
     for (auto track : edit->getTrackList()) {
         if (!track->isAudioTrack())
             continue;
-        dynamic_cast<tracktion_engine::AudioTrack*>(track)->freezeTrackAsync();
+        dynamic_cast<tracktion::engine::AudioTrack*>(track)->freezeTrackAsync();
     }
 
     for (auto track : edit->getTrackList()) {
         while (true) {
             Thread::sleep(50);
-            if (track->isFrozen(tracktion_engine::Track::FreezeType::anyFreeze))
+            if (track->isFrozen(tracktion::engine::Track::FreezeType::anyFreeze))
                 break;
         }
     }
@@ -287,9 +289,8 @@ void MainComponent::processFileWatcherDetectedUpdate(String fullPath)
 
         auto& newTransport = edit->getTransport();
         newTransport.addChangeListener (this);
-        newTransport.setCurrentPosition(0);
         if (wasPlaying)
-            newTransport.play(true);
+            newTransport.playFromStart(true);
 
         startFileWatcher();
     });
@@ -310,39 +311,44 @@ void MainComponent::tryHotReloadEdit()
     }
 
     File editFile{editFilePath};
-    auto itemId = tracktion_engine::ProjectItemID::createNewID(projectItemIDSource);
-    auto newEdit = std::make_unique<tracktion_engine::Edit> (engine, tracktion_engine::loadEditFromFile (engine, editFile, itemId), tracktion_engine::Edit::forExamining, nullptr, 0);
+    auto itemId = tracktion::engine::ProjectItemID::createNewID(projectItemIDSource);
+    tracktion::Edit::Options opts{
+            .engine = engine,
+            .editState = tracktion::engine::loadEditFromFile (engine, editFile, itemId),
+            .role = tracktion::engine::Edit::EditRole::forExamining,
+    };
+    auto newEdit = std::make_unique<tracktion::engine::Edit> (opts);
 
-    std::vector<tracktion_engine::Track*> tracksFoundInNewEdit{};
+    std::vector<tracktion::engine::Track*> tracksFoundInNewEdit{};
     for (auto& trackNE : newEdit->getTrackList()) {
         std::cerr << trackNE->getName() << std::endl;
-        auto trackEX = std::find_if(edit->getTrackList().begin(), edit->getTrackList().end(), [trackNE](tracktion_engine::Track* t) {
+        auto trackEX = std::find_if(edit->getTrackList().begin(), edit->getTrackList().end(), [trackNE](tracktion::engine::Track* t) {
             return t->getName() == trackNE->getName();
         });
         if (trackEX != edit->getTrackList().end()) {
-            tracktion_engine::ClipTrack* clipTrackNE{nullptr};
-            auto clipTrackEX = dynamic_cast<tracktion_engine::ClipTrack*>(*trackEX);
+            tracktion::engine::ClipTrack* clipTrackNE{nullptr};
+            auto clipTrackEX = dynamic_cast<tracktion::engine::ClipTrack*>(*trackEX);
             if (clipTrackEX != nullptr) {
-                clipTrackNE = dynamic_cast<tracktion_engine::ClipTrack *>(trackNE);
+                clipTrackNE = dynamic_cast<tracktion::engine::ClipTrack *>(trackNE);
                 if (clipTrackNE == nullptr)
                     // it became different kind of track. Do not treat it as identical.
                     continue;
             }
 
             tracksFoundInNewEdit.emplace_back(*trackEX);
-            auto tempoTrack = dynamic_cast<tracktion_engine::TempoTrack*>(*trackEX);
+            auto tempoTrack = dynamic_cast<tracktion::engine::TempoTrack*>(*trackEX);
             if (tempoTrack != nullptr)
                 continue; // we handle this in tempoSequence.
             if (clipTrackEX != nullptr) {
                 // Replace clip content and automation tracks
                 const auto& clips = clipTrackEX->getClips();
-                clipTrackEX->deleteRegion(tracktion_engine::EditTimeRange(0, edit->getLength()), nullptr);
+                clipTrackEX->deleteRegion(tracktion::TimeRange(tracktion::TimePosition::fromSeconds(0), toPosition(edit->getLength())), nullptr);
                 for (auto* clip : clipTrackNE->getClips())
                     clipTrackEX->addClip(clip);
                 for (auto subTrack : clipTrackEX->getAllSubTracks(true))
                     edit->deleteTrack(subTrack);
                 for (auto subTrack : clipTrackNE->getAllSubTracks(true)) {
-                    tracktion_engine::TrackInsertPoint tip{clipTrackEX, nullptr};
+                    tracktion::engine::TrackInsertPoint tip{clipTrackEX, nullptr};
                     edit->insertTrack(tip, subTrack->state, nullptr);
                 }
             }
@@ -352,14 +358,14 @@ void MainComponent::tryHotReloadEdit()
             edit->getTrackList().objects.add(trackNE);
         }
     }
-    std::vector<tracktion_engine::Track*> tracksToRemove{};
+    std::vector<tracktion::engine::Track*> tracksToRemove{};
     for (auto& trackEX : edit->getTrackList())
         if (std::find(tracksFoundInNewEdit.begin(), tracksFoundInNewEdit.end(), trackEX) == tracksFoundInNewEdit.end())
             tracksToRemove.emplace_back(trackEX);
     for (auto trackEX : tracksToRemove)
         edit->deleteTrack(trackEX);
 
-    edit->tempoSequence.deleteRegion(tracktion_engine::EditTimeRange(0, edit->getLength()));
+    edit->tempoSequence.deleteRegion(tracktion::TimeRange(tracktion::TimePosition::fromSeconds(0), toPosition(edit->getLength())));
     edit->tempoSequence.copyFrom(newEdit->tempoSequence);
 
     edit->flushState();
@@ -384,7 +390,7 @@ void MainComponent::exportPluginSettings(juce::AudioPluginFormatManager &formatM
         auto pluginStartElement = String::formatted("%s  {\"type\": \"%s\", \"name\": \"%s\", \"unique-id\": \"%d\",\n   \"file\": \"%s\", \"parameters\": [",
                                                     subsequentPlugin ? ",\n" : "",
                                                     escapeJson(pluginInfo.pluginFormatName),
-                                                    escapeJson(pluginInfo.name), pluginInfo.uid,
+                                                    escapeJson(pluginInfo.name), pluginInfo.uniqueId,
                                                     escapeJson(pluginInfo.fileOrIdentifier));
         auto instance = formatManager.createPluginInstance(pluginInfo, deviceManager.getSampleRate(),
                                                            deviceManager.getBlockSize(), format);
@@ -412,9 +418,9 @@ void MainComponent::startRendering() {
     const juce::File wavFile = juce::File(editFilePath).withFileExtension(".wav");
     const juce::String taskName{"augene-ng renderer"};
     /*
-    juce::Array<tracktion_engine::Clip*> allClips{};
-    edit->visitAllTopLevelTracks([&](tracktion_engine::Track &track) {
-        auto clipTrack = dynamic_cast<tracktion_engine::ClipTrack*>(&track);
+    juce::Array<tracktion::engine::Clip*> allClips{};
+    edit->visitAllTopLevelTracks([&](tracktion::engine::Track &track) {
+        auto clipTrack = dynamic_cast<tracktion::engine::ClipTrack*>(&track);
         if (clipTrack)
             allClips.addArray(clipTrack->getClips());
         return true;
@@ -424,9 +430,16 @@ void MainComponent::startRendering() {
     juce::BigInteger trackBits{0};
     trackBits.setRange(0, edit->getTrackList().size(), true);
 
-    tracktion_engine::Renderer::renderToFile(taskName, wavFile, *edit,
-                                             tracktion_engine::EditTimeRange(edit->getFirstClipTime(), edit->getLength()),
-                                             trackBits, true, {}, false);
+    tracktion::engine::Renderer::Parameters para{engine};
+    para.destFile = wavFile;
+    para.edit = edit.get();
+    para.time = tracktion::TimeRange(edit->getFirstClipTime(), edit->getLength());
+    para.tracksToDo = trackBits;
+    para.realTimeRender = false;
+    para.trimSilenceAtEnds = true;
+    para.shouldNormalise = true;
+    para.shouldNormaliseByRMS = true;
+    tracktion::engine::Renderer::renderToFile(taskName, para);
 }
 
 void MainComponent::startLoadEdit() {
@@ -452,11 +465,19 @@ void MainComponent::startLoadEdit() {
     editFilePath = editFile.getFullPathName();
     loadEditFile();
 #else
+#if 0
+    FileChooser fc{"Open tracktionedit File", File{}, "*.tracktionedit"};
+    fc.launchAsync(FileBrowserComponent::openMode, [&](const auto&) {
+        editFilePath = fc.getResult().getFullPathName();
+        loadEditFile();
+    });
+#else // the code ^ does not really show the dialog on mac...
     FileChooser fc{"Open tracktionedit File", File{}, "*.tracktionedit"};
     if (fc.browseForFileToOpen()) {
         editFilePath = fc.getResult().getFullPathName();
         loadEditFile();
     }
+#endif
 #endif
 }
 
