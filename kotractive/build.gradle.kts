@@ -1,3 +1,6 @@
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
@@ -7,15 +10,16 @@ plugins {
     id("signing")
 }
 
+@OptIn(ExperimentalKotlinGradlePluginApi::class)
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(21)
     androidTarget {
-        compilations.all { kotlinOptions.jvmTarget = "17" }
+        compilerOptions.jvmTarget.set(JvmTarget.JVM_11)
         publishLibraryVariantsGroupedByFlavor = true
         publishLibraryVariants("debug", "release")
     }
     jvm {
-        compilations.all { kotlinOptions.jvmTarget = "17" }
+        compilerOptions.jvmTarget.set(JvmTarget.JVM_11)
         testRuns["test"].executionTask.configure {
             useJUnit()
         }
@@ -110,6 +114,10 @@ android {
     compileSdk = libs.versions.android.compileSdk.get().toInt()
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     sourceSets["main"].assets.srcDir("src/commonMain/resources") // kind of hack...
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_11
+    }
     defaultConfig {
         minSdk = libs.versions.android.minSdk.get().toInt()
     }

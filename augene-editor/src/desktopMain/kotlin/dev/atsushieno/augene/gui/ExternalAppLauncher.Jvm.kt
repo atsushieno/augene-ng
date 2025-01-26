@@ -1,7 +1,13 @@
 package dev.atsushieno.augene.gui
 
+import java.awt.Desktop
+import java.io.File
+
 actual fun launchExternalProcess(command: String, vararg args: String) {
-    ProcessBuilder(listOf(command).plus(args)).start()
+    if (File(command).isDirectory) // Apple
+        Desktop.getDesktop().open(File(command))
+    else
+        ProcessBuilder(listOf(command).plus(args)).start()
 }
 
 actual fun runFileOrFolderLauncher (fullPath: String) {

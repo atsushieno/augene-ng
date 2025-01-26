@@ -9,7 +9,7 @@ We use [Birch-san/juicysfplugin](https://github.com/Birch-san/juicysfplugin) to 
 
 Since juicysfplugin saves full path to the SF2 files, I had to hardcode my local paths to those folders (it's rather how VST3 works).
 
-All those sfz file references point to: `/home/atsushi/.local/share/sounds/sf2`. We are not sure which directory is the best to store sfz (to reference from those `*.filtergraph`s), so things are tentative yet.
+All those sf2 file references point to: `/home/atsushi/.local/share/sounds/sf2`. We are not sure which directory is the best to store sfz (to reference from those `*.filtergraph`s), so things are tentative yet.
 
 Referenced SF2 soundfonts in this bank:
 
