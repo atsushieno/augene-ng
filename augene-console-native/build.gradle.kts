@@ -1,3 +1,8 @@
+@file:OptIn(ExperimentalKotlinGradlePluginApi::class)
+
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 buildscript {
     repositories {
         maven("https://plugins.gradle.org/m2/")
@@ -10,9 +15,7 @@ plugins {
 
 kotlin {
     jvm {
-        compilations.all {
-            kotlinOptions.jvmTarget = "11"
-        }
+        compilerOptions.jvmTarget.set(JvmTarget.JVM_11)
         testRuns["test"].executionTask.configure {
             useJUnit()
         }

@@ -1,6 +1,5 @@
 package dev.atsushieno.kotractive
 
-import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
@@ -18,7 +17,7 @@ class EditModelTemplate {
 		fun CreateNewEmptyEdit(): EditElement {
 			var newIdFrom = 1001
 
-			val instant = Clock.System.now()
+			val instant = kotlin.time.Clock.System.now()
 
 			val projectIdPart = "" + (Random.nextInt() % 1000000).toString() + '/' // FIXME: format "D06"
 			val mediaFilePart = "" + (Random.nextInt() % 1000000).toString() + '/'
@@ -54,7 +53,7 @@ class EditModelTemplate {
 				ClickTrack = ClickTrackElement().apply { Level = 0.60 }
 				Id3VorbisMetadata = Id3VorbisMetadataElement().apply {
 					TrackNumber = 1.0
-					Date = Clock.System.now().toLocalDateTime(TimeZone.UTC).year.toString()
+					Date = kotlin.time.Clock.System.now().toLocalDateTime(TimeZone.UTC).year.toString()
 				}
 				MasterVolume = MasterVolumeElement().apply {
 					Plugins = mutableListOf(

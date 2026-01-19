@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTargetWithTests
 
@@ -14,6 +15,21 @@ plugins {
 @OptIn(ExperimentalKotlinGradlePluginApi::class)
 kotlin {
     jvmToolchain(21)
+
+    /*
+    @OptIn(ExperimentalWasmDsl::class)
+    wasmJs {
+        browser {
+            testTask {
+                enabled = false
+                useKarma {
+                    useChromeHeadless()
+                    webpackConfig.cssSupport {}
+                }
+            }
+        }
+        //nodejs {}
+    }*/
     androidTarget {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
@@ -28,21 +44,19 @@ kotlin {
         }
     }
     /*
-    js(IR) { // it depends on mugene which does not support BOTH
+    js {
         nodejs {
-            testTask(Action {
-                // FIXME: enable this once this error got fixed:
-                // Module not found: Error: Can't resolve 'os' in '/media/atsushi/extssd0/sources/ktmidi/augene-ng/augene-project/build/js/node_modules/okio-parent-okio-js-legacy'
-                enabled = false
+            testTask {
                 useKarma {
                     useChromeHeadless()
                     //webpackConfig.cssSupport.enabled = true
                 }
-            })
+            }
             useCommonJs()
         }
         //browser() - okio FileSystem.SYSTEM is not available on browsers yet.
-    }*/
+    }
+     */
 
     /*
     val hostOs = System.getProperty("os.name")
@@ -50,26 +64,12 @@ kotlin {
         macosArm64()
         macosX64()
     }
-    //linuxArm64()
-    //linuxX64()
-    mingwX64()
-     */
+    linuxArm64()
+    linuxX64()
+    mingwX64()*/
 
     sourceSets {
-        /*
-        all {
-            languageSettings.useExperimentalAnnotation("kotlin.RequiresOptIn")
-            languageSettings.useExperimentalAnnotation("okio.ExperimentalFileSystem")
-        }*/
-
         val androidMain by getting
-        /*
-        val androidTest by getting {
-            dependencies {
-                implementation(kotlin("test-junit"))
-                implementation("junit:junit:4.13.2")
-            }
-        }*/
         val commonMain by getting {
             dependencies {
                 implementation(libs.okio)
@@ -89,19 +89,23 @@ kotlin {
         val jvmMain by getting
         val jvmTest by getting
         /*
-        val jsMain by getting {
-            dependencies {
-                implementation(libs.okio.nodefilesystem)
-            }
-        }
+        val jsMain by getting
         val jsTest by getting {
             dependencies {
                 implementation(kotlin("test-js"))
             }
-        }
+        }*/
+        /*
+        val nativeMain by creating
+        val nativeTest by creating
+        val macosArm64Main by getting
+        val macosX64Main by getting
+        val linuxArm64Main by getting
+        val linuxX64Main by getting
+        val mingwX64Main by getting
+        val wasmJsMain by getting
+        val wasmJsTest by getting
          */
-        //val nativeMain by getting
-        //val nativeTest by getting
     }
 }
 
