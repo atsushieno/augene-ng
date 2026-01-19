@@ -126,3 +126,14 @@ tasks.withType<Jar>().configureEach {
         dependsOn("kspCommonMainKotlinMetadata")
     }
 }
+
+// Ensure all Kotlin compilation tasks depend on KSP generation
+tasks.configureEach {
+    if (name.startsWith("compile") && name.contains("Kotlin")) {
+        dependsOn("kspCommonMainKotlinMetadata")
+    }
+}
+
+dependencies {
+    add("kspCommonMainMetadata", project(":kotractive_ksp"))
+}
