@@ -4,8 +4,8 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTargetWithTests
 
 plugins {
-    alias(libs.plugins.androidLibrary)
     alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.androidKotlinMultiplatformLibrary)
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.dokka)
     id("maven-publish")
@@ -30,12 +30,14 @@ kotlin {
         }
         //nodejs {}
     }*/
-    androidTarget {
+    androidLibrary {
+        namespace = "dev.atsushieno.augene"
+        compileSdk = libs.versions.android.compileSdk.get().toInt()
+        minSdk = libs.versions.android.minSdk.get().toInt()
+
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
         }
-        publishLibraryVariantsGroupedByFlavor = true
-        publishLibraryVariants("debug", "release")
     }
     jvm {
         compilerOptions.jvmTarget.set(JvmTarget.JVM_11)
@@ -109,25 +111,3 @@ kotlin {
     }
 }
 
-android {
-    namespace = "dev.atsushieno.augene"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
-    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
-    sourceSets["main"].assets.srcDir("src/commonMain/resources") // kind of hack...
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-    defaultConfig {
-        minSdk = libs.versions.android.minSdk.get().toInt()
-        targetSdk = libs.versions.android.targetSdk.get().toInt()
-    }
-    buildTypes {
-        val debug by getting {
-            //minifyEnabled(false)
-        }
-        val release by getting {
-            //minifyEnabled(false)
-        }
-    }
-}

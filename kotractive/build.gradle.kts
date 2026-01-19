@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.androidKotlinMultiplatformLibrary)
     alias(libs.plugins.dokka)
     alias(libs.plugins.ksp)
     id("maven-publish")
@@ -28,10 +28,14 @@ kotlin {
         }
         //nodejs {}
     }
-    androidTarget {
-        compilerOptions.jvmTarget.set(JvmTarget.JVM_11)
-        publishLibraryVariantsGroupedByFlavor = true
-        publishLibraryVariants("debug", "release")
+    androidLibrary {
+        namespace = "dev.atsushieno.kotractive"
+        compileSdk = libs.versions.android.compileSdk.get().toInt()
+        minSdk = libs.versions.android.minSdk.get().toInt()
+
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_11)
+        }
     }
     jvm {
         compilerOptions.jvmTarget.set(JvmTarget.JVM_11)
@@ -97,39 +101,17 @@ kotlin {
     }
 }
 
-android {
-    namespace = "dev.atsushieno.kotractive"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
-    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
-    sourceSets["main"].assets.srcDir("src/commonMain/resources") // kind of hack...
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-    defaultConfig {
-        minSdk = libs.versions.android.minSdk.get().toInt()
-    }
-    buildTypes {
-        val debug by getting {
-            //minifyEnabled(false)
-        }
-        val release by getting {
-            //minifyEnabled(false)
-        }
-    }
-}
 //kotlin.sourceSets.commonMain.configure { kotlin.srcDir(tasks.named("kspCommonMainKotlinMetadata")) }
-tasks.withType<Jar>().configureEach {
-    // Look for any task that packages sources
-    if (name.endsWith("SourcesJar", ignoreCase = true)) {
-        // Ensure the task waits for common KSP generation
-        dependsOn("kspCommonMainKotlinMetadata")
-    }
-}
 
-// Ensure all Kotlin compilation tasks depend on KSP generation
+// Ensure all tasks that need KSP-generated code depend on KSP generation
 tasks.configureEach {
-    if (name.startsWith("compile") && name.contains("Kotlin")) {
+    val taskNeedsKsp = (name.startsWith("compile") && name.contains("Kotlin")) ||
+        name == "compileAndroidMain" ||
+        name.contains("SourcesJar", ignoreCase = true) ||
+        name == "sourcesJar" ||
+        name == "androidSourcesJar"
+
+    if (taskNeedsKsp) {
         dependsOn("kspCommonMainKotlinMetadata")
     }
 }
