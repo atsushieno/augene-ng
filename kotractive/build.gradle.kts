@@ -55,11 +55,7 @@ kotlin {
         }
     }
 
-    val hostOs = System.getProperty("os.name")
-    if (hostOs == "Mac OS X") {
-        macosArm64()
-        macosX64()
-    }
+    macosArm64()
     linuxArm64()
     linuxX64()
     mingwX64()
@@ -93,7 +89,6 @@ kotlin {
         val nativeMain by creating
         val nativeTest by creating
         val macosArm64Main by getting
-        val macosX64Main by getting
         val linuxArm64Main by getting
         val linuxX64Main by getting
         val mingwX64Main by getting
